@@ -1,0 +1,110 @@
+.app_nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.app_menu_items{
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.app_menu_item{
+    position: relative; 
+    cursor: pointer;    
+}
+
+.app_menu_item:hover>.app_boder_animated, .app_menu_item:focus>.app_boder_animated{
+    height: 3px;
+    visibility: visible;
+}
+
+.app_boder_animated{
+    visibility: hidden;
+    position: absolute;
+    width: calc(100% - 21px);    
+    height: 0px;
+    background-color: var(--color-primary);
+    transition: ease 0.5s height;
+}
+
+.app_boder_animated:after{
+    content: ""
+}
+
+.app_menu_item_title:after{
+    color: #a5aab6;
+    content: "|";
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.app_menu_item:last-child> .app_menu_item_title:after{
+    content: "";
+}
+
+.app_nav_menu_buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+    align-items: center;
+    list-style: none;
+
+    margin-left: 15px;
+}
+
+.app_nav_menu_button{
+    font-weight: 300;
+    font-size: 1.4em;
+    margin: 0 20px;
+}
+
+.app_menu_item_active {
+    position: absolute;
+    height: 3px;
+    width: calc(100% - 21px);    
+    background-color: var(--color-primary);
+}
+
+.app_nav_menu_button:hover, .app_nav_menu_button:focus{
+    transition: ease all 0.5s;
+    color: var(--color-primary);
+}
+
+.app_menu_hamburguer:hover , .app_menu_hamburguer:focus{
+    transition: ease all 0.5s;
+    color: var(--color-primary);
+}
+
+@media screen and (min-width: 860px){
+    .app_menu_hamburguer{
+        font-weight: 300;
+        font-size: 1.4em;
+        margin: 0 20px;
+        visibility: hidden;
+    }
+}
+
+@media screen and (max-width: 860px){
+    .app_menu_hamburguer{
+        font-weight: 300;
+        font-size: 1.4em;
+        margin: 0 20px;
+        visibility: visible !important;
+    }
+
+    .app_menu_items{
+        display: none;
+        visibility: hidden;
+        width: 0px;
+        height: 0px;
+    }
+    .app_nav_menu_buttons{
+        display: none;
+        visibility: hidden;
+        width: 0px;
+        height: 0px;
+    }
+}

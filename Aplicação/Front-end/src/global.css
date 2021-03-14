@@ -1,0 +1,13 @@
+:root{
+   --background-light : #f2f2f2;
+   --margin-side : 10%;
+   --box-shadow-principal: 0px 4px 4px rgba(0, 0, 0, 0.20);
+   --color-primary: #56CCF2;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    --webkit-border: border-box;
+}

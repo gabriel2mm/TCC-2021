@@ -3,6 +3,8 @@
    --margin-side : 10%;
    --box-shadow-principal: 0px 4px 4px rgba(0, 0, 0, 0.20);
    --color-primary: #56CCF2;
+   --text-dark : #333333;
+   --text-light : #FFF;
 }
 
 *{
@@ -10,4 +12,12 @@
     padding: 0;
     border: 0;
     --webkit-border: border-box;
+}
+
+h1,h2,h3,h4,h5,h6{
+    margin-bottom: 0 !important;
+}
+
+ul, ol{
+    margin-bottom: 0 !important;
 }

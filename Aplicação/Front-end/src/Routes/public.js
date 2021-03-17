@@ -5,7 +5,7 @@ import {LoginPage} from '../Pages';
 export default function PublicRoutes(){
     return (
         <Switch>
-            <Route path="/" exact component={LoginPage}/>
+            <Route path="/login" exact component={LoginPage}/>
             <Route path="/**" render={() => <Redirect to="/" />} />
         </Switch>
     );

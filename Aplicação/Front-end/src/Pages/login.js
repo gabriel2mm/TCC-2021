@@ -1,11 +1,14 @@
 import React from 'react';
-import {HeaderComponent, NavMenuComponent} from '../Components';
-
+import { HeaderComponent, NavMenuComponent, FooterComponent, BreadCrumbComponent } from '../Components';
 function LoginPage() {
   return (
+    <>
       <HeaderComponent>
-          <NavMenuComponent />
+        <NavMenuComponent />
       </HeaderComponent>
+      <BreadCrumbComponent />
+      <FooterComponent />
+    </>
   );
 }
 

@@ -1,0 +1,12 @@
+.app_footer{
+    width: 100%;
+    padding: 15px 0px;
+
+    text-align:center;
+}
+
+.app_footer > p{
+    font-size: 1.1em;
+    font-weight: 300;
+    font-family: "Roboto", sans-serif, arial;
+}

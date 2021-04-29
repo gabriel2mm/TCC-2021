@@ -2,7 +2,7 @@ import React from 'react';
 
 function BasicInputComponent({ type, placeholder, className, name, pattern, required, icon, iconPosition }) {
 
-  const classBase = "w-full py-2 border-2 border-gray-200 rounded-lg placeholder-gray-400 hover:border-gray-300 focus:outline-none focus:border-purple-600 transition-colors";
+  const classBase = "w-full py-2 border-2 border-gray-200 rounded-lg placeholder-gray-400 hover:border-gray-300 focus:outline-none focus:border-purple-600 transition-colors duration-300";
   return (
     <>
       {!icon ? (<input type={type} placeholder={placeholder} name={name} patter={pattern} required={required} className={`${className} ${classBase} pl-2`} />) : (

@@ -12,7 +12,7 @@ function ResetPasswordPage() {
                 </Link>
             </div>
 
-            <h2 className="text-2xl text-center font-bold text-gray-700 ">Redefinir senha</h2>
+            <h2 className="text-2xl text-center font-bold text-gray-800 ">Redefinir senha</h2>
         
             <form>
             <div className="my-2">

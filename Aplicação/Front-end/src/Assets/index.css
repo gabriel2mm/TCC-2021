@@ -1,5 +1,7 @@
-@tailwind base;
+:root{
+    font-family: "Roboto", sans-serif, Trebuchet MS, Lucida Sans Unicode, Lucida Grande, Lucida Sans, Arial, sans-serif !important;
+}
 
-@tailwind components;
-
-@tailwind utilities;
+*{
+    font-family: "Roboto", sans-serif, Trebuchet MS, Lucida Sans Unicode, Lucida Grande, Lucida Sans, Arial, sans-serif !important;
+}

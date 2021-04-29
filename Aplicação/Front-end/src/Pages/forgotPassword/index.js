@@ -12,7 +12,7 @@ function ForgotPasswordPage() {
                 </Link>
             </div>
 
-            <h2 className="text-2xl text-center font-bold text-gray-700 ">Esqueci minha senha</h2>
+            <h2 className="text-2xl text-center font-bold text-gray-800 ">Esqueci minha senha</h2>
             <span className="mt-2 text-gray-600 subpixel-antialiased font-light leading-tight"> Insira o e-mail utilizado em seu cadastrado no campo abaixo. Caso o e-mail seja válido, você receberá um link no email cadastrado para redefinir sua senha</span>
 
             <form>

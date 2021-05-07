@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import { SearchOutlined} from "@ant-design/icons";
 import {List} from 'antd';
 import axios from 'axios'
+import {AuthenticatedLayoutComponent} from '../../Components';
 
 function ChatComponent() {
   const maxCharacters = 30;
@@ -27,6 +28,7 @@ function ChatComponent() {
   }
 
   return (
+    <AuthenticatedLayoutComponent>
     <div className="w-full mx-auto">
       <div className="grid grid-cols-4 gap-1 max-h-screen">
         <div className="bg-gray-100">
@@ -69,6 +71,7 @@ function ChatComponent() {
         <div className="px-4 py-4 col-span-3 bg-gray-700">área 2</div>
       </div>
     </div>
+    </AuthenticatedLayoutComponent>
   );
 }
 

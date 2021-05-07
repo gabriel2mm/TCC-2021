@@ -22,9 +22,9 @@ function BreadCrumbComponent() {
         const last = routes.indexOf(route) === routes.length - 1;
 
         return last ? (
-            <span className="text-gray-800 font-bold  ">{route.breadcrumbName}</span>
+            <span className="text-gray-800 font-bold  ">{route.breadcrumbName.toLowerCase().charAt(0).toUpperCase() + route.breadcrumbName.substr(1)}</span>
         ) : (
-            <Link to={`/${paths.join('/')}`} className="text-gray-300 hover:text-purple-800 visited:text-purple-600">{route.breadcrumbName}</Link>
+            <Link to={`/${paths.join('/')}`} className="text-gray-300 hover:text-purple-800 visited:text-purple-600">{route.breadcrumbName.toLowerCase().charAt(0).toUpperCase() + route.breadcrumbName.substr(1)}</Link>
         );
     }
 

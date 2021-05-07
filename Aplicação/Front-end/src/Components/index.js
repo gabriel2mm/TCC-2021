@@ -5,5 +5,7 @@ import LoginLayoutComponent from './Layout/Login';
 import LoginComponent from './Login/index';
 import AuthenticatedLayoutComponent from './Layout/Authenticated';
 import BreadCrumbComponent from './Breadcrumb';
+import SettingsComponent from './Settings';
 
-export {ChatComponent, BasicInputComponent, ButtonComponent, LoginLayoutComponent, LoginComponent, AuthenticatedLayoutComponent, BreadCrumbComponent}
+
+export {ChatComponent, BasicInputComponent, ButtonComponent, LoginLayoutComponent, LoginComponent, AuthenticatedLayoutComponent, BreadCrumbComponent, SettingsComponent}

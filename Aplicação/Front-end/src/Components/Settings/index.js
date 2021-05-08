@@ -8,7 +8,7 @@ function SettingsComponent({ dataSource }) {
     return (
         data.map((d, i) => {
             return (
-                <div className="flex flex-col justify-items-start md:mx-20 md:pl-14 my-1" key={`${d.title}-${i}`}>
+                <div className="flex flex-col justify-items-start md:mx-20 md:pl-14 mt-5" key={`${d.title}-${i}`}>
                     <h1 className="text-gray-600 font-bold">{d.title}</h1>
                     <div className="flex flex-row justify-items-start overflow-x-auto my-2">
                         {d.balloons.map( (b, i) => {

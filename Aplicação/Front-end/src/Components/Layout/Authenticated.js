@@ -26,6 +26,16 @@ function AuthenticatedLayoutComponent({ children }) {
         </Menu>
       );
 
+    function getCurrentRoute(menuPath){
+        const path = window.location.pathname;
+        if(path){
+            if(path.includes(menuPath)){
+                return buttonActive;
+            }
+        }
+        return buttonNotActive;
+    }
+
     return (
         <>
             <header className="header-2 relative">
@@ -41,10 +51,10 @@ function AuthenticatedLayoutComponent({ children }) {
                         </div>
 
                         <div ref={refMenu} className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
-                            <NavLink to="/home" className={`${buttonActive}`} tabIndex="2">Atividades</NavLink>
-                            <NavLink to="/" className={`${buttonNotActive}`} tabIndex="3">Relatórios</NavLink>
-                            <NavLink to="/settings" className={`${buttonNotActive}`} tabIndex="4">Configurações</NavLink>
-                            <ul className="flex flex-row justify-around md:justify-center items-center">
+                            <NavLink to="/home" className={`${getCurrentRoute("/home")}`} tabIndex="2">Atividades</NavLink>
+                            <NavLink to="/" className={`${getCurrentRoute("/dashboard")}`} tabIndex="3">Relatórios</NavLink>
+                            <NavLink to="/settings" className={`${getCurrentRoute("/settings")}`} tabIndex="4">Configurações</NavLink>
+                            <ul className="flex flex-row justify-around md:justify-center items-center ml-2">
                                 <li className="text-gray-500 text-xl flex justify-center items-center py-2 px-2 rounded-full hover:bg-gray-200 focus:bg-gray-200 transition-colors duration-800"><SearchOutlined /></li>
                                 <Link to="/chat" className="mx-10 py-2 px-2 rounded-full hover:bg-gray-200 focus:bg-gray-200 transition-colors duration-800 h-auto flex justify-center rounded-full hover:bg-gray-200 focus:bg-gray-200 transition-colors duration-800 text-gray-500"><li className="text-gray-500 text-xl flex flex-1 justify-center items-center "><MessageOutlined /></li></Link>
                                 <li className="text-gray-500 text-xl flex justify-center items-center py-2 px-2 rounded-full hover:bg-gray-200 focus:bg-gray-200 transition-colors duration-800">

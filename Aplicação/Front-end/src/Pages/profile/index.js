@@ -3,6 +3,8 @@ import { AuthenticatedLayoutComponent, ButtonComponent } from '../../Components'
 import { Table, Tag, Popconfirm, message } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
+
 
 function ProfilePage() {
   const [loading, setLoading] = useState(true);
@@ -55,7 +57,9 @@ function ProfilePage() {
       render: (text, record, i) =>
         <div className="flex flex-row justify-center items-center">
           <div className="mx-1">
-            <a href="!#">Visualizar</a>
+            <Link to={`/settings/profiles/${record.id}`}>
+              Visualizar
+            </Link>
           </div>
           <div className="mx-1">
             <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o perfil ${record.profile}?`} onConfirm={() => handleDelete(record)}>

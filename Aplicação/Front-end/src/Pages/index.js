@@ -4,5 +4,7 @@ import ResetPasswordPage from './resetPassword';
 import HomePage from './home';
 import SettingsPage from './settings';
 import AboutPage from './about';
+import ProfilePage from './profile';
 
-export {LoginPage, ForgotPasswordPage, ResetPasswordPage, HomePage, SettingsPage, AboutPage}
+
+export { LoginPage, ForgotPasswordPage, ResetPasswordPage, HomePage, SettingsPage, AboutPage, ProfilePage }

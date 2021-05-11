@@ -1,7 +1,6 @@
 import React from 'react';
 import {Switch,Route, Redirect} from 'react-router-dom';
-import {LoginPage, ForgotPasswordPage, ResetPasswordPage, HomePage, SettingsPage, AboutPage, ProfilePage, ProfileDetailPage} from '../Pages';
-import {ChatComponent} from '../Components';
+import {LoginPage, ForgotPasswordPage, ResetPasswordPage, HomePage, SettingsPage, AboutPage, ProfilePage, ProfileDetailPage, NewProfilePage} from '../Pages';
 
 export default function PublicRoutes(){
     return (
@@ -13,8 +12,8 @@ export default function PublicRoutes(){
             <Route path="/settings" exact component={SettingsPage} />
             <Route path="/settings/about" exact component={AboutPage} />
             <Route path="/settings/profiles" exact component={ProfilePage} />
+            <Route path="/settings/profiles/new" exact component={NewProfilePage} />
             <Route path="/settings/profiles/:id" exact component={ProfileDetailPage} />
-            <Route path="/chat" exact render={() => <ChatComponent /> }/>
             <Route path="/**" render={() => <Redirect to="/" />} />
         </Switch>
     );

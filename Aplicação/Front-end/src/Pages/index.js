@@ -6,5 +6,16 @@ import SettingsPage from './settings';
 import AboutPage from './about';
 import ProfilePage from './profile';
 import ProfileDetailPage from './profileDetail';
+import NewProfilePage from './newProfile';
 
-export { LoginPage, ForgotPasswordPage, ResetPasswordPage, HomePage, SettingsPage, AboutPage, ProfilePage, ProfileDetailPage }
+export {
+    LoginPage,
+    ForgotPasswordPage,
+    ResetPasswordPage,
+    HomePage,
+    SettingsPage,
+    AboutPage,
+    ProfilePage,
+    ProfileDetailPage,
+    NewProfilePage
+}

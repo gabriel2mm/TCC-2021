@@ -6,7 +6,8 @@ export const dataSource = [
             { title: 'Sobre', color: 'bg-red-500', hover: 'bg-red-600', icon: <InfoOutlined />, link: '/settings/about' }, 
     ]},
     { title: 'Atividades', balloons: [
-        { title: 'Categorias', color: 'bg-yellow-500', hover: 'bg-yellow-600', icon: <InfoOutlined />, link: '/about' }
+        { title: 'Categorias', color: 'bg-yellow-500', hover: 'bg-yellow-600', icon: <InfoOutlined />, link: '/about' },
+         { title: 'Teste', color: 'bg-red-500', hover: 'bg-red-600', icon: <InfoOutlined />, link: '/about' }
     ]},
     { title: 'Usuários e segurança', balloons: [
         { title: 'Usuários', color: 'bg-blue-500', hover: 'bg-blue-600', icon: <UserOutlined />, link: '/settings/profiles' },

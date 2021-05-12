@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, List, Spin, message } from 'antd';
+import React, { useState } from 'react';
+import { Modal, List, Spin, message, Empty } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import moment from 'moment';
@@ -60,14 +60,15 @@ function SearchActivityComponent() {
                 {loading ? (<div className="w-full mt-10 flex flex-row justify-center items-center"><Spin /></div>) : (
                     <>
                         <List className="mt-5 max-h-80 overflow-y-auto">
-                            {activities.map( (a,i )=> (
+                            {activities && activities.length > 0 ? activities.map( (a,i )=> (
                                 <List.Item key={i} className="hover:bg-gray-200 transition delay-150 duration-300 ease-in-out border-b-2 border-gray-100 rounded px-5 py-2">
                                     <div className="detalhes w-full flex flex-row justify-between items-center">
                                         <span className="font-semibold text-gray-800">{a.chamados}</span>
                                         <span className="font-normal text-gray-700">{`${moment(a.data).format("DD/MM/yyyy")} ás  ${moment(a.data).format("HH:mm")}`}</span>
                                     </div>
                                 </List.Item>
-                            ))}
+                            )) : (<Empty description={`Não encontramos nenhuma atividade com este termo "${search}" `} />)}
+                           
                         </List>
                     </>
                 )}

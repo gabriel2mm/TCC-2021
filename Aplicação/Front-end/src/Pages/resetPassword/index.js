@@ -41,7 +41,7 @@ function ResetPasswordPage() {
                     className="max-w-screen-md"
                 />
                 </div>
-                <ButtonComponent type="subit" className="float-right mt-5" >Redefinir</ButtonComponent>
+                <ButtonComponent type="submit" className="float-right mt-5" >Redefinir</ButtonComponent>
             </form>
       </LoginLayoutComponent>
   )

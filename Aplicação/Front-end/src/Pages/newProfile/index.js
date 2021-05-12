@@ -8,7 +8,7 @@ import axios from 'axios';
 
 function NewProfilePage() {
 
-    const initialData = { id: null, profile: "", description: "", permissions: [] };
+    const initialData = { id: null, profile: "", description: "", status: "ativo", permissions: [] };
     const [data, setData] = useState(initialData);
     function onChangeText(event) {
         setData({ ...data, [event.target.name]: event.target.value })
@@ -41,8 +41,6 @@ function NewProfilePage() {
                         <label htmlFor="description" className="font-semibold text-gray-600">Descrição do perfil</label>
                         <BasicInputComponent name="description" type="textarea" placeholder="Informe a descrição do perfil" value={data.description} onChange={e => onChangeText(e)} required />
                     </Form.Item>
-
-
                     <Form.Item>
                         <h2 className="text-lg text-gray-600 font-bold ">Permissões</h2>
                         <GroupListComponent data={data} setData={setData} dataSource={configuration} />

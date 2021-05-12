@@ -8,6 +8,10 @@ import BreadCrumbComponent from './Breadcrumb';
 import SettingsComponent from './Settings';
 import GroupListComponent from './GroupList';
 import SearchActivityComponent from './SearchActivity';
+import BasicSelectComponent from './BasicSelect';
+import UserTableComponent from './UserTable';
+import UserFormComponent from './UserForm';
+
 
 export {
     ChatComponent,
@@ -19,5 +23,8 @@ export {
     BreadCrumbComponent,
     SettingsComponent,
     GroupListComponent,
-    SearchActivityComponent
+    SearchActivityComponent,
+    BasicSelectComponent,
+    UserTableComponent,
+    UserFormComponent
 }

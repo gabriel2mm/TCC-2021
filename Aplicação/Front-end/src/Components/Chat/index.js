@@ -10,7 +10,7 @@ function ChatComponent({ open }) {
   }
 
   return (
-      <Drawer title="Help desk" closable={true} onClose={handleClose} visible={drawerVisibility} />
+      <div className="w-32 h-32"></div>
   );
 }
 

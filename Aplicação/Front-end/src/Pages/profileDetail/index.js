@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, GroupListComponent } from '../../Components';
-import { Form, message } from 'antd';
+import { Form, message, Switch } from 'antd';
+import {CloseOutlined, CheckOutlined} from "@ant-design/icons";
 import { configuration } from '../../Components/GroupList/dataSource';
 import axios from 'axios';
 
 function ProfileDetailPage() {
-    const [data, setData] = useState({ id: null, name: "", description: "", permissions: [] });
+    const [data, setData] = useState({ id: null, name: "", description: "", status: "", permissions: [] });
     const params = useParams();
 
     useEffect(() => {
@@ -39,6 +40,14 @@ function ProfileDetailPage() {
         }
     }
 
+    function toggleActive(e){
+        if(e){
+            setData({...data, status: "ativo"})
+        }else{
+            setData({...data, status: "suspended"})
+        }
+    }
+
     return (
         <AuthenticatedLayoutComponent>
             <div className="container">
@@ -51,6 +60,10 @@ function ProfileDetailPage() {
                     <Form.Item>
                         <label htmlFor="description" className="font-semibold text-gray-600">Descrição do perfil</label>
                         <BasicInputComponent name="description" type="textarea" placeholder="Informe a descrição do perfil" value={data.description} onChange={e => onChangeText(e)} required />
+                    </Form.Item>
+                    <Form.Item>
+                        <label htmlFor="Ativo" className="font-semibold text-gray-600 mr-2">Ativo? </label>
+                        <Switch checked={data.status !== "suspended"} onChange={e => toggleActive(e)} checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
                     </Form.Item>
                     <Form.Item>
                         <h2 className="text-lg text-gray-600 font-bold ">Permissões</h2>

@@ -67,7 +67,7 @@ function SearchActivityComponent() {
                                         <span className="font-normal text-gray-700">{`${moment(a.data).format("DD/MM/yyyy")} ás  ${moment(a.data).format("HH:mm")}`}</span>
                                     </div>
                                 </List.Item>
-                            )) : (<Empty description={`Não encontramos nenhuma atividade com este termo "${search}" `} />)}
+                            )) : search && search.length > 0 ? (<Empty description={`Não encontramos nenhuma atividade com este termo "${search}" `} />) : (<span></span>) }
                            
                         </List>
                     </>

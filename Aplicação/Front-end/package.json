@@ -6,6 +6,7 @@
     "@ant-design/icons": "^4.6.2",
     "antd": "^4.15.0",
     "axios": "^0.21.1",
+    "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.0.7",
@@ -27,10 +28,11 @@
     "workbox-streams": "^5.1.3"
   },
   "scripts": {
-    "build:style": "tailwind build src/Assets/index.css -o src/Assets/tailwind.css",
-    "start": "craco start",
+    "build:style": "npm run tailwind build src/Assets/index.css -o src/Assets/tailwind.css",
+    "start": "react-scripts start",
     "build": "craco build",
     "test": "craco test",
+    "cracoStart": "craco strat",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -57,9 +59,9 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "autoprefixer": "9",
-    "postcss": "7",
+    "autoprefixer": "^9.8.6",
+    "postcss": "^7.0.35",
     "postcss-cli": "^8.3.1",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2"
   }
 }

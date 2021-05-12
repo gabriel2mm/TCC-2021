@@ -17,7 +17,7 @@ function ForgotPasswordPage() {
 
             <form>
                 <BasicInputComponent type="email" name="email" placeholder="Informe o email cadastrado" icon={<MailOutlined />} iconPosition="left"/>
-                <ButtonComponent type="subit" className="float-right mt-5" >Redefinir</ButtonComponent>
+                <ButtonComponent type="submit" className="float-right mt-5" >Redefinir</ButtonComponent>
             </form>
       </LoginLayoutComponent>
   )

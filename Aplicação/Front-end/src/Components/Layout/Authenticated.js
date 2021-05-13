@@ -20,7 +20,7 @@ function AuthenticatedLayoutComponent({ children }) {
     const menu = (
         <Menu>
             <Menu.Item>
-                <Link to="/profile">Meu perfil</Link>
+                <Link to="/settings/my-profile">Meu perfil</Link>
             </Menu.Item>
             <Menu.Item>
                 <Link to="/">Sair</Link>

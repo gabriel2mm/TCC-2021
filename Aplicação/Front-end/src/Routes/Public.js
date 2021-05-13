@@ -14,7 +14,8 @@ import {
     CategoryPage, 
     CategoryDetailPage,
     NewUserPage,
-    UserPage
+    UserPage,
+    userProfilePage
 } from '../Pages';
 
 export default function PublicRoutes(){
@@ -36,6 +37,7 @@ export default function PublicRoutes(){
             <Route path="/settings/users" exact component={UserPage} />
             <Route path="/settings/users/new" exact component={NewUserPage} />
             <Route path="/settings/users/:id" exact component={NewUserPage} />
+            <Route path="/settings/my-profile" component={userProfilePage}/>
             <Route path="/**" render={() => <Redirect to="/" />} />
         </Switch>
     );

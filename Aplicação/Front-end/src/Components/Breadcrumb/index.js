@@ -29,7 +29,7 @@ function BreadCrumbComponent() {
     }
 
     return (
-        <div className="w-min py-2 px-5 m-2 bg-gray-200 rounded-2xl ">
+        <div className="w-max py-2 px-5 m-2 bg-gray-200 rounded-2xl ">
             <Breadcrumb itemRender={itemRender} routes={pages} />
         </div>
     );

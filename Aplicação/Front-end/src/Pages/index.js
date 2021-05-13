@@ -12,6 +12,7 @@ import CategoryPage from './category';
 import CategoryDetailPage from './categoryDetail';
 import UserPage from './user';
 import NewUserPage from './newUser';
+import userProfilePage from './userProfile';
 
 export {
     LoginPage,
@@ -27,5 +28,6 @@ export {
     CategoryPage,
     CategoryDetailPage,
     UserPage,
-    NewUserPage
+    NewUserPage,
+    userProfilePage
 }

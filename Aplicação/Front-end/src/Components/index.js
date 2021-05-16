@@ -1,4 +1,3 @@
-import ChatComponent from './Chat'
 import BasicInputComponent from './BasicInput'
 import ButtonComponent from './Button/index'
 import LoginLayoutComponent from './Layout/Login';
@@ -11,7 +10,7 @@ import SearchActivityComponent from './SearchActivity';
 import BasicSelectComponent from './BasicSelect';
 import UserTableComponent from './UserTable';
 import UserFormComponent from './UserForm';
-
+import ChatComponent from './Chat';
 
 export {
     ChatComponent,
@@ -26,5 +25,5 @@ export {
     SearchActivityComponent,
     BasicSelectComponent,
     UserTableComponent,
-    UserFormComponent
+    UserFormComponent,
 }

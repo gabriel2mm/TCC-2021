@@ -15,7 +15,7 @@ function UserTableComponent() {
       email: 'john.brown@gmail.com',
       cpf: 12345678910,
       password: 'abcd1234',
-      tags: ['Dev', 'Mob', 'Web'],
+      tags: "Administrador",
     },
     {
       key: '2',
@@ -24,7 +24,7 @@ function UserTableComponent() {
       email: 'jim.green@yahoo.com',
       cpf: 12345678911,
       password: 'abcd1234',
-      tags: ['sem função'],
+      tags: "Tecnico",
     },
     {
       key: '3',
@@ -33,7 +33,7 @@ function UserTableComponent() {
       email: 'joe.black@outlook.com',
       cpf: 12345678912,
       password: 'abcd1234',
-      tags: ['manutenção', 'hardware'],
+      tags: "Manutenção",
     },
   ];
 
@@ -60,29 +60,13 @@ function UserTableComponent() {
       key: 'cpf',
     },
     {
-      title: 'Senha',
-      dataIndex: 'password',
-      key: 'password',
-    },
-    {
-      title: 'Função',
+      title: 'Perfil',
       key: 'tags',
       dataIndex: 'tags',
-      render: tags => (
-        <>
-          {tags.map(tag => {
-            //EXEMPLO DE ESCOLHA DE COR, DEFINIR MAIS TARDE COMO SERÁ AS TAGS SE TIVER
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'sem função') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
+      render: (tag, record, i)  => (
+          <Tag color={"gray"} key={i}>
+                {tag}
+          </Tag>
       ),
     },
     {

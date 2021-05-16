@@ -1,15 +1,24 @@
 import React from 'react';
 import { AuthenticatedLayoutComponent } from '../../Components';
+import { Divider, List } from 'antd';
 
 function AboutPage() {
   return (
     <AuthenticatedLayoutComponent>
-      <div className="w-full lg:w-1/2 mx-auto p-10 bg-white rounded-2xl shadow-md flex flex-col justify-items-center">
-
+      <div className="container">
         <h2 className="text-2xl font-bold text-gray-800 my-5 ">Sobre</h2>
-        <h3 className="text-2xl font-bold text-center text-gray-800">Field Service Cloud</h3>
-        <span className="text-gray-600 text-center">Versão 1.0.0</span>
-        <span className="text-gray-600 text-center">Lançamento 2021</span>
+        <Divider />
+        <h3 className="text-2xl font-bold text-gray-800">Field Service Cloud</h3>
+        <span className="text-gray-600 font-thin">Projeto desenvolvido para TCC da universidade positivo</span>
+        <span className="text-gray-600 clearfix">Versão 1.0.0</span>
+        <span className="text-gray-600 clearfix">Lançamento 2021</span>
+        <Divider />
+        <label className="font-semibold text-gray-600">Integrantes</label>
+        <List>
+          <List.Item>
+            <label className="font-semibold text-gray-600">Gabriel Maia • <a href="https:github.com/gabriel2mm">Github</a></label>
+          </List.Item>
+        </List>
       </div>
     </AuthenticatedLayoutComponent>
   );

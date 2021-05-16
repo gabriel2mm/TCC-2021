@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 
-function ProfilePage() {
+function GroupPage() {
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState([]);
   const [deletedFilter, setDeletedFilter] = useState([]);
@@ -37,9 +37,9 @@ function ProfilePage() {
 
   const cols = [
     {
-      title: 'Perfil',
-      dataIndex: 'profile',
-      key: 'perfil',
+      title: 'Grupo',
+      dataIndex: 'group',
+      key: 'group',
     },
     {
       title: 'Descrição',
@@ -65,12 +65,12 @@ function ProfilePage() {
       render: (text, record, i) =>
         <div className="flex flex-row justify-center items-center">
           <div className="mx-1">
-            <Link to={`/settings/profiles/${record.id}`}>
+            <Link to={`/settings/groups/${record.id}`}>
               Visualizar
             </Link>
           </div>
           <div className="mx-1">
-            <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o perfil ${record.profile}?`} onConfirm={() => handleDelete(record)}>
+            <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o grupo ${record.group}?`} onConfirm={() => handleDelete(record)}>
               <a href="!#">Deletar</a>
             </Popconfirm>
           </div>
@@ -82,13 +82,13 @@ function ProfilePage() {
     try {
       const response = await axios.delete(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/profiles/${record.id}`);
       if (response.status >= 200 && response.status < 300) {
-        message.success(`Perfil "${record.profile}" deletado com sucesso!`);
-        setDeletedFilter([...deletedFilter, record.profile]);
+        message.success(`grupo "${record.group}" deletado com sucesso!`);
+        setDeletedFilter([...deletedFilter, record.group]);
         fetchProfiles();
       }
     } catch (e) {
       console.log(e);
-      message.error(`Não foi possível deletar o perfil "${record.profile}"!`);
+      message.error(`Não foi possível deletar o grupo "${record.group}"!`);
     }
   }
 
@@ -96,10 +96,10 @@ function ProfilePage() {
     const text = event.target.value;
     data.then(item => {
       if (text && item) {
-        const filteredData = item.filter(entry => entry.profile.toLowerCase().includes(text.toLowerCase()) && !deletedFilter.includes(entry.profile));
+        const filteredData = item.filter(entry => entry.group.toLowerCase().includes(text.toLowerCase()) && !deletedFilter.includes(entry.group));
         setDataSource(filteredData);
       } else {
-        setDataSource(item.filter(entry => !deletedFilter.includes(entry.profile)));
+        setDataSource(item.filter(entry => !deletedFilter.includes(entry.group)));
       }
     }).catch(err => console.log("Não foi possível gerar data"))
   }
@@ -107,11 +107,11 @@ function ProfilePage() {
   return (
     <AuthenticatedLayoutComponent>
       <div className="container">
-        <h2 className="text-2xl font-bold text-gray-800 my-5">Novo perfil de acesso</h2>
+        <h2 className="text-2xl font-bold text-gray-800 my-5">Grupos</h2>
         <div className="mt-5 w-full flex flex-col md:flex-row flex-shrink-0 justify-start md:justify-between md:items-center">
-          <input onChange={(event) => handleSearch(event)} type="text" name="search" placeholder="Buscar perfil" className="order-2 md:order-1 w-full md:w-80 pl-3 pr-10 py-2 border-2 border-gray-200 rounded-xl hover:border-gray-300 focus:outline-none focus:border-purple-500 transition-colors" />
-          <Link to="/settings/profiles/new" className="order-1 md:order-2">
-            <ButtonComponent className="float-left md:float-right mb-4 w-28 md:w-48 ">Novo Perfil</ButtonComponent>
+          <input onChange={(event) => handleSearch(event)} type="text" name="search" placeholder="Buscar grupo" className="order-2 md:order-1 w-full md:w-80 pl-3 pr-10 py-2 border-2 border-gray-200 rounded-xl hover:border-gray-300 focus:outline-none focus:border-purple-500 transition-colors" />
+          <Link to="/settings/groups/new" className="order-1 md:order-2">
+            <ButtonComponent className="float-left md:float-right mb-4 w-28 md:w-48 ">Novo grupo</ButtonComponent>
           </Link>
         </div>
         <Table rowKey={record => record.id} loading={loading} columns={cols} dataSource={dataSource || []} onRow={(record, rowIndex) => { return { onClick: event => { console.log(record, rowIndex, event) }, } }} />
@@ -120,4 +120,4 @@ function ProfilePage() {
   )
 }
 
-export default ProfilePage;
+export default GroupPage;

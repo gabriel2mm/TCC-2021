@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from 'react-router-dom';
 import { BasicInputComponent, ButtonComponent } from '../../Components';
 import { Form } from 'antd';
 
@@ -49,7 +48,7 @@ function UserFormComponent() {
                     <BasicInputComponent name="confimrPassword" type="password" />
                 </Form.Item>
                 <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>
-                <Link to="/settings/users" className="ml-5 text-blue-500">Cancelar</Link>
+                <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>
             </Form>
         </>
     );

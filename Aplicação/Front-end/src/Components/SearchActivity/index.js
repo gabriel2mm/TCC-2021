@@ -45,7 +45,7 @@ function SearchActivityComponent() {
 
     return (
         <>
-            <li onClick={toggleSearchModal} className="antialiased text-gray-500 text-2xl flex justify-center items-center py-2 px-2 rounded-full hover:bg-gray-200 focus:bg-gray-200 transition-colors duration-800">
+            <li onClick={toggleSearchModal} className="antialiased py-2 px-2 md:ml-5 text-gray-500 md:text-gray-600 md:font-black text-2xl md:text-3xl flex justify-center items-center rounded-full hover:bg-gray-200 focus:bg-gray-200 transition-colors duration-800">
                 <SearchOutlined />
             </li>
             <Modal visible={searchMenu} okText="Fechar" footer={[]} onOk={toggleSearchModal} closable={true} destroyOnClose={true} onCancel={toggleSearchModal} >

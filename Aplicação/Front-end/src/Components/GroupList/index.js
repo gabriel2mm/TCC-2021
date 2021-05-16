@@ -15,11 +15,11 @@ function GroupListComponent({ dataSource, data, setData, ...props }) {
     }
 
     return (
-        dataSource.map(item => (
-            <div className="container mx-auto">
+        dataSource.map( (item, i) => (
+            <div className="container mx-auto" key={i}>
                 <h3 className="mt-5 mb-1 font-semibold text-gray-600 mb-2">{item.group}</h3>
-                {item.permissions.map(p => (
-                    <div className="w-full flex flex-row justify-between pb-2 mb-2 border-b-2 border-gray-200">
+                {item.permissions.map( (p, j) => (
+                    <div key={j} className="w-full flex flex-row justify-between pb-2 mb-2 border-b-2 border-gray-200">
                         <div className="flex flex-col justify-start">
                             <span className="title text-lg text-gray-800 font-medium">{p.name}</span>
                             <span className="description font-thin text-gray-600">{p.description}</span>

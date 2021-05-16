@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { message, Popconfirm, Table, Popover } from "antd";
-import { DeleteTwoTone, EyeTwoTone, CloseOutlined } from "@ant-design/icons";
+import { message, Popconfirm, Table } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import { AuthenticatedLayoutComponent, ButtonComponent } from "../../Components";
 import axios from "axios";
 

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, GroupListComponent } from '../../Components';
-import { Form, message } from 'antd';
-import { configuration } from '../../Components/GroupList/dataSource';
+import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, GroupListComponent } from '../../../Components';
+import { Divider, Form, message } from 'antd';
+import { configuration } from '../../../Components/GroupList/dataSource';
 import axios from 'axios';
 
 
 function NewProfilePage() {
-
+    const [form] = Form.useForm();
     const initialData = { id: null, profile: "", description: "", status: "ativo", permissions: [] };
     const [data, setData] = useState(initialData);
     function onChangeText(event) {
@@ -32,22 +31,23 @@ function NewProfilePage() {
             <div className="container">
                 <h2 className="text-2xl font-bold text-gray-800 my-5">Novo perfil de acesso</h2>
 
-                <Form onFinish={handleSubmit}>
-                    <Form.Item>
-                        <label htmlFor="profile" className="font-semibold text-gray-600">Nome do perfil</label>
-                        <BasicInputComponent name="profile" type="text" placeholder="Informe o nome do perfil" value={data.profile} onChange={e => onChangeText(e)} required />
+                <Form onFinish={handleSubmit} initialValues={initialData} form={form} scrollToFirstError>
+                    <label htmlFor="profile" className="font-semibold text-gray-600">Nome do perfil</label>
+                    <Form.Item name="profile" type="text" rules={[{ required: true, message: 'Insira o nome do perfil' }]}>
+                        <BasicInputComponent name="profile" type="text" placeholder="Informe o nome do perfil" value={data.profile} onChange={e => onChangeText(e)} />
                     </Form.Item>
-                    <Form.Item>
-                        <label htmlFor="description" className="font-semibold text-gray-600">Descrição do perfil</label>
-                        <BasicInputComponent name="description" type="textarea" placeholder="Informe a descrição do perfil" value={data.description} onChange={e => onChangeText(e)} required />
+                    <label htmlFor="description" className="font-semibold text-gray-600">Descrição do perfil</label>
+                    <Form.Item name="description" type="textarea" rules={[{ required: true, message: 'Insira a descrição do perfil' }]}>
+                        <BasicInputComponent name="description" type="textarea" placeholder="Informe a descrição do perfil" value={data.description} onChange={e => onChangeText(e)} />
                     </Form.Item>
+                    <Divider />
                     <Form.Item>
                         <h2 className="text-lg text-gray-600 font-bold ">Permissões</h2>
                         <GroupListComponent data={data} setData={setData} dataSource={configuration} />
                     </Form.Item>
 
                     <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>
-                    <Link to="/settings/profiles" className="ml-5 text-blue-500">Cancelar</Link>
+                    <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>
                 </Form>
 
             </div>

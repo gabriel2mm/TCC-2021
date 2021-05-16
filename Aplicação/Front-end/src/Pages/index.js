@@ -5,15 +5,22 @@ import HomePage from './home';
 import SettingsPage from './settings';
 import AboutPage from './about';
 import ProfilePage from './profile';
-import ProfileDetailPage from './profileDetail';
-import NewProfilePage from './newProfile';
-import NewGroupPage from './newGroup';
+import ProfileDetailPage from './profile/profileDetail';
+import NewProfilePage from './profile/newProfile';
+import NewGroupPage from './group/newGroup';
 import CategoryPage from './category';
-import CategoryDetailPage from './categoryDetail';
+import CategoryDetailPage from './category/categoryDetail';
+import NewCategoryPage from './category/newCategory';
 import UserPage from './user';
-import NewUserPage from './newUser';
-import userProfilePage from './userProfile';
-
+import NewUserPage from './user/newUser';
+import MyProfilePage from './user/userProfile';
+import ChatPage from './Chat';
+import SkillPage from './skill';
+import NewSkillPage from './skill/newSkill';
+import SkillDetailPage from './skill/skillDetail';
+import GroupPage from './group';
+import GroupDetailPage from './group/groupDetail';
+import ChangePasswordPage from './user/changePassword';
 export {
     LoginPage,
     ForgotPasswordPage,
@@ -27,7 +34,15 @@ export {
     NewGroupPage,
     CategoryPage,
     CategoryDetailPage,
+    NewCategoryPage,
     UserPage,
     NewUserPage,
-    userProfilePage
+    MyProfilePage,
+    ChatPage,
+    SkillPage,
+    NewSkillPage,
+    SkillDetailPage,
+    GroupPage,
+    GroupDetailPage,
+    ChangePasswordPage
 }

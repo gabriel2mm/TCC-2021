@@ -1,5 +1,5 @@
 import React from 'react';
-import { AuthenticatedLayoutComponent, UserFormComponent } from '../../Components'
+import { AuthenticatedLayoutComponent, UserFormComponent } from '../../../Components'
 
 function NewUserPage() {
   return (

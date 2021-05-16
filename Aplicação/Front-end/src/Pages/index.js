@@ -21,7 +21,6 @@ import SkillDetailPage from './skill/skillDetail';
 import GroupPage from './group';
 import GroupDetailPage from './group/groupDetail';
 import ChangePasswordPage from './user/changePassword';
-
 export {
     LoginPage,
     ForgotPasswordPage,

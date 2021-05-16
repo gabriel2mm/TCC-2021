@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { message, Popconfirm, Table } from "antd";
+import { message, Popconfirm, Table, Tag } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { AuthenticatedLayoutComponent, ButtonComponent } from "../../Components";
 import axios from "axios";
@@ -41,6 +41,18 @@ function CategoryPage() {
             responsive: ["md"],
         },
         {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: tag => {
+                if (tag === "suspended") {
+                    return (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>)
+                }
+
+                return (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
+            },
+        },
+        {
             title: "Ações",
             dataIndex: "acoes",
             width: 50,
@@ -49,7 +61,7 @@ function CategoryPage() {
                     <div className="mx-1">
                         <Link to={`/settings/categories/${record.id}`}>
                             Visualizar
-                         </Link>
+                        </Link>
                     </div>
                     <div className="mx-1">
                         <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o perfil ${record.name}?`} onConfirm={() => handleDelete(record)}>

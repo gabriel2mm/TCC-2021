@@ -23,7 +23,10 @@ import {
     GroupPage,
     GroupDetailPage,
     NewCategoryPage,
-    ChangePasswordPage
+    ChangePasswordPage,
+    CapacityPage,
+    NewCapacityPage,
+    CapacityDetailPage
 } from '../Pages';
 
 export default function PublicRoutes(){
@@ -52,6 +55,9 @@ export default function PublicRoutes(){
             <Route path="/settings/skills" exact component={SkillPage}/>
             <Route path="/settings/skills/new" exact component={NewSkillPage}/>
             <Route path="/settings/skills/:id" exact component={SkillDetailPage}/>
+            <Route path="/settings/capacities" exact component={CapacityPage}/>
+            <Route path="/settings/capacities/new" exact component={NewCapacityPage}/>
+            <Route path="/settings/capacities/:id" exact component={CapacityDetailPage}/>
             <Route path="/chat" component={ChatPage}/>
             <Route path="/**" render={() => <Redirect to="/" />} />
         </Switch>

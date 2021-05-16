@@ -19,9 +19,9 @@ const initialTargetKeys = mockData
   .map((item) => item.key);
 
 function CategoryDetailPage(props) {
-
+  const [form] = Form.useForm();
   const [dataSLA, setDataSLA] = useState([{}])
-  const [data, setData] = useState({});
+  const [data, setData] = useState({name: "", description: ""});
   const params = useParams();
 
   useEffect(() => {
@@ -37,6 +37,7 @@ function CategoryDetailPage(props) {
         )
         setDataSLA(tmpSLA);
         console.log(response);
+        form.resetFields();
       }
     }
 
@@ -72,7 +73,7 @@ function CategoryDetailPage(props) {
     <AuthenticatedLayoutComponent>
       <div className="container">
         <h2 className="text-2xl font-bold text-gray-800 my-5">Detalhe da categoria</h2>
-        <Form>
+        <Form form={form} initialValues={data} scrollToFirstError>
           <label htmlFor="category" className="font-semibold text-gray-600">Nome da categoria:</label>
           <Form.Item name="category" type="text" rules={[{ required: true, message: 'Insira o nome da categoria' }]}>
             <BasicInputComponent name="category" type="text" placeholder="Informe o nome da categoria" value={data.name} onChange={e => onChangeText(e)} />
@@ -93,10 +94,17 @@ function CategoryDetailPage(props) {
           </Form.Item>
           <span className="text-blue-500 hover:text-blue-400 focus:text-blue-400 cursor-pointer">Remover SLA</span>
           
-          <div className="my-5">
-            <label className="font-semibold text-gray-600"> Adicionar Habilidades</label>
-            <Transfer dataSource={mockData} titles={["Habilidades Selecionadas", "Todas as habilidades"]} targetKeys={targetKeys} selectedKeys={selectedKeys} onChange={onChange} onSelectChange={onSelectChange} render={(item) => item.title} />
+          <div className="flex flex-col lg:flex-row lg:items-center justify-start my-5">
+            <div className="lg:mr-10 md:mb-2">
+              <label className="font-semibold text-gray-600"> Adicionar habilidades</label>
+              <Transfer dataSource={mockData} titles={["Habilidades Selecionadas", "Todas as habilidades"]} targetKeys={targetKeys} selectedKeys={selectedKeys} onChange={onChange} onSelectChange={onSelectChange} render={(item) => item.title} />
+            </div>
+            <div>
+              <label className="font-semibold text-gray-600"> Adicionar capacidades:</label>
+              <Transfer dataSource={mockData} titles={["Habilidades Selecionadas", "Todas as habilidades"]} targetKeys={targetKeys} selectedKeys={selectedKeys} onChange={onChange} onSelectChange={onSelectChange} render={(item) => item.title} />
+            </div>
           </div>
+
 
           <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>
           <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>

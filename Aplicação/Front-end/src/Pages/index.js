@@ -21,6 +21,11 @@ import SkillDetailPage from './skill/skillDetail';
 import GroupPage from './group';
 import GroupDetailPage from './group/groupDetail';
 import ChangePasswordPage from './user/changePassword';
+import CapacityPage from './capacity/index';
+import CapacityDetailPage from './capacity/capacityDetail';
+import NewCapacityPage from './capacity/newCapacity';
+
+
 export {
     LoginPage,
     ForgotPasswordPage,
@@ -44,5 +49,8 @@ export {
     SkillDetailPage,
     GroupPage,
     GroupDetailPage,
-    ChangePasswordPage
+    ChangePasswordPage,
+    CapacityPage,
+    CapacityDetailPage,
+    NewCapacityPage,
 }

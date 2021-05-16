@@ -31,8 +31,8 @@ function NewCategoryPage() {
       if (response.status >= 200 && response.status < 300) {
         const tmpSLA = [];
         setData(response.data);
-        response.data.sla.map(r=>
-          tmpSLA.push({option: r.name, value: r.name})
+        response.data.sla.map(r =>
+          tmpSLA.push({ option: r.name, value: r.name })
         )
         setDataSLA(tmpSLA);
         console.log(response);
@@ -75,13 +75,19 @@ function NewCategoryPage() {
 
           <label htmlFor="description" className="font-semibold text-gray-600">Selecionar SLA:</label>
           <Form.Item>
-            <BasicSelectComponent name="sla" dataSource={dataSLA} palceholder="Seleciona o SLa desta categoria"/>
+            <BasicSelectComponent name="sla" dataSource={dataSLA} palceholder="Seleciona o SLa desta categoria" />
           </Form.Item>
           <span className="text-blue-500 hover:text-blue-400 focus:text-blue-400 cursor-pointer">Remover SLA</span>
-          
-          <div className="my-5">
-            <label className="font-semibold text-gray-600"> Adicionar Habilidades</label>
-            <Transfer dataSource={mockData} titles={["Habilidades Selecionadas", "Todas as habilidades"]} targetKeys={targetKeys} selectedKeys={selectedKeys} onChange={onChange} onSelectChange={onSelectChange} render={(item) => item.title} />
+
+          <div className="flex flex-col lg:flex-row lg:items-center justify-start my-5">
+            <div className="lg:mr-10 md:mb-2">
+              <label className="font-semibold text-gray-600"> Adicionar habilidades</label>
+              <Transfer dataSource={mockData} titles={["Habilidades Selecionadas", "Todas as habilidades"]} targetKeys={targetKeys} selectedKeys={selectedKeys} onChange={onChange} onSelectChange={onSelectChange} render={(item) => item.title} />
+            </div>
+            <div>
+              <label className="font-semibold text-gray-600"> Adicionar capacidades:</label>
+              <Transfer dataSource={mockData} titles={["Habilidades Selecionadas", "Todas as habilidades"]} targetKeys={targetKeys} selectedKeys={selectedKeys} onChange={onChange} onSelectChange={onSelectChange} render={(item) => item.title} />
+            </div>
           </div>
 
           <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>

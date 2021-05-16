@@ -1,4 +1,4 @@
-import { InfoOutlined, UnlockOutlined , UserOutlined, FolderOutlined, TagsOutlined, ToolOutlined } from "@ant-design/icons";
+import { InfoOutlined, UnlockOutlined , UserOutlined, FolderOutlined, TagsOutlined, ToolOutlined, ReconciliationOutlined} from "@ant-design/icons";
 
 export const dataSource = [
     { title: 'Geral', balloons: [
@@ -6,7 +6,8 @@ export const dataSource = [
     ]},
     { title: 'Atividades', balloons: [
         { title: 'Categorias', color: 'bg-yellow-500', hover: 'bg-yellow-600', icon: <TagsOutlined />, link: '/settings/categories' },
-        { title: 'Habilidade', color: 'bg-indigo-500', hover: 'bg-indigo-600', icon: <ToolOutlined />, link: '/settings/skills' },
+        { title: 'Habilidade', color: 'bg-indigo-500', hover: 'bg-indigo-600', icon: <ReconciliationOutlined /> , link: '/settings/skills' },
+        { title: 'Capacidades', color: 'bg-purple-500', hover: 'bg-purple-600', icon: <ToolOutlined />, link: '/settings/capacities' },
         { title: 'Grupos', color: 'bg-green-500', hover: 'bg-green-600', icon: <FolderOutlined />, link: '/settings/groups' }
     ]},
     { title: 'Usuários e segurança', balloons: [

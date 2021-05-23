@@ -4,10 +4,10 @@ import AuthenticatedRoutes from './Authenticated';
 
 function Routes() {
     function defineRoutes(){
-        const token = localStorage.getItem("token");
-        if(token){
-            return <AuthenticatedRoutes />       
-        }
+        // const token = localStorage.getItem("token");
+        // if(token){
+        //     return <AuthenticatedRoutes />       
+        // }
 
         return <PublicRoutes />
     }

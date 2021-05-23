@@ -26,7 +26,8 @@ import {
     ChangePasswordPage,
     CapacityPage,
     NewCapacityPage,
-    CapacityDetailPage
+    CapacityDetailPage,
+    DashboardPage
 } from '../Pages';
 
 export default function PublicRoutes(){
@@ -59,6 +60,7 @@ export default function PublicRoutes(){
             <Route path="/settings/capacities/new" exact component={NewCapacityPage}/>
             <Route path="/settings/capacities/:id" exact component={CapacityDetailPage}/>
             <Route path="/chat" component={ChatPage}/>
+            <Route path="/dashboard" exact component={DashboardPage} />
             <Route path="/**" render={() => <Redirect to="/" />} />
         </Switch>
     );

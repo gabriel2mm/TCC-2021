@@ -11,6 +11,7 @@ import BasicSelectComponent from './BasicSelect';
 import UserTableComponent from './UserTable';
 import UserFormComponent from './UserForm';
 import ChatComponent from './Chat';
+import ActivitiesReports from './ActivitiesReports';
 
 export {
     ChatComponent,
@@ -26,4 +27,5 @@ export {
     BasicSelectComponent,
     UserTableComponent,
     UserFormComponent,
+    ActivitiesReports,
 }

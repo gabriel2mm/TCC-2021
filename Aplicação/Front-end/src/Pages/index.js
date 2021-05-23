@@ -24,6 +24,7 @@ import ChangePasswordPage from './user/changePassword';
 import CapacityPage from './capacity/index';
 import CapacityDetailPage from './capacity/capacityDetail';
 import NewCapacityPage from './capacity/newCapacity';
+import DashboardPage from './reports';
 
 
 export {
@@ -53,4 +54,5 @@ export {
     CapacityPage,
     CapacityDetailPage,
     NewCapacityPage,
+    DashboardPage
 }

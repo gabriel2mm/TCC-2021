@@ -12,6 +12,7 @@ import UserTableComponent from './UserTable';
 import UserFormComponent from './UserForm';
 import ChatComponent from './Chat';
 import ActivitiesReports from './ActivitiesReports';
+import LineChart from './LineChart';
 
 export {
     ChatComponent,
@@ -28,4 +29,5 @@ export {
     UserTableComponent,
     UserFormComponent,
     ActivitiesReports,
+    LineChart,
 }

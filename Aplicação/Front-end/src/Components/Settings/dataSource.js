@@ -8,7 +8,8 @@ export const dataSource = [
         { title: 'Categorias', color: 'bg-yellow-500', hover: 'bg-yellow-600', icon: <TagsOutlined />, link: '/settings/categories' },
         { title: 'Habilidade', color: 'bg-indigo-500', hover: 'bg-indigo-600', icon: <ReconciliationOutlined /> , link: '/settings/skills' },
         { title: 'Capacidades', color: 'bg-purple-500', hover: 'bg-purple-600', icon: <ToolOutlined />, link: '/settings/capacities' },
-        { title: 'Grupos', color: 'bg-green-500', hover: 'bg-green-600', icon: <FolderOutlined />, link: '/settings/groups' }
+        { title: 'Grupos', color: 'bg-green-500', hover: 'bg-green-600', icon: <FolderOutlined />, link: '/settings/groups' },
+        { title: 'Acordos de níveis de serviços', color: 'bg-yellow-300', hover: 'bg-yellow-400', icon: <FolderOutlined />, link: '/settings/sla' }
     ]},
     { title: 'Usuários e segurança', balloons: [
         { title: 'Usuários', color: 'bg-blue-500', hover: 'bg-blue-600', icon: <UserOutlined />, link: '/settings/users' },

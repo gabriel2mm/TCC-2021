@@ -133,6 +133,7 @@ function CategoryPage() {
                 </div>
                 <div>
                     <Table
+                        rowKey={ record => record.id}
                         loading={loading}
                         columns={columns}
                         dataSource={dataSource || []}

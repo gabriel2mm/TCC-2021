@@ -96,7 +96,7 @@ function UserTableComponent() {
   }
   return (
     <>
-     <Table columns={columns} dataSource={data} />
+     <Table rowKey={record => record.key} columns={columns} dataSource={data} />
     </>
   )
 }

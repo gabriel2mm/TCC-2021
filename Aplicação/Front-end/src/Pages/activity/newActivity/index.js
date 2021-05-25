@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Form, Upload, message, Button, Tabs, Table, Switch } from 'antd';
 import { AuthenticatedLayoutComponent, BasicInputComponent, BasicInputMaskComponent, BasicSelectComponent, ButtonComponent } from '../../../Components'
-import { UploadOutlined, ClearOutlined } from "@ant-design/icons";
+import { UploadOutlined, ClearOutlined, CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import ActivityResultPage from '../activityResult';
 import AddressMapComponent from '../maps/addressMap';
 import axios from 'axios';
@@ -42,6 +42,16 @@ export default function NewActivityPage() {
                 <span>{record.title.substr(0, 30)}</span>
             )
         },
+        {
+            title: 'Usuário',
+            dataIndex: 'user',
+            key: 'user',
+        },
+        {
+            title: 'Data',
+            dataIndex: 'data',
+            key: 'data',
+        },
 
         {
             title: 'Ações',
@@ -53,7 +63,7 @@ export default function NewActivityPage() {
                 </>
             )
         }
-    ]
+    ];
 
     function handleClearComplement() {
         setData({ ...data, viewFormComplement: false, formComplement: "" });
@@ -164,15 +174,6 @@ export default function NewActivityPage() {
                             </div>
 
                             <div className="flex md:flex-row flex-col w-full">
-                                <div className="item-group w-full md:mr-2">
-                                    <label htmlFor="requester" className="font-semibold text-gray-600">Usuário atribuído:</label>
-                                    <Form.Item>
-                                        <BasicSelectComponent dataSource={[{ option: "Fulano da silva - finalodasilva@email.com", value: "1" }]} />
-                                    </Form.Item>
-                                </div>
-                            </div>
-
-                            <div className="flex md:flex-row flex-col w-full">
                                 <div className="item-group w-full">
                                     <label htmlFor="description" className="font-semibold text-gray-600">Descrição:</label>
                                     <Form.Item name="description" rules={[{ required: true, message: "Informe a descrição" }]}>
@@ -272,20 +273,20 @@ export default function NewActivityPage() {
 
                                             <div className="flex md:flex-row flex-col w-full">
                                                 <div className="item-group w-full">
-                                                    <label htmlFor="deadline" className="font-semibold text-gray-600">Anexo:</label>
+                                                    <label htmlFor="deadline" className="font-semibold text-gray-600">Mostrar complemento ao usuário:</label>
                                                     <Form.Item>
-                                                        <Upload {...props} maxCount={1}>
-                                                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                                                        </Upload>
+                                                        <Switch checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
                                                     </Form.Item>
                                                 </div>
                                             </div>
 
                                             <div className="flex md:flex-row flex-col w-full">
                                                 <div className="item-group w-full">
-                                                    <label htmlFor="deadline" className="font-semibold text-gray-600">visivel para usuário:</label>
+                                                    <label htmlFor="deadline" className="font-semibold text-gray-600">Anexo:</label>
                                                     <Form.Item>
-                                                        <Switch />
+                                                        <Upload {...props} maxCount={1}>
+                                                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                                        </Upload>
                                                     </Form.Item>
                                                 </div>
                                             </div>

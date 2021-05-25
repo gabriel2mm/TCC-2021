@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom';
-import { Form, Upload, message, Button, Tabs, Table, Rate } from 'antd';
+import { Form, Upload, message, Button, Tabs, Table, Rate, Switch } from 'antd';
 import { AuthenticatedLayoutComponent, BasicInputComponent, BasicInputMaskComponent, BasicSelectComponent, ButtonComponent } from '../../../Components'
-import { UploadOutlined, ClearOutlined } from "@ant-design/icons";
+import { UploadOutlined, ClearOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import axios from 'axios';
 import AddressMapComponent from '../maps/addressMap';
 import ActivityResultPage from '../activityResult';
@@ -61,6 +61,16 @@ export default function ActivityDetailPage() {
       render: (key, record) => (
         <span>{record.title.substr(0, 30)}</span>
       )
+    },
+    {
+      title: 'Usuário',
+      dataIndex: 'user',
+      key: 'user',
+    },
+    {
+      title: 'Data',
+      dataIndex: 'data',
+      key: 'data',
     },
 
     {
@@ -180,7 +190,7 @@ export default function ActivityDetailPage() {
                 <div className="item-group w-full md:mr-2">
                   <label htmlFor="activity" className="font-semibold text-gray-600">Categoria:</label>
                   <Form.Item>
-                    <BasicSelectComponent dataSource={[{ option: "Categoria 1", value: "categoria1" }, { option: "Categoria 2", value: "categoria 2" }]} />
+                    <BasicSelectComponent disabled={true} value="Categoria 1" dataSource={[{ option: "Categoria 1", value: "categoria1" }, { option: "Categoria 2", value: "categoria 2" }]} />
                   </Form.Item>
                 </div>
               </div>
@@ -207,6 +217,15 @@ export default function ActivityDetailPage() {
                       </Form.Item>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <div className="flex md:flex-row flex-col w-full">
+                <div className="item-group w-full md:mr-2">
+                  <label htmlFor="requester" className="font-semibold text-gray-600">Usuário atribuído:</label>
+                  <Form.Item>
+                    <BasicSelectComponent dataSource={[{ option: "Fulano da silva - finalodasilva@email.com", value: "1" }]} />
+                  </Form.Item>
                 </div>
               </div>
 
@@ -306,6 +325,15 @@ export default function ActivityDetailPage() {
                           <label htmlFor="formComplement" className="font-semibold text-gray-600">Complemento:</label>
                           <Form.Item>
                             <BasicInputComponent type="textarea" rows="10" name="formComplement" onChange={changeText} value={data.formComplement} placeholder="Informe o complemento da sua solicitação" />
+                          </Form.Item>
+                        </div>
+                      </div>
+
+                      <div className="flex md:flex-row flex-col w-full">
+                        <div className="item-group w-full">
+                          <label htmlFor="deadline" className="font-semibold text-gray-600">Mostrar complemento ao usuário:</label>
+                          <Form.Item>
+                            <Switch checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
                           </Form.Item>
                         </div>
                       </div>

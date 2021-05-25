@@ -14,8 +14,12 @@ import ChatComponent from './chat';
 import GroupUserListComponent from './groupUsersList';
 import QueueActivityComponent from './queueActivity';
 import BasicInputMaskComponent from './basicInputMask';
+import ActivitiesReportsComponent from './activitiesReports';
+import LineChartComponent from './lineChart';
 
 export {
+    LineChartComponent,
+    ActivitiesReportsComponent,
     ChatComponent,
     BasicInputComponent,
     ButtonComponent,

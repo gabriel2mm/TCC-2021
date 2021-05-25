@@ -1,15 +1,14 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { Form, Upload, message, Button, Tabs, Table } from 'antd';
 import { AuthenticatedLayoutComponent, BasicInputComponent, BasicInputMaskComponent, BasicSelectComponent, ButtonComponent } from '../../../Components'
 import { UploadOutlined } from "@ant-design/icons";
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import axios from 'axios';
 import { layout } from '../maps/optionsLayout';
+import axios from 'axios';
 
 export default function NewActivityPage() {
     const { TabPane } = Tabs;
     const [form] = Form.useForm();
-    const [map, setMap] = useState(null)
     const [showMarker, setShowMarker] = useState(false);
     const [location, setLocation] = useState({ lat: -25.475174 || 0, lng: -49.2807627 || 0 });
     const [data, setData] = useState({ formComplement: "", tableComplement: [], cep: "", address: "", city: "", state: "", number: "", complement: "", district: "" });
@@ -23,16 +22,6 @@ export default function NewActivityPage() {
         width: '100%',
         height: '100%'
     };
-
-    const onLoad = useCallback(function callback(map) {
-        const bounds = new window.google.maps.LatLngBounds();
-        map.fitBounds(bounds);
-        setMap(map)
-    }, []);
-
-    const onUnmount = useCallback(function callback(map) {
-        setMap(null)
-    }, [])
 
     const props = {
         name: 'file',

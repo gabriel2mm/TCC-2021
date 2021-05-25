@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Tree } from 'antd';
+import {BasicInputComponent} from '../../Components';
 import { DownOutlined } from '@ant-design/icons';
-import BasicInputComponent from '../basicInput';
 import { treeData as initialData } from './dataSource';
 
 export default function GroupUserListComponent() {
@@ -27,21 +27,6 @@ export default function GroupUserListComponent() {
         }
     };
     generateList(initialData);
-
-    const getParentKey = (key, tree) => {
-        let parentKey;
-        for (let i = 0; i < tree.length; i++) {
-            const node = tree[i];
-            if (node.children) {
-                if (node.children.some((item) => item.key === key)) {
-                    parentKey = node.key;
-                } else if (getParentKey(key, node.children)) {
-                    parentKey = getParentKey(key, node.children);
-                }
-            }
-        }
-        return parentKey;
-    };
 
     function onExpand(expandedKeys) {
         setAutoExpandParent(true);

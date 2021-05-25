@@ -57,7 +57,7 @@ function AuthenticatedLayoutComponent({ children }) {
 
                             <div ref={refMenu} className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
                                 <NavLink to="/home" className={`${getCurrentRoute("/home")}`} tabIndex="2">Atividades</NavLink>
-                                <NavLink to="/" className={`${getCurrentRoute("/dashboard")}`} tabIndex="3">Relatórios</NavLink>
+                                <NavLink to="/dashboard" className={`${getCurrentRoute("/dashboard")}`} tabIndex="3">Relatórios</NavLink>
                                 <NavLink to="/settings" className={`${getCurrentRoute("/settings")}`} tabIndex="4">Configurações</NavLink>
                                 <ul className="flex flex-row justify-around md:justify-center items-center ml-2 mt-5 md:mt-0">
                                     <SearchActivityComponent />

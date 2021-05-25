@@ -32,7 +32,8 @@ import {
     SLADetailPage,
     MyActivitiesPage,
     ActivityDetailPage,
-    NewActivityPage
+    NewActivityPage,
+    DashboardPage
 } from '../Pages';
 
 export default function PublicRoutes(){
@@ -71,6 +72,7 @@ export default function PublicRoutes(){
             <Route path="/activities/new" exact component={NewActivityPage}/>
             <Route path="/activities/:id" exact component={ActivityDetailPage}/>
             <Route path="/chat" component={ChatPage}/>
+            <Route path="/dashboard" component={DashboardPage}/>
             <Route path="/**" render={() => <Redirect to="/" />} />
         </Switch>
     );

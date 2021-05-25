@@ -30,6 +30,7 @@ import SLADetailPage from './SLA/SLADetail';
 import NewActivityPage from './activity/newActivity';
 import ActivityDetailPage from './activity/activityDetail';
 import MyActivitiesPage from './activity/myActivities';
+import DashboardPage from './reports';
 
 export {
     LoginPage,
@@ -64,4 +65,5 @@ export {
     NewActivityPage,
     ActivityDetailPage,
     MyActivitiesPage,
+    DashboardPage
 }

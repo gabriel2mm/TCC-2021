@@ -1,4 +1,4 @@
-import LoginPage from './Login/index'
+import LoginPage from './login/index'
 import ForgotPasswordPage from './forgotPassword/index'
 import ResetPasswordPage from './resetPassword';
 import HomePage from './home';
@@ -14,7 +14,7 @@ import NewCategoryPage from './category/newCategory';
 import UserPage from './user';
 import NewUserPage from './user/newUser';
 import MyProfilePage from './user/userProfile';
-import ChatPage from './Chat';
+import ChatPage from './chat';
 import SkillPage from './skill';
 import NewSkillPage from './skill/newSkill';
 import SkillDetailPage from './skill/skillDetail';

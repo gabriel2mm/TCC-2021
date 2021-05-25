@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from 'antd';
 import './styles.css';
 
-function ActivitiesReportsComponent() {
+function ActivitiesReports() {
   return (
     <>
       <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -31,4 +31,4 @@ function ActivitiesReportsComponent() {
   );
 }
 
-export default ActivitiesReportsComponent;
+export default ActivitiesReports;

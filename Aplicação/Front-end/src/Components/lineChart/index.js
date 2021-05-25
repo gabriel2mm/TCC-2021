@@ -1,7 +1,7 @@
 import React from "react";
 import { Line } from 'react-chartjs-2';
 
-function LineChartComponent() {
+function LineChart() {
   const dataChart = {
     labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
     datasets: [
@@ -57,4 +57,4 @@ function LineChartComponent() {
   );
 }
 
-export default LineChartComponent;
+export default LineChart;

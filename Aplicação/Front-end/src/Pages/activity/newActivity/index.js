@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { Form, Upload, message, Button, Tabs, Table, Switch } from 'antd';
 import { AuthenticatedLayoutComponent, BasicInputComponent, BasicInputMaskComponent, BasicSelectComponent, ButtonComponent } from '../../../Components'
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, ClearOutlined } from "@ant-design/icons";
+import ActivityResultPage from '../activityResult';
+import AddressMapComponent from '../maps/addressMap';
 import axios from 'axios';
 
 

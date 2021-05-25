@@ -33,11 +33,8 @@ import {
     MyActivitiesPage,
     ActivityDetailPage,
     NewActivityPage,
-<<<<<<< Updated upstream
-    DashboardPage
-=======
+    DashboardPage,
     TokenSecurityPage
->>>>>>> Stashed changes
 } from '../Pages';
 
 export default function PublicRoutes(){

@@ -1,8 +1,7 @@
 import React from 'react';
 import { AuthenticatedLayoutComponent, ButtonComponent, BasicInputComponent } from '../../Components';
-import { Avatar, Image } from 'antd';
-import { UserOutlined, ArrowLeftOutlined, LockOutlined, IdcardOutlined } from '@ant-design/icons';
-import {Link} from 'react-router-dom';
+import { Avatar } from 'antd';
+import { UserOutlined, LockOutlined, IdcardOutlined } from '@ant-design/icons';
 
 function userProfilePage() {
    

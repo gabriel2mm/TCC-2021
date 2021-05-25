@@ -21,7 +21,7 @@ const initialTargetKeys = mockData
 function CategoryDetailPage(props) {
   const [form] = Form.useForm();
   const [dataSLA, setDataSLA] = useState([{}])
-  const [data, setData] = useState({name: "", description: ""});
+  const [data, setData] = useState({name: "", description: "", status: ""});
   const params = useParams();
 
   useEffect(() => {
@@ -36,7 +36,6 @@ function CategoryDetailPage(props) {
           tmpSLA.push({option: r.name, value: r.name})
         )
         setDataSLA(tmpSLA);
-        console.log(response);
         form.resetFields();
       }
     }
@@ -44,7 +43,7 @@ function CategoryDetailPage(props) {
     if (params && params.id) {
       fetchProfile();
     }
-  }, [params]);
+  }, [params, form]);
 
   function onChangeText(event) {
     setData({ ...data, [event.target.name]: event.target.value });

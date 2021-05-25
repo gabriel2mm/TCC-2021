@@ -48,7 +48,7 @@ function AuthenticatedLayoutComponent({ children }) {
                         <div className="container px-4 mx-auto md:flex md:items-center">
                             <div className="flex justify-between items-center">
 
-                                <h1><Link to="/home" className="flex-shrink-0 text-gray-800 font-bold text-2xl md:text-lg lg:text-2xl hover:text-purple-800 focus:text-purple-800 transition-colors duration-800 focus:underline" tabIndex="1">Field Service Cloud</Link></h1>
+                                <h1><Link to="/home" className="flex-shrink-0 text-gray-800 font-bold text-2xl md:text-lg lg:text-2xl hover:text-purple-800 focus:text-purple-800 transition-colors duration-800 focus:underline" tabIndex="1">Campify field service</Link></h1>
 
                                 <button onClick={openMenu} className="flex justify-center items-center border border-solid border-gray-600 w-10 h-10 rounded text-gray-600 opacity-50 hover:opacity-75 md:hidden" id="navbar-toggle">
                                     <MenuOutlined className="mt-0.5" />
@@ -57,7 +57,7 @@ function AuthenticatedLayoutComponent({ children }) {
 
                             <div ref={refMenu} className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
                                 <NavLink to="/home" className={`${getCurrentRoute("/home")}`} tabIndex="2">Atividades</NavLink>
-                                <NavLink to="/" className={`${getCurrentRoute("/dashboard")}`} tabIndex="3">Relatórios</NavLink>
+                                <NavLink to="/dashboard" className={`${getCurrentRoute("/dashboard")}`} tabIndex="3">Relatórios</NavLink>
                                 <NavLink to="/settings" className={`${getCurrentRoute("/settings")}`} tabIndex="4">Configurações</NavLink>
                                 <ul className="flex flex-row justify-around md:justify-center items-center ml-2 mt-5 md:mt-0">
                                     <SearchActivityComponent />

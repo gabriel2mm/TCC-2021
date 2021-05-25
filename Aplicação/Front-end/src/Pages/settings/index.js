@@ -1,7 +1,7 @@
 import React from 'react';
 import {AuthenticatedLayoutComponent} from '../../Components';
 import {SettingsComponent} from '../../Components';
-import { dataSource } from '../../Components/Settings/dataSource';
+import { dataSource } from '../../Components/settings/dataSource';
 
 
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { BasicInputComponent, ButtonComponent } from '../../Components';
+import { BasicInputComponent, ButtonComponent } from '..';
 import {Form} from 'antd';
 
 function LoginComponent() {

@@ -72,10 +72,9 @@ function NewCategoryPage() {
           <Form.Item name="description" type="textarea" rules={[{ required: true, message: 'Insira a descrição da categoria' }]}>
             <BasicInputComponent name="category" type="textarea" placeholder="Informe a descrição da categoria" value={data.descricao} onChange={e => onChangeText(e)} />
           </Form.Item>
-
           <label htmlFor="description" className="font-semibold text-gray-600">Selecionar SLA:</label>
           <Form.Item>
-            <BasicSelectComponent name="sla" dataSource={dataSLA} palceholder="Seleciona o SLa desta categoria" />
+            <BasicSelectComponent defaultOption={true} name="sla" dataSource={dataSLA} palceholder="Seleciona o SLa desta categoria" />
           </Form.Item>
           <span className="text-blue-500 hover:text-blue-400 focus:text-blue-400 cursor-pointer">Remover SLA</span>
 

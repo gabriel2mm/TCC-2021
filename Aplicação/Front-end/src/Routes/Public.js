@@ -26,7 +26,15 @@ import {
     ChangePasswordPage,
     CapacityPage,
     NewCapacityPage,
-    CapacityDetailPage
+    CapacityDetailPage,
+    SLAPage,
+    NewSLAPage,
+    SLADetailPage,
+    MyActivitiesPage,
+    ActivityDetailPage,
+    NewActivityPage,
+    DashboardPage,
+    TokenSecurityPage
 } from '../Pages';
 
 export default function PublicRoutes(){
@@ -58,7 +66,15 @@ export default function PublicRoutes(){
             <Route path="/settings/capacities" exact component={CapacityPage}/>
             <Route path="/settings/capacities/new" exact component={NewCapacityPage}/>
             <Route path="/settings/capacities/:id" exact component={CapacityDetailPage}/>
+            <Route path="/settings/sla" exact component={SLAPage}/>
+            <Route path="/settings/sla/new" exact component={NewSLAPage}/>
+            <Route path="/settings/sla/:id" exact component={SLADetailPage}/>
+            <Route path="/activities" exact component={MyActivitiesPage}/>
+            <Route path="/activities/new" exact component={NewActivityPage}/>
+            <Route path="/activities/:id" exact component={ActivityDetailPage}/>
+            <Route path="/settings/token" exact component={TokenSecurityPage}/>
             <Route path="/chat" component={ChatPage}/>
+            <Route path="/dashboard" component={DashboardPage}/>
             <Route path="/**" render={() => <Redirect to="/" />} />
         </Switch>
     );

@@ -16,7 +16,7 @@ function LoginLayoutComponent({ children }) {
         {!imageState ? (<Skeleton.Image active={true} loading={true} title="Imagem de fundo" className="flex justify-center items-center w-full h-full absolute object-cover"/>) : null}
         <div className="absolute w-full h-full bg-black opacity-60"></div>
         <h1 className="absolute top-1/2 transform -translate-y-1/2 text-xl sm:text-3x1 md:text-2xl lg:text-4xl subpixel-antialiased font-extralight tracking-wide leading-tight text-center text-white drop-shadow">
-          Field Service Cloud
+          Campify field service
         </h1>
       </div>
       <div className="row-span-2 sm:row-span-2 md:row-span-1 md:col-span-2 sm:col-span-1 flex flex-1 justify-center items-center bg-gray-200">

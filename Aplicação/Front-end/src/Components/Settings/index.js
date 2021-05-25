@@ -14,8 +14,8 @@ function SettingsComponent({ dataSource }) {
                         {d.balloons.map( (b, i) => {
                             return (
                                 <Link to={b.link} key={`${b.title}-${i}`} >
-                                    <div className="flex flex-col justify-items-center ml-10 ">
-                                        <div className={`w-16 h-16 rounded-full mx-5 ${b.color} hover:${b.hover} transition-all delay-200 ease-in-out flex flex-row items-center justify-center text-white text-4xl`}>{b.icon}</div>
+                                    <div className="flex flex-col justify-center items-center w-32 ml-10 ">
+                                        <div className={`w-16 h-16 rounded-full mx-5 ${b.color} hover:${b.hover} focus:${b.hover} transition-all delay-200 ease-in-out flex flex-row items-center justify-center text-white text-4xl`}>{b.icon}</div>
                                         <span className="font-medium text-black text-center mt-1">{b.title}</span>
                                     </div>
                                 </Link>

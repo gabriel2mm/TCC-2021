@@ -33,7 +33,11 @@ import {
     MyActivitiesPage,
     ActivityDetailPage,
     NewActivityPage,
+<<<<<<< Updated upstream
     DashboardPage
+=======
+    TokenSecurityPage
+>>>>>>> Stashed changes
 } from '../Pages';
 
 export default function PublicRoutes(){
@@ -71,6 +75,7 @@ export default function PublicRoutes(){
             <Route path="/activities" exact component={MyActivitiesPage}/>
             <Route path="/activities/new" exact component={NewActivityPage}/>
             <Route path="/activities/:id" exact component={ActivityDetailPage}/>
+            <Route path="/settings/token" exact component={TokenSecurityPage}/>
             <Route path="/chat" component={ChatPage}/>
             <Route path="/dashboard" component={DashboardPage}/>
             <Route path="/**" render={() => <Redirect to="/" />} />

@@ -1,4 +1,4 @@
-import { InfoOutlined, UnlockOutlined , UserOutlined, FolderOutlined, TagsOutlined, ToolOutlined, ReconciliationOutlined} from "@ant-design/icons";
+import { InfoOutlined, UnlockOutlined , UserOutlined, FolderOutlined, TagsOutlined, ToolOutlined, ReconciliationOutlined, KeyOutlined} from "@ant-design/icons";
 
 export const dataSource = [
     { title: 'Geral', balloons: [
@@ -14,5 +14,6 @@ export const dataSource = [
     { title: 'Usuários e segurança', balloons: [
         { title: 'Usuários', color: 'bg-blue-500', hover: 'bg-blue-600', icon: <UserOutlined />, link: '/settings/users' },
         { title: 'Perfis de acesso', color: 'bg-gray-500', hover:'bg-gray-600', icon: <UnlockOutlined />, link: '/settings/profiles' },
+        { title: 'Integração', color: 'bg-red-500', hover:'bg-red-600', icon: <KeyOutlined />, link: '/settings/token' },
     ]}
 ];

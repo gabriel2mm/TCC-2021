@@ -30,7 +30,11 @@ import SLADetailPage from './SLA/SLADetail';
 import NewActivityPage from './activity/newActivity';
 import ActivityDetailPage from './activity/activityDetail';
 import MyActivitiesPage from './activity/myActivities';
+<<<<<<< Updated upstream
 import DashboardPage from './reports';
+=======
+import TokenSecurityPage from './tokenSecurity';
+>>>>>>> Stashed changes
 
 export {
     LoginPage,
@@ -65,5 +69,9 @@ export {
     NewActivityPage,
     ActivityDetailPage,
     MyActivitiesPage,
+<<<<<<< Updated upstream
     DashboardPage
+=======
+    TokenSecurityPage,
+>>>>>>> Stashed changes
 }

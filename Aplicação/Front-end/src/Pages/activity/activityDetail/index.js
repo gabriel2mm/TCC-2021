@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useParams } from 'react-router-dom';
+//import { useParams } from 'react-router-dom';
 import { Form, Upload, message, Button, Tabs, Table, Rate, Switch } from 'antd';
 import { AuthenticatedLayoutComponent, BasicInputComponent, BasicInputMaskComponent, BasicSelectComponent, ButtonComponent } from '../../../Components'
 import { UploadOutlined, ClearOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
@@ -10,7 +10,7 @@ import SignatureCanvas from 'react-signature-canvas';
 
 
 export default function ActivityDetailPage() {
-  const params = useParams();
+  //const params = useParams();
   const signatureRef = useRef();
   const { TabPane } = Tabs;
   const [form] = Form.useForm();

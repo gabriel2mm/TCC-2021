@@ -1,5 +1,5 @@
 import React from "react";
-import { BasicInputComponent, ButtonComponent } from '../../Components';
+import { BasicInputComponent, ButtonComponent } from '..';
 import { Form } from 'antd';
 
 

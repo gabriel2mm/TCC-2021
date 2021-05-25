@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Form, Table } from 'antd';
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent } from '../../Components';
 
-
 function TokenSecurityPage() {
     const [data, setData] = useState({})
     const [form] = Form.useForm();

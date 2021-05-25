@@ -24,8 +24,14 @@ import ChangePasswordPage from './user/changePassword';
 import CapacityPage from './capacity/index';
 import CapacityDetailPage from './capacity/capacityDetail';
 import NewCapacityPage from './capacity/newCapacity';
+import SLAPage from './SLA';
+import NewSLAPage from './SLA/newSLA';
+import SLADetailPage from './SLA/SLADetail';
+import NewActivityPage from './activity/newActivity';
+import ActivityDetailPage from './activity/activityDetail';
+import MyActivitiesPage from './activity/myActivities';
 import DashboardPage from './reports';
-
+import TokenSecurityPage from './tokenSecurity';
 
 export {
     LoginPage,
@@ -54,5 +60,12 @@ export {
     CapacityPage,
     CapacityDetailPage,
     NewCapacityPage,
-    DashboardPage
+    SLAPage,
+    NewSLAPage,
+    SLADetailPage,
+    NewActivityPage,
+    ActivityDetailPage,
+    MyActivitiesPage,
+    DashboardPage,
+    TokenSecurityPage
 }

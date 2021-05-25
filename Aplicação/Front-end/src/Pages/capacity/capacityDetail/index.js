@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, GroupListComponent } from '../../../Components';
+import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent } from '../../../Components';
 import { Divider, Form, message, Switch, Transfer } from 'antd';
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import axios from 'axios';

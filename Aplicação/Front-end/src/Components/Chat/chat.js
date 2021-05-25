@@ -34,7 +34,7 @@ export default function ChatMassagesComponent() {
                     <span className="font-bold text-gray-800 ml-2">{`${chatUser.Nome} ${chatUser.Sobrenome}`}</span>
                 </div>
                 <div className="flex flex-col justify-between h-full w-full">
-                    <div className="h-screen md:h-full md:max-h-96 w-full bg-gray-600 overflow-y-auto overscroll-contain overscroll-y-contain">
+                    <div className="h-screen md:h-full md:max-h-96 w-full bg-gray-600 overflow-y-auto overscroll-contain overscroll-y-contain scrollbar-track-gray-lighter scrollbar-thumb-rounded scrollbar-thumb-gray scrolling-touch">
                         <div className="clearfix">
                             <div className="bg-green-300 float-right w-3/4 mx-4 my-2 p-2 rounded-lg clearfix">Mensagem de texto enviada</div>
                         </div>

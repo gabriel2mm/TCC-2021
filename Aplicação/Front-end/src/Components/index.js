@@ -11,10 +11,15 @@ import BasicSelectComponent from './basicSelect';
 import UserTableComponent from './userTable';
 import UserFormComponent from './userForm';
 import ChatComponent from './chat';
-import ActivitiesReports from './ActivitiesReports';
-import LineChart from './LineChart';
+import ActivitiesReportsComponent from './activitiesReports';
+import LineChartComponent from './lineChart';
+import GroupUserListComponent from './groupUsersList';
+import QueueActivityComponent from './queueActivity';
+import BasicInputMaskComponent from './basicInputMask';
 
 export {
+    LineChartComponent,
+    ActivitiesReportsComponent,
     ChatComponent,
     BasicInputComponent,
     ButtonComponent,
@@ -28,6 +33,7 @@ export {
     BasicSelectComponent,
     UserTableComponent,
     UserFormComponent,
-    ActivitiesReports,
-    LineChart,
+    GroupUserListComponent,
+    QueueActivityComponent,
+    BasicInputMaskComponent
 }

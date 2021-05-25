@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, GroupListComponent } from '../../../Components';
 import { Divider, Form, message, Switch } from 'antd';
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
-import { configuration } from '../../../Components/GroupList/dataSource';
+import { configuration } from '../../../Components/groupList/dataSource';
 import axios from 'axios';
 
 function ProfileDetailPage() {

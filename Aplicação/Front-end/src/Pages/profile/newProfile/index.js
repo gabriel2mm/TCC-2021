@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, GroupListComponent } from '../../../Components';
 import { Divider, Form, message } from 'antd';
-import { configuration } from '../../../Components/GroupList/dataSource';
+import { configuration } from '../../../Components/groupList/dataSource';
 import axios from 'axios';
 
 

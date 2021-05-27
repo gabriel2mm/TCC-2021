@@ -1,6 +1,6 @@
 import React from 'react';
 import { Result, Button } from 'antd';
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 function ActivityResultPage({ activityNumber }) {
     return (
         <Result

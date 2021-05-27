@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback} from 'react'
 //import { useParams } from 'react-router-dom';
 import { Form, Upload, message, Button, Tabs, Table, Rate, Switch } from 'antd';
 import { AuthenticatedLayoutComponent, BasicInputComponent, BasicInputMaskComponent, BasicSelectComponent, ButtonComponent } from '../../../Components'
@@ -20,6 +20,45 @@ export default function ActivityDetailPage() {
   const [location, setLocation] = useState({ lat: -25.475174 || 0, lng: -49.2807627 || 0 });
   const [data, setData] = useState({ description: "", viewFormComplement: false, formComplement: "", tableComplement: [], lat: 0, lng: 0, cep: "", address: "", city: "", state: "", number: "", complement: "", district: "" });
 
+
+
+  const searchCEP = useCallback(() => {
+    async function searchCEP() {
+      const cep = data.cep.split("-").join("").split("_").join("");
+      if (cep && cep.length > 0) {
+        const response = await axios.get("https://viacep.com.br/ws/" + cep + "/json/");
+        try {
+          if (!response.data.erro && response.status >= 200 && response.status < 300) {
+            const tmpData = response.data;
+            setData({ ...data, cep: cep, city: tmpData.localidade, state: tmpData.uf, address: tmpData.logradouro, district: tmpData.bairro })
+            form.resetFields();
+          } else {
+            setData({ ...data, cep: cep, city: "", state: "", address: "", district: "" })
+            setShowMarker(false);
+            form.resetFields();
+          }
+        } catch (e) {
+          message.error("Não foi possível localizar bairro! ");
+        }
+  
+        const geoapi = await axios.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + cep + "&key=AIzaSyAqlZil13PZoeh3agIbqcRpxf7mdMwDJ_0");
+        if (geoapi.status >= 200 && geoapi.status < 300) {
+          const results = geoapi.data.results;
+          if (geoapi.data.results.length > 0) {
+            setData({ ...data, lat: parseFloat(results[0].geometry.location.lat), lng: parseFloat(results[0].geometry.location.lng) });
+            setLocation({ lat: parseFloat(results[0].geometry.location.lat), lng: parseFloat(results[0].geometry.location.lng) });
+            setShowMarker(true);
+          }
+        }
+      } else {
+        setData({ ...data, cep: cep, city: "", state: "", address: "", district: "" })
+        setShowMarker(false);
+      }
+    }
+
+    return searchCEP();
+  }, [data, form]);
+
   useEffect(() => {
     searchCEP();
     function getHistory() {
@@ -33,7 +72,7 @@ export default function ActivityDetailPage() {
     }
 
     getHistory();
-  }, []);
+  }, [searchCEP]);
 
   const props = {
     name: 'file',
@@ -128,39 +167,6 @@ export default function ActivityDetailPage() {
     setData({ ...data, [e.target.name]: e.target.value });
   }
 
-  async function searchCEP() {
-    const cep = data.cep.split("-").join("").split("_").join("");
-    if (cep && cep.length > 0) {
-      const response = await axios.get("https://viacep.com.br/ws/" + cep + "/json/");
-      try {
-        if (!response.data.erro && response.status >= 200 && response.status < 300) {
-          const tmpData = response.data;
-          setData({ ...data, cep: cep, city: tmpData.localidade, state: tmpData.uf, address: tmpData.logradouro, district: tmpData.bairro })
-          form.resetFields();
-        } else {
-          setData({ ...data, cep: cep, city: "", state: "", address: "", district: "" })
-          setShowMarker(false);
-          form.resetFields();
-        }
-      } catch (e) {
-        message.error("Não foi possível localizar bairro! ");
-      }
-
-      const geoapi = await axios.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + cep + "&key=AIzaSyAqlZil13PZoeh3agIbqcRpxf7mdMwDJ_0");
-      if (geoapi.status >= 200 && geoapi.status < 300) {
-        const results = geoapi.data.results;
-        if (geoapi.data.results.length > 0) {
-          setData({ ...data, lat: parseFloat(results[0].geometry.location.lat), lng: parseFloat(results[0].geometry.location.lng) });
-          setLocation({ lat: parseFloat(results[0].geometry.location.lat), lng: parseFloat(results[0].geometry.location.lng) });
-          setShowMarker(true);
-        }
-      }
-    } else {
-      setData({ ...data, cep: cep, city: "", state: "", address: "", district: "" })
-      setShowMarker(false);
-    }
-  }
-
   function handleSubmit() {
     setSendForm(true);
   }
@@ -170,7 +176,7 @@ export default function ActivityDetailPage() {
       <div className="container">
         <h2 className="text-2xl font-bold text-gray-800 my-5">Detalhe atividade</h2>
         {!sendForm ? (
-          <Form initialValues={data} onFinish={handleSubmit} initialValues={data} form={form} scrollToFirstError>
+          <Form initialValues={data} onFinish={handleSubmit} form={form} scrollToFirstError>
             <div className="flex flex-col w-full">
               <div className="flex flex-row w-full justify-end">
                 <button title="Iniciar atividade" className="mx-1  px-2  flex flex-row justify-center items-center bg-gray-100 border-2 border-gray-200 rounded h-8 cursor-pointer">

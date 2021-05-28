@@ -55,3 +55,7 @@
 .item:nth-last-child(){
     border-right: 0;
 }
+
+.bg-items:nth-child(even){
+    background: rgba(0,0,0,0.05) ;
+}

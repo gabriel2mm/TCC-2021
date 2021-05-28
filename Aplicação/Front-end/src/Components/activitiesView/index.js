@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { message } from 'antd';
+import { CaretLeftOutlined, CaretRightOutlined, CaretDownOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import axios from 'axios';
 import "./style.css";
@@ -69,7 +70,7 @@ function ActivitiesViewComponent() {
 
         if (hour === activityHour) {
           return (
-            <div className="h-16 bg-green-400 rounded-lg absolute" style={{ top: "calc(1.5rem + 1.25rem + "+i+" * 4rem)", "width": "calc(100% + 100%)", gridRowStart: row }}></div>
+            <div className="h-16 bg-green-400 rounded-lg absolute" style={{ top: "calc(1.5rem + 1.25rem + " + i + " * 4rem)", "width": "calc(100%)", gridRowStart: row }}></div>
           )
         }
       });
@@ -78,19 +79,29 @@ function ActivitiesViewComponent() {
 
   return (
     <div className="w-full h-auto block overflow-y-auto">
-      <span>data inicial: {moment(initialDate).format("DD/MM/yy HH:mm")}</span><br />
-      <span>data final: {moment(endDate).format("DD/MM/yy HH:mm")}</span><br />
-      <span>CurrentDate: {moment(new Date()).format("DD/MM/yy HH:mm")}</span><br />
-      <span>Diferença de datas: {difHours}</span><br />
+      <div className="w-ful flex flex-row justify-between content-start items-center m-5">
+        <div className="flex flex-row items-center">
+          <button className="flex flex-row justifiy-center items-center bg-gray-100 p-1 mx-1 border-2 border-gray-100 hover:bg-gray-200 transition-colors delay-300 rounded-full"><CaretLeftOutlined className="text-gray-600" /></button>
+          <span className="font-bold text-lg text-gray-800 bg-gray-100 p-1 rounded">{moment(new Date()).format("DD/MM/yyyy")}</span>
+          <button className="flex flex-row justifiy-center items-center bg-gray-100 p-1 mx-1 border-2 border-gray-100 hover:bg-gray-200 transition-colors delay-300 rounded-full"><CaretRightOutlined className="text-gray-600" /></button>
+        </div>
+        <div className="flex flex-row float-right">
+          <button className="flex flex-row justifiy-center items-center bg-gray-100 p-1 mx-1 border-2 border-gray-100 hover:bg-gray-200 transition-colors delay-300"></button>
+          <button className="flex flex-row justifiy-center items-center bg-gray-100 p-1 mx-1 border-2 border-gray-100 hover:bg-gray-200 transition-colors delay-300"></button>
+          <button className="flex flex-row justifiy-center items-center bg-gray-100 p-1 mx-1 border-2 border-gray-100 hover:bg-gray-200 transition-colors delay-300"></button>
+        </div>
+      </div>
 
-      <div className={`relative w-full py-1 h-auto min-h-screen grid grid-cols-${difHours + 2} grid-rows-none overflow-y-auto`}>
-
+      <div id="grid-view" className={`relative w-full py-1 h-auto min-h-screen grid grid-cols-${difHours + 2} grid-rows-none overflow-y-auto`}>
         <div className="row-start-1 item col-span-2 text-lg text-gray-800 text-center">
           <div className="mb-5">Recursos</div>
           {dataSource.map((data, index) => (
-            
-            <div key={index} className="h-16 flex flex-row justify-center items-center" style={{gridRowStart: index + 2}}>{data.Recurso}</div>)
-            
+            <>
+              <div className={`${index % 2 === 0 ? "bg-items" : ""} absolute w-full h-16 -mt-1`}></div>
+              <div key={index} className="h-16 flex flex-row justify-center items-center" style={{ gridRowStart: index + 2 }}>{data.Recurso}</div>
+            </>
+          )
+
           )}
         </div>
         {headers.map((hour, index) =>

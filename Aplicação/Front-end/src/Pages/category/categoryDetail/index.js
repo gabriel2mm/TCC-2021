@@ -21,19 +21,19 @@ const initialTargetKeys = mockData
 function CategoryDetailPage(props) {
   const [form] = Form.useForm();
   const [dataSLA, setDataSLA] = useState([{}])
-  const [data, setData] = useState({name: "", description: "", status: ""});
+  const [data, setData] = useState({id: "", category: "", description: "", status: ""});
   const params = useParams();
 
   useEffect(() => {
     async function fetchProfile() {
       const response = await axios.get(
-        `https://6096c51f116f3f00174b394c.mockapi.io/category/${params.id}`
+        `https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens/${params.id}`
       );
       if (response.status >= 200 && response.status < 300) {
         const tmpSLA = [];
         setData(response.data);
         response.data.sla.map(r=>
-          tmpSLA.push({option: r.name, value: r.name})
+          tmpSLA.push({option: r.sla, value: r.sla})
         )
         setDataSLA(tmpSLA);
         form.resetFields();
@@ -75,11 +75,11 @@ function CategoryDetailPage(props) {
         <Form form={form} initialValues={data} scrollToFirstError>
           <label htmlFor="category" className="font-semibold text-gray-600">Nome da categoria:</label>
           <Form.Item name="category" type="text" rules={[{ required: true, message: 'Insira o nome da categoria' }]}>
-            <BasicInputComponent name="category" type="text" placeholder="Informe o nome da categoria" value={data.name} onChange={e => onChangeText(e)} />
+            <BasicInputComponent name="category" type="text" placeholder="Informe o nome da categoria" value={data.category} onChange={e => onChangeText(e)} />
           </Form.Item>
           <label htmlFor="description" className="font-semibold text-gray-600">Descrição da categoria:</label>
           <Form.Item name="description" type="textarea" rules={[{ required: true, message: 'Insira a descrição da categoria' }]}>
-            <BasicInputComponent name="category" type="textarea" placeholder="Informe a descrição da categoria" value={data.descricao} onChange={e => onChangeText(e)} />
+            <BasicInputComponent name="category" type="textarea" placeholder="Informe a descrição da categoria" value={data.description} onChange={e => onChangeText(e)} />
           </Form.Item>
           
           <label htmlFor="Ativo" className="font-semibold text-gray-600 mr-2">Categoria ativa? </label>

@@ -19,7 +19,7 @@ function SLAPage() {
   async function fetchProfiles() {
     setLoading(true);
     try {
-      const response = await axios.get('https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/profiles');
+      const response = await axios.get('https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/sla');
       if (response.status >= 200 && response.status < 300) {
         setDataSource(response.data || []);
         setLoading(false);
@@ -80,7 +80,7 @@ function SLAPage() {
 
   async function handleDelete(record) {
     try {
-      const response = await axios.delete(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/profiles/${record.id}`);
+      const response = await axios.delete(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/sla/${record.id}`);
       if (response.status >= 200 && response.status < 300) {
         message.success(`acordo "${record.sla}" deletado com sucesso!`);
         setDeletedFilter([...deletedFilter, record.sla]);

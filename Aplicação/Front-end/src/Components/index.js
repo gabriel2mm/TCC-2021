@@ -16,8 +16,10 @@ import QueueActivityComponent from './queueActivity';
 import BasicInputMaskComponent from './basicInputMask';
 import ActivitiesReportsComponent from './activitiesReports';
 import LineChartComponent from './lineChart';
+import ActivitiesViewComponent from './activitiesView';
 
 export {
+    ActivitiesViewComponent,
     LineChartComponent,
     ActivitiesReportsComponent,
     ChatComponent,

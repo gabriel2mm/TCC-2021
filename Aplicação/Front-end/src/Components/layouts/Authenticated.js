@@ -79,8 +79,8 @@ function AuthenticatedLayoutComponent({ children }) {
                         </div>
                     </nav>
                 </header>
-                <div className="container mx-auto pt-20 md:pt-3"><BreadCrumbComponent /></div>
-                <div className="mx-auto bg-gray-100 p-5 mt-5 mb-10"> {children}</div>
+                <div className="lg:container mx-auto pt-20 md:pt-3"><BreadCrumbComponent /></div>
+                <div className="lg:container mx-auto bg-gray-100 p-5 mt-5 mb-10 min-h-screen h-auto"> {children}</div>
                 <footer className="text-md text-gray-600 text-center pb-5 min-w-max">Todos os direitos reservados. <p><strong>Field Service Cloud &copy; 2021</strong></p> </footer>
                 <div className="hidden md:block"> <ChatComponent  defaultVisible={false}/> </div>
             </ChatContextProvider>

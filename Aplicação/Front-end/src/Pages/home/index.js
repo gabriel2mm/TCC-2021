@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Drawer } from 'antd';
-import { AuthenticatedLayoutComponent, GroupUserListComponent, QueueActivityComponent } from '../../Components';
+import { ActivitiesViewComponent, AuthenticatedLayoutComponent, GroupUserListComponent, QueueActivityComponent } from '../../Components';
 import { ExpandAltOutlined, ShrinkOutlined, MergeCellsOutlined, ContainerOutlined, FileAddOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
@@ -31,12 +31,12 @@ function HomePage() {
                         <MergeCellsOutlined />
                     </button>
                 </div>
-                <div className="flex flex-row transition-all delay-500 clear-both">
+                <div className="flex flex-row transition-all delay-500 clear-both justify-between items-stretch content-between">
                     {expanded ? (<GroupUserListComponent />) : (null)}
-                    <div className="w-full h-screen bg-white rounded flex flex-row border-2 border-gray-200 transition-all delay-500">
-
+                    <div className="w-full min-h-screen bg-white rounded flex flex-row border-2 border-gray-200 transition-all delay-500">
+                        <ActivitiesViewComponent/>
                     </div>
-                    <Drawer width={450} closable={true} visible={openQueue} onClose={e => setOpenQueue(false)}>
+                    <Drawer width={350} closable={true} visible={openQueue} onClose={e => setOpenQueue(false)}>
                         <QueueActivityComponent />
                     </Drawer>
                 </div>

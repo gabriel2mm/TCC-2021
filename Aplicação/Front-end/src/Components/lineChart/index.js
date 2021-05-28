@@ -47,7 +47,7 @@ function LineChart() {
               },
               title: {
                 display: true,
-                text: 'GRÁFICO DE ATIVIDADES'
+                text: 'GRÁFICO DE LINHA'
               }
             }
           }}

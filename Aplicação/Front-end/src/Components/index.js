@@ -16,6 +16,11 @@ import LineChartComponent from './lineChart';
 import GroupUserListComponent from './groupUsersList';
 import QueueActivityComponent from './queueActivity';
 import BasicInputMaskComponent from './basicInputMask';
+import BarChart from './barChart';
+import PieChart from './pieChart';
+import DoughnutChart from './doughnutChart';
+import PolarArea from './polarChart';
+import RadarChart from './radarChart';
 
 export {
     LineChartComponent,
@@ -35,5 +40,10 @@ export {
     UserFormComponent,
     GroupUserListComponent,
     QueueActivityComponent,
-    BasicInputMaskComponent
+    BasicInputMaskComponent,
+    BarChart,
+    PieChart,
+    DoughnutChart,
+    PolarArea,
+    RadarChart
 }

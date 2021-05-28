@@ -3,10 +3,10 @@ import { Drawer } from 'antd';
 import { ActivitiesViewComponent, AuthenticatedLayoutComponent, GroupUserListComponent, QueueActivityComponent } from '../../Components';
 import { ExpandAltOutlined, ShrinkOutlined, MergeCellsOutlined, ContainerOutlined, FileAddOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import {ActivityViewContextProvider} from '../../Contexts';
 
 
 function HomePage() {
-
     const [expanded, setExpanded] = useState(true);
     const [openQueue, setOpenQueue] = useState(false);
 
@@ -34,7 +34,9 @@ function HomePage() {
                 <div className="flex flex-row transition-all delay-500 clear-both justify-between items-stretch content-between">
                     {expanded ? (<GroupUserListComponent />) : (null)}
                     <div className="w-full min-h-screen bg-white rounded flex flex-row border-2 border-gray-200 transition-all delay-500">
+                    <ActivityViewContextProvider> 
                         <ActivitiesViewComponent/>
+                    </ActivityViewContextProvider> 
                     </div>
                     <Drawer width={350} closable={true} visible={openQueue} onClose={e => setOpenQueue(false)}>
                         <QueueActivityComponent />

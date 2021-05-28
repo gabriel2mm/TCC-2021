@@ -57,7 +57,7 @@ export default function ActivityDetailPage() {
     }
 
     return searchCEP();
-  }, [data, form]);
+  }, []);
 
   useEffect(() => {
     searchCEP();

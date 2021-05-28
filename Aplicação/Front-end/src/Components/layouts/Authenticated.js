@@ -32,12 +32,27 @@ function AuthenticatedLayoutComponent({ children }) {
 
     function getCurrentRoute(menuPath) {
         const path = window.location.pathname;
-        if (path) {
-            if (path.includes(menuPath)) {
-                return buttonActive;
+        let isActive = false;
+
+        if(Array.isArray(menuPath)){  
+            if(path){
+                const arrayPath = path.split("/");
+                arrayPath.forEach(element => {
+                    if(menuPath.includes(path)){
+                       isActive = true;
+                    }
+                });
+            }
+            
+        }else{
+            if (path && path.includes(menuPath)) {
+                isActive = true;
             }
         }
-        return buttonNotActive;
+
+        console.log(isActive, menuPath, path, menuPath.includes(path));
+       
+        return isActive ? buttonActive : buttonNotActive;
     }
 
     return (
@@ -56,7 +71,7 @@ function AuthenticatedLayoutComponent({ children }) {
                             </div>
 
                             <div ref={refMenu} className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
-                                <NavLink to="/home" className={`${getCurrentRoute("/home")}`} tabIndex="2">Atividades</NavLink>
+                                <NavLink to="/home" className={getCurrentRoute(["/home", "/", "/activity", "/activities", "/activities/new"])} tabIndex="2">Atividades</NavLink>
                                 <NavLink to="/dashboard" className={`${getCurrentRoute("/dashboard")}`} tabIndex="3">Relatórios</NavLink>
                                 <NavLink to="/settings" className={`${getCurrentRoute("/settings")}`} tabIndex="4">Configurações</NavLink>
                                 <ul className="flex flex-row justify-around md:justify-center items-center ml-2 mt-5 md:mt-0">

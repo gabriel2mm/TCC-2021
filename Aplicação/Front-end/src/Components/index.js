@@ -17,8 +17,12 @@ import BasicInputMaskComponent from './basicInputMask';
 import ActivitiesReportsComponent from './activitiesReports';
 import LineChartComponent from './lineChart';
 import ActivitiesViewComponent from './activitiesView';
+import TableViewComponent from './activitiesView/tableView';
+import MapViewComponent from './activitiesView/mapView';
 
 export {
+    MapViewComponent,
+    TableViewComponent,
     ActivitiesViewComponent,
     LineChartComponent,
     ActivitiesReportsComponent,

@@ -14,7 +14,7 @@ function DashboardPage() {
   return (
     <AuthenticatedLayoutComponent>
       <div className="container">
-        <h2 className="text-2xl font-bold text-gray-800 my-5">Relatórios</h2>
+        <h2 className="text-2xl font-bold text-gray-800 my-5">Dashboard</h2>
         <ActivitiesReportsComponent />
         <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start lg:flex-row ">
           <div className="w-full md:w-1/2">

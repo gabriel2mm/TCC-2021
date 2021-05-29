@@ -1,7 +1,7 @@
 import React from "react";
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
-function LineChart() {
+function BarChart() {
   const dataChart = {
     labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
     datasets: [
@@ -34,7 +34,7 @@ function LineChart() {
   return (
     <>
       <div className="mt-8">
-        <Line
+        <Bar
           height={400}
           width={400}
           data={dataChart}
@@ -47,7 +47,7 @@ function LineChart() {
               },
               title: {
                 display: true,
-                text: 'GRÁFICO DE LINHA'
+                text: 'GRÁFICO DE BARRAS'
               }
             }
           }}
@@ -57,4 +57,4 @@ function LineChart() {
   );
 }
 
-export default LineChart;
+export default BarChart;

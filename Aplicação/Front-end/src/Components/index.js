@@ -1,5 +1,5 @@
 import BasicInputComponent from './basicInput'
-import ButtonComponent from './basicInput/index'
+import ButtonComponent from './basicButton/index';
 import LoginLayoutComponent from './layouts/Login';
 import LoginComponent from './login/index';
 import AuthenticatedLayoutComponent from './layouts/Authenticated'

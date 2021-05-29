@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { message, Spin } from 'antd';
 import axios from 'axios';
+import {useActivityViewContext} from '../../../Contexts';
 import "./style.css";
 
 function ChartViewComponent() {
@@ -8,6 +9,8 @@ function ChartViewComponent() {
     const [loading, setLoading] = useState(false);
     const [headers, setHeaders] = useState([]);
     const [dataSource, setDataSource] = useState([]);
+    const { changeActivity, handleShowModal } = useActivityViewContext();
+
     const tmpHeaders = [];
     const initialDate = useMemo(() => {
         const date = new Date();
@@ -62,6 +65,12 @@ function ChartViewComponent() {
     }, [])
 
 
+    function handleShowActivity(activity){
+        console.log(activity)
+        changeActivity(activity);
+        handleShowModal();
+    }
+
     function renderItem(hour, index) {
 
         return dataSource.map((resources, i) => {
@@ -71,7 +80,7 @@ function ChartViewComponent() {
 
                 if (hour === activityHour) {
                     return (
-                        <div className="h-16 bg-green-400 rounded-lg absolute" style={{ top: "calc(1.5rem + 1.25rem + " + i + " * 4rem)", "width": "calc(100%)", gridRowStart: row }}></div>
+                        <div onClick={() => handleShowActivity(activity)} className={`h-16 cursor-pointer ${j % 2 === 0 ? "bg-green-400" : "bg-yellow-300"} rounded-lg absolute`} style={{ top: "calc(1.5rem + 1.25rem + " + i + " * 4rem)", "width": "calc(100%)", gridRowStart: row }}></div>
                     )
                 }
             });
@@ -81,7 +90,7 @@ function ChartViewComponent() {
     return (
         loading ? (<div className="w-full h-full flex flex-row justify-center items-center"><Spin /></div>) : (
             <div id="grid-view" className={`relative w-full py-1 h-auto min-h-screen grid grid-cols-${difHours + 2} grid-rows-none overflow-y-auto`}>
-                <div className="row-start-1 item col-span-2 text-lg text-gray-800 text-center">
+                <div className="row-start-1 min-w-max item col-span-2 text-lg text-gray-800 text-center">
                     <div className="mb-5">Recursos</div>
                     {dataSource.map((data, index) => (
                         <>

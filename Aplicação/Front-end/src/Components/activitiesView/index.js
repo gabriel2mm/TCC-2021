@@ -1,16 +1,19 @@
 import React from 'react';
+import { Modal, Button } from 'antd';
 import { CaretLeftOutlined, CaretRightOutlined, ProjectOutlined, EnvironmentOutlined, TableOutlined } from '@ant-design/icons';
-import moment from 'moment';
 import { useActivityViewContext, ActivityViewTypes } from '../../Contexts';
+import moment from 'moment';
 import ChartViewComponent from './chartView';
 import TableViewComponent from './tableView';
 import MapViewComponent from './mapView';
+import { Link } from 'react-router-dom';
 
 
 function ActivitiesViewComponent() {
-  const { screen, changeViewScreen } = useActivityViewContext();
+  const { screen, showModal, activity, handleShowModal, changeActivity, changeViewScreen } = useActivityViewContext();
+
   React.useEffect(() => {
-    console.log(screen, changeViewScreen);
+    console.log(screen, changeViewScreen, changeActivity, handleShowModal);
   }, []);
 
   function renderScreen() {
@@ -24,6 +27,10 @@ function ActivitiesViewComponent() {
       default:
         return (<ChartViewComponent />)
     }
+  }
+
+  function toggleModal() {
+    handleShowModal();
   }
 
   return (
@@ -42,6 +49,31 @@ function ActivitiesViewComponent() {
       </div>
       {renderScreen()}
 
+      <Modal title="Atividade" visible={showModal} closable={true} onCancel={toggleModal} onBlur={toggleModal} footer={[
+        <Button key="init">
+          Iniciar atividade
+        </Button>,
+        <Button key="close" type="primary">
+          Fechar atividade
+        </Button>,
+        <Link key="detalhe" className="mx-2" to={`/activities/${activity.id}`}>
+          <Button type="primary">
+            Detalhe
+          </Button>
+        </Link>,
+
+      ]}>
+        <div className="container">
+          <div className="flex flex-col">
+            <span><b>Atividade: </b> {activity.activity}</span>
+            <span><b>criado: </b> {moment(activity.created).format("DD/MM/yy HH:mm")}</span>
+            <span><b>data limite: </b> {moment(activity.limite).format("DD/MM/yy HH:mm")}</span>
+            <span><b>Status: </b> {activity.status}</span>
+            <span><b>Usuário Atribuído: </b> {activity.request} </span>
+            <span><b>Usuário requisitante: </b> {activity.request}</span>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

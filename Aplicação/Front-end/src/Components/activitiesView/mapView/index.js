@@ -3,11 +3,13 @@ import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { layout } from '../../../Pages/activity/maps/optionsLayout';
 import axios from 'axios';
 import {message} from 'antd';
+import {useActivityViewContext} from '../../../Contexts';
 
 
 function MapViewComponent() {
   const [activities, setActivities] = useState([]);
   const [initialLocation, setInitialLocation] = useState({ lat: -25.475174 || 0, lng: -49.2807627 || 0 });
+  const { screen, showModal, activity, handleShowModal, changeActivity, changeViewScreen } = useActivityViewContext();
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -36,6 +38,12 @@ function MapViewComponent() {
     fetchActivities();
   }, [])
 
+  function toggleActivity(activity) {
+    changeActivity(activity);
+    handleShowModal();
+  }
+
+
   return (
     (
       isLoaded ?
@@ -45,10 +53,7 @@ function MapViewComponent() {
               mapContainerStyle={containerStyle}
               options={{ styles: layout, disableDefaultUI: true, zoomControl: true }}>
               {activities.map( (a,i ) => {
-
-                console.log(a, i);
-
-                return <Marker key={new Date().getTime().toString()}
+                return <Marker key={`map-${i}`} onClick={() => toggleActivity(a)}
                       position={{lat: parseFloat(a.lat), lng: parseFloat(a.lng)}}
                   />
               }

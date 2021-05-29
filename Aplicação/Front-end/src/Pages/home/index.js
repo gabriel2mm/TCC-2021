@@ -7,7 +7,7 @@ import {ActivityViewContextProvider} from '../../Contexts';
 
 
 function HomePage() {
-    const [expanded, setExpanded] = useState(true);
+    const [expanded, setExpanded] = useState(false);
     const [openQueue, setOpenQueue] = useState(false);
 
     return (
@@ -25,13 +25,13 @@ function HomePage() {
                         </button>
                     </Link>
                     <button title="Expandir" className="mr-1 flex flex-row justify-center items-center bg-gray-100 border-2 border-gray-200 rounded w-8 h-8 cursor-pointer" onClick={e => setExpanded(!expanded)}>
-                        {expanded ? (<ExpandAltOutlined />) : (<ShrinkOutlined />)}
+                        {expanded ? (<ShrinkOutlined />) : (<ExpandAltOutlined />)}
                     </button>
                     <button title="Abrir fila de atividades não atribuídas" className="my-2 flex flex-row justify-center items-center bg-gray-100 border-2 border-gray-200 rounded w-8 h-8 cursor-pointer" onClick={e => setOpenQueue(!openQueue)}>
                         <MergeCellsOutlined />
                     </button>
                 </div>
-                <div className="flex flex-row transition-all delay-500 clear-both justify-between items-stretch content-between">
+                <div className="flex flex-col lg:flex-row transition-all delay-500 clear-both justify-between items-stretch content-between">
                     {expanded ? (<GroupUserListComponent />) : (null)}
                     <div className="w-full min-h-screen bg-white rounded flex flex-row border-2 border-gray-200 transition-all delay-500">
                     <ActivityViewContextProvider> 

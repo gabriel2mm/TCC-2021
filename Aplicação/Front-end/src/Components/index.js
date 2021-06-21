@@ -25,6 +25,7 @@ import DoughnutChart from './doughnutChart';
 import PolarArea from './polarChart';
 import RadarChart from './radarChart';
 
+
 export {
     MapViewComponent,
     TableViewComponent,

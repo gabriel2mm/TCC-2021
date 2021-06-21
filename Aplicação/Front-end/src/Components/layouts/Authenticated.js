@@ -63,7 +63,7 @@ function AuthenticatedLayoutComponent({ children }) {
                         <div className="container px-4 mx-auto md:flex md:items-center">
                             <div className="flex justify-between items-center">
 
-                                <h1><Link to="/home" className="flex-shrink-0 text-gray-800 font-bold text-2xl md:text-lg lg:text-2xl hover:text-purple-800 focus:text-purple-800 transition-colors duration-800 focus:underline" tabIndex="1">Campify field service</Link></h1>
+                                <h1><Link to="/home" className="flex-shrink-0 text-gray-800 font-bold text-2xl md:text-lg lg:text-2xl hover:text-purple-800 focus:text-purple-800 transition-colors duration-800 focus:underline" tabIndex="1">OCR Field Service</Link></h1>
 
                                 <button onClick={openMenu} className="flex justify-center items-center border border-solid border-gray-600 w-10 h-10 rounded text-gray-600 opacity-50 hover:opacity-75 md:hidden" id="navbar-toggle">
                                     <MenuOutlined className="mt-0.5" />

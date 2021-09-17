@@ -2,13 +2,19 @@ package br.com.ocrfieldservice.entrypoint.adapter;
 
 import org.springframework.stereotype.Component;
 
-import br.com.ocrfieldservice.dataprovider.entity.User;
-import br.com.ocrfieldservice.entrypoint.request.SignRequest;
+import br.com.ocrfieldservice.core.entity.User;
 
 @Component
 public class UserAdapter {
-//alterar para usuario do core
-	public User toUser(SignRequest request) {
-		return new User(request.getEmail(), request.getPassword());
+
+	public User toUser(br.com.ocrfieldservice.dataprovider.entity.User user) {
+		User _user = new User();
+		_user.setActive(user.isActive());
+		_user.setCreated(user.getCreated());
+		_user.setUpdated(user.getUpdated());
+		_user.setEmail(user.getEmail());
+		_user.setFirstName(user.getFirstName());
+		_user.setLastName(user.getLastName());		
+		return _user;
 	}
 }

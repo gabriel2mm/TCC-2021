@@ -1,6 +1,6 @@
 package br.com.ocrfieldservice.core.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import lombok.NoArgsConstructor;
 
@@ -13,8 +13,8 @@ public class User {
 	private String password;
 	private Organization organization;
 	private boolean active;
-	private Date created;
-	private Date updated;
+	private LocalDateTime created;
+	private LocalDateTime updated;
 	private User createdBy;
 
 	public String getFirstName() {
@@ -53,16 +53,16 @@ public class User {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-	public Date getCreated() {
+	public LocalDateTime getCreated() {
 		return created;
 	}
-	public void setCreated(Date created) {
+	public void setCreated(LocalDateTime created) {
 		this.created = created;
 	}
-	public Date getUpdated() {
+	public LocalDateTime getUpdated() {
 		return updated;
 	}
-	public void setUpdated(Date updated) {
+	public void setUpdated(LocalDateTime updated) {
 		this.updated = updated;
 	}
 	public User getCreatedBy() {

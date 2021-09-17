@@ -16,4 +16,6 @@ public interface UserRepository {
 	public List<User> findUser(User user);
 	
 	public User findUser(final String email, final String password);
+	
+	public User findByEmail(final String email);
 }

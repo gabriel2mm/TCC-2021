@@ -1,4 +1,4 @@
-package br.com.ocrfieldservice.entrypoint.request;
+package br.com.ocrfieldservice.entrypoint.viewModel;
 
 
 public class SignRequest {

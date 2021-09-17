@@ -1,6 +1,8 @@
 package br.com.ocrfieldservice.dataprovider.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,10 +15,18 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "USERS")
-public class User {
+public class User implements UserDetails{
+
+	private static final long serialVersionUID = -5483228932826755787L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +41,7 @@ public class User {
 	@Column(name = "email", nullable = false, length = 50, unique = true)
 	private String email;
 
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(name = "password_hash", nullable = false)
 	private String password;
 
@@ -40,12 +51,14 @@ public class User {
 	@Column(name = "active", columnDefinition = "tinyint(1) default 1")
 	private boolean active;
 
+	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime created;
 
+	@JsonIgnore
 	@UpdateTimestamp
 	private LocalDateTime updated;
-
+	@JsonIgnore
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User createdBy;
 
@@ -129,4 +142,33 @@ public class User {
 		this.createdBy = createdBy;
 	}
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }

@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -61,6 +62,9 @@ public class User implements UserDetails{
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User createdBy;
+	
+	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = PasswordReset.class)
+	private Collection<PasswordReset> passwordResetList;
 
 	public User() {
 	}
@@ -170,5 +174,13 @@ public class User implements UserDetails{
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public Collection<PasswordReset> getPasswordResetList() {
+		return passwordResetList;
+	}
+
+	public void setPasswordResetList(Collection<PasswordReset> passwordResetList) {
+		this.passwordResetList = passwordResetList;
 	}
 }

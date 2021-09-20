@@ -26,9 +26,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.ocrfieldservice.contracts.SignInService;
 import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.UserRepository;
-import br.com.ocrfieldservice.core.usecase.SignIn;
 import br.com.ocrfieldservice.entrypoint.viewModel.SignRequest;
 import br.com.ocrfieldservice.entrypoint.viewModel.TokenResponse;
 
@@ -48,7 +48,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	private UserRepository repository;
 	
 	@Autowired
-	private SignIn signIn;
+	private SignInService signIn;
 	
 	
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {

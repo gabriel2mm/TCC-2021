@@ -47,7 +47,7 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 				return;
 			}else {
 				String request_path = request.getServletPath();
-				if("/api/auth".equals(request_path))
+				if(request_path.contains("/api/auth"))
 					chain.doFilter(request, response);
 				else
 					constructorErrors("Não foi possível localizar o token", 403, response);

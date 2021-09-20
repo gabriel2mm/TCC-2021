@@ -26,10 +26,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 import br.com.ocrfieldservice.core.usecase.SignIn;
-import br.com.ocrfieldservice.dataprovider.entity.User;
-import br.com.ocrfieldservice.entrypoint.adapter.UserAdapter;
 import br.com.ocrfieldservice.entrypoint.viewModel.SignRequest;
 import br.com.ocrfieldservice.entrypoint.viewModel.TokenResponse;
 
@@ -51,8 +50,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Autowired
 	private SignIn signIn;
 	
-	@Autowired
-	private UserAdapter adapter;
 	
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
@@ -103,7 +100,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		
 		response.setStatus(403);
 		response.setContentType("application/json; charset=UTF-8");
-		response.getWriter().write(new ObjectMapper().writeValueAsString(new TokenResponse.Builder().token("").type("").erros(new ArrayList<>() {{ add("Usuário e/ou senha inválidos"); }}).build()));
+		response.getWriter().write(new ObjectMapper().writeValueAsString(new TokenResponse.Builder().token("").type("").erros(new ArrayList<String>() {{ add("Usuário e/ou senha inválidos"); }}).build()));
 		response.getWriter().flush();
 	}
 	

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.UserRepository;
-import br.com.ocrfieldservice.dataprovider.entity.User;
 
 @RestController
 @RequestMapping(value = "/api/users")

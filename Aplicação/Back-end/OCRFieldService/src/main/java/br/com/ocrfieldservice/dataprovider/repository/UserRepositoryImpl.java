@@ -9,12 +9,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Repository;
 
+import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 import br.com.ocrfieldservice.dataprovider.dao.UserDao;
-import br.com.ocrfieldservice.dataprovider.entity.User;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -37,13 +36,36 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public List<User> findUser(User user) {
-		Example<User> userExemple = Example.of(user);
-		return userDao.findAll(userExemple);
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> root = criteria.from(User.class);
+		criteria.distinct(true)
+			.select(root)
+			.where(builder.or(
+					builder.like(root.get("firstName"), user.getFirstName()),
+					builder.like(root.get("lastName"), user.getLastName()),
+					builder.like(root.get("email"), user.getEmail())
+			));
+		return entityManager.createQuery(criteria).getResultList();
 	}
 
 	@Override
 	public User findUser(String email, String password) {
-		return userDao.findAll().get(0);
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> root = criteria.from(User.class);
+		criteria.distinct(true).select(root)
+			.where(builder.and(
+					builder.equal(root.get("email"), email),
+					builder.equal(root.get("password"), password)
+		));
+		
+		List<User> users = entityManager.createQuery(criteria).getResultList();
+		if(users != null && users.size() > 0) {
+			return users.get(0);
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -54,7 +76,13 @@ public class UserRepositoryImpl implements UserRepository {
 		Root<User> root = query.from(User.class);
 		query.select(root).where(builder.equal(root.get("email"), email));
 		
-		return entityManager.createQuery(query).getSingleResult();
+		
+		List<User> users = entityManager.createQuery(query).getResultList();
+		if(users != null && users.size() > 0) {
+			return users.get(0);
+		}
+		
+		return null;
 	}
 
 }

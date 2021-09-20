@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import br.com.ocrfieldservice.dataprovider.entity.User;
+import br.com.ocrfieldservice.core.entity.User;
 
 @Repository
 public interface UserRepository {

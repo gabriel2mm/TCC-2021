@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.UserRepository;
-import br.com.ocrfieldservice.dataprovider.entity.User;
 
 @Component
 public class UserDetailService implements UserDetailsService {

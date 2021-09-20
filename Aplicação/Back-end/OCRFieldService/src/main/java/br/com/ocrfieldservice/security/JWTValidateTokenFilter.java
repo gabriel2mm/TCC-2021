@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,12 @@ import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.com.ocrfieldservice.core.entity.Errors;
+import io.jsonwebtoken.JwtException;
 
 @Component
 public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
@@ -30,21 +37,39 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-		
-		
 		String authorizationHeader = request.getHeader(HEADER);
-		
-		if(authorizationHeader == null || !authorizationHeader.startsWith(PREFIX)) {
-			chain.doFilter(request, response);
-			return;
+		try {
+			if(authorizationHeader != null && authorizationHeader.startsWith(PREFIX)) {
+				String token = authorizationHeader.replace(PREFIX, "");
+				UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(token);
+				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+				chain.doFilter(request, response);
+				return;
+			}else {
+				String request_path = request.getServletPath();
+				if("/api/auth".equals(request_path))
+					chain.doFilter(request, response);
+				else
+					constructorErrors("Não foi possível localizar o token", 403, response);
+			}
+		}catch(AccessDeniedException e) {
+			constructorErrors("Acesso negado", 403, response);
+		}catch(JWTVerificationException | JwtException e){
+			constructorErrors("Token inválido", 403, response);
+		}catch(Exception e) {
+			logger.error(e.getMessage());
+			constructorErrors("Não foi possível processar solicitação", 500, response);
 		}
+	}
+	
+	private void constructorErrors(String error, int status, HttpServletResponse response) throws JsonProcessingException, IOException {
+		String errors = new ObjectMapper().writeValueAsString(new Errors(new ArrayList<String>() {{ add(error);}}, status));
 		
-		String token = authorizationHeader.replace(PREFIX, "");
-		UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(token);
-		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-		
-		chain.doFilter(request, response);
-		
+		response.setStatus(status);
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().write(errors);
+		response.getWriter().flush();
 	}
 	
 	private UsernamePasswordAuthenticationToken getAuthenticationToken(final String token) {

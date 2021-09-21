@@ -22,7 +22,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
 import br.com.ocrfieldservice.contracts.PasswordResetService;
+import br.com.ocrfieldservice.contracts.SendEmailService;
 import br.com.ocrfieldservice.contracts.SignInService;
+import br.com.ocrfieldservice.core.entity.PasswordReset;
 import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 import br.com.ocrfieldservice.entrypoint.viewModel.ForgotInput;
@@ -40,6 +42,9 @@ public class AuthenticationController {
 
 	@Autowired
 	private UserRepository repository;
+	
+	@Autowired
+	private SendEmailService sendMailService;
 
 	@Autowired
 	private PasswordResetService passwordResetService;
@@ -99,8 +104,11 @@ public class AuthenticationController {
 	public @ResponseBody ResponseEntity<String> sendEmailReset(@RequestBody final ForgotInput email) {
 		try {
 			User user = repository.findByEmail(email.getEmail());
-			if (user != null) 
-				passwordResetService.createToken(user);
+			if (user != null) {
+				PasswordReset passwordReset = passwordResetService.createToken(user);
+				String token = passwordReset.getToken();
+				sendMailService.sendEmail("Esqueci minha senha", "Para trocar sua senha clique no link:  http://ocrfieldservice.com.br/reset-password?t=" + token, user.getEmail());
+			}
 			else
 				return new ResponseEntity<String>("Não foi possível realizar envio do email!", HttpStatus.BAD_REQUEST);
 			

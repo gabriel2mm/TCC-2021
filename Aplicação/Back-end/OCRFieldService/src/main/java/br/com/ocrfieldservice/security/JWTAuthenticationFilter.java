@@ -68,7 +68,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			
 			User user = repository.findByEmail(signRequest.getEmail());
 			if(user != null && signIn.sigin(signRequest.getPassword(), user.getPassword())) {
-				return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signRequest.getEmail(), signRequest.getPassword(), new ArrayList<>()));
+				return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signRequest.getEmail(), signRequest.getPassword(), user.getProfile().getPermissions()));
 			}
 		} catch (JsonParseException | JsonMappingException e) {
 			logger.error("Não foi possível converter json para user");

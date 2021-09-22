@@ -2,6 +2,7 @@ package br.com.ocrfieldservice.entrypoint.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +25,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 import br.com.ocrfieldservice.contracts.PasswordResetService;
 import br.com.ocrfieldservice.contracts.SendEmailService;
 import br.com.ocrfieldservice.contracts.SignInService;
+import br.com.ocrfieldservice.core.entity.Organization;
 import br.com.ocrfieldservice.core.entity.PasswordReset;
+import br.com.ocrfieldservice.core.entity.Profile;
 import br.com.ocrfieldservice.core.entity.User;
+import br.com.ocrfieldservice.core.repository.OrganizationRepository;
+import br.com.ocrfieldservice.core.repository.PermissionRepository;
+import br.com.ocrfieldservice.core.repository.ProfileRepository;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 import br.com.ocrfieldservice.entrypoint.viewModel.ForgotInput;
 import br.com.ocrfieldservice.entrypoint.viewModel.PasswordResetInput;
@@ -54,6 +60,15 @@ public class AuthenticationController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private PermissionRepository permissionRepository;
+	
+	@Autowired
+	private ProfileRepository profileRepository;
+	
+	@Autowired
+	private OrganizationRepository organizationRepository;
 
 	@Value("${jwt.secret}")
 	private String secret;
@@ -63,6 +78,7 @@ public class AuthenticationController {
 
 	@GetMapping
 	private @ResponseBody ResponseEntity<String> createUserTeste() {
+		
 		User user = new User();
 		user.setActive(true);
 		user.setPassword(passwordEncoder.encode("teste"));
@@ -71,23 +87,23 @@ public class AuthenticationController {
 		user.setLastName("teste");
 
 		repository.save(user);
-
+		
 		return new ResponseEntity<String>("Criado com sucesso!", HttpStatus.OK);
 	}
 
 	@PostMapping
 	private @ResponseBody ResponseEntity<TokenResponse> signIn(@RequestBody SignRequest signRequest) {
 
-		User user = repository.findByEmail(signRequest.getEmail());
+		User user = repository.findByEmail(signRequest.getEmail());	
 		if (user != null && signIn.sigin(signRequest.getPassword(), user.getPassword())) {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signRequest.getEmail(),
-					signRequest.getPassword(), new ArrayList<>()));
-
+					signRequest.getPassword(), user.getProfile() == null ? new ArrayList<>() : user.getProfile().getPermissions()));
+			
 			String token = JWT.create().withSubject(user.getUsername())
 					.withExpiresAt(new Date(System.currentTimeMillis() + expiration))
 					.sign(Algorithm.HMAC512(this.secret.getBytes()));
 
-			return new ResponseEntity<TokenResponse>(new TokenResponse.Builder().token(token).type("Bearer").build(),
+			return new ResponseEntity<TokenResponse>(new TokenResponse.Builder().token(token).type("Bearer").erros(new ArrayList<String>()).build(),
 					HttpStatus.OK);
 		}
 

@@ -2,14 +2,17 @@ package br.com.ocrfieldservice.core.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -46,11 +49,14 @@ public class User implements UserDetails{
 	@Column(name = "password_hash", nullable = false)
 	private String password;
 
-	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = Organization.class)
+	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = Organization.class)
 	private Organization organization;
 
 	@Column(name = "active", columnDefinition = "tinyint(1) default 1")
 	private boolean active;
+	
+	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = Profile.class, fetch = FetchType.EAGER)
+	private Profile profile;
 
 	@JsonIgnore
 	@CreationTimestamp
@@ -63,8 +69,9 @@ public class User implements UserDetails{
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User createdBy;
 	
+	@ElementCollection
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = PasswordReset.class)
-	private Collection<PasswordReset> passwordResetList;
+	private List<PasswordReset> passwordResetList;
 
 	public User() {
 	}
@@ -147,8 +154,13 @@ public class User implements UserDetails{
 	}
 
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return new ArrayList<>();
+	public List<? extends GrantedAuthority> getAuthorities() {	
+		if(this.profile == null) {
+			return new ArrayList<GrantedAuthority>();
+		}
+		
+		
+		return profile.getPermissions();
 	}
 
 	@Override
@@ -176,11 +188,19 @@ public class User implements UserDetails{
 		return true;
 	}
 
-	public Collection<PasswordReset> getPasswordResetList() {
+	public List<PasswordReset> getPasswordResetList() {
 		return passwordResetList;
 	}
 
-	public void setPasswordResetList(Collection<PasswordReset> passwordResetList) {
+	public void setPasswordResetList(List<PasswordReset> passwordResetList) {
 		this.passwordResetList = passwordResetList;
+	}
+
+	public Profile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 }

@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,21 +19,28 @@ import org.springframework.stereotype.Component;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.ocrfieldservice.core.entity.Errors;
+import br.com.ocrfieldservice.core.entity.User;
+import br.com.ocrfieldservice.core.repository.UserRepository;
 import io.jsonwebtoken.JwtException;
 
 @Component
 public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 
-	private final String secret = "APLICACAOBACKENDTCC2";
+	@Value("${jwt.secret}")
+	private String secret;
 	private static final String HEADER = "Authorization";
 	private static final String PREFIX = "Bearer ";
 	
-	public JWTValidateTokenFilter(AuthenticationManager authenticationManager) {
+	private final UserRepository repository;
+	
+	public JWTValidateTokenFilter(AuthenticationManager authenticationManager, UserRepository repository) {
 		super(authenticationManager);		
+		this.repository = repository;
 	}
 	
 	@Override
@@ -41,10 +49,15 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 		try {
 			if(authorizationHeader != null && authorizationHeader.startsWith(PREFIX)) {
 				String token = authorizationHeader.replace(PREFIX, "");
-				UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(token);
-				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-				chain.doFilter(request, response);
-				return;
+				String email = JWT.decode(token).getSubject();
+				User user = repository.findByEmail(email);
+				DecodedJWT decoded = JWT.require(Algorithm.HMAC512(this.secret)).build().verify(token);
+				
+				if(user != null && decoded != null) {
+					UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+					chain.doFilter(request, response);
+				}
 			}else {
 				String request_path = request.getServletPath();
 				if(request_path.contains("/api/auth"))
@@ -57,8 +70,7 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 		}catch(JWTVerificationException | JwtException e){
 			constructorErrors("Token inválido", 403, response);
 		}catch(Exception e) {
-			logger.error(e.getMessage());
-			constructorErrors("Não foi possível processar solicitação", 500, response);
+			constructorErrors("Não foi possível processar sua solicitação", 500, response);
 		}
 	}
 	

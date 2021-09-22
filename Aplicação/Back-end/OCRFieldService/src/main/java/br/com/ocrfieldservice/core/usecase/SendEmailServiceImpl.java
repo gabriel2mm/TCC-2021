@@ -36,7 +36,6 @@ public class SendEmailServiceImpl implements SendEmailService {
 		mailMessage.setText(body);
 		
 		javaMailSender.send(mailMessage);
-		
 	}
 
 	@Override

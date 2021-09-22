@@ -1,18 +1,24 @@
 package br.com.ocrfieldservice.core.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="ORGS")
@@ -31,8 +37,18 @@ public class Organization {
 	@UpdateTimestamp
 	private LocalDateTime updated;
 	
-	@OneToOne(cascade = CascadeType.ALL, targetEntity = User.class)
+	@OneToOne(cascade = CascadeType.ALL, targetEntity = User.class, fetch = FetchType.LAZY)
 	private User createdBy;
+	
+	@JsonIgnore
+	@ElementCollection
+	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = User.class)
+	private List<User> users;
+	
+	@JsonIgnore
+	@ElementCollection
+	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = Organization.class)
+	private List<Profile> profiles;
 
 	public long getId() {
 		return id;

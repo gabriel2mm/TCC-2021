@@ -65,7 +65,7 @@ public class AddressRepositoryImpl implements AddressRepository {
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
+		addressDao.deleteById(id);
 		
 	}
 

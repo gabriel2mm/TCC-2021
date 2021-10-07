@@ -8,6 +8,7 @@ import br.com.ocrfieldservice.core.entity.Address;
 
 @Repository
 public interface AddressRepository {
+	
 
 	public Address save(Address address);
 

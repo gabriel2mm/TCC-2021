@@ -10,11 +10,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ocrfieldservice.core.entity.Address;
@@ -33,42 +33,10 @@ public class AddressController {
 	@Autowired
 	private UserRepository userRepository;
 
-	/*@PostMapping(value = "/new")
-	public @ResponseBody ResponseEntity<String> newAddress (@RequestBody final Address address) {
-		System.out.println(address);
-		Address addressSave = addressRepository.save(address);
-		return new ResponseEntity<String>("Criado com sucesso!" + address.toString(), HttpStatus.OK);
-	}*/
-
-	/*@GetMapping
-	public @ResponseBody ResponseEntity<Collection<Address>> address() {
-		return new ResponseEntity<Collection<Address>>(addressRepository.findAll(), HttpStatus.OK);
-	}*/
-
-	/*@PutMapping("/{id}")
-    public ResponseEntity<Address> updateAddress(
-    @PathVariable(value = "id") Long addressId,
-    @Valid @RequestBody Address userDetails) throws ResourceNotFoundException {
-		Address addressBase = addressRepository.findById(addressId);
-
-		addressBase.setAddress(userDetails.getAddress());
-		addressBase.setCEP(userDetails.getCEP());
-		addressBase.setCity(userDetails.getCity());
-		addressBase.setComplement(userDetails.getComplement());
-		addressBase.setDistrict(userDetails.getDistrict());
-		addressBase.setIat(userDetails.getIat());
-		addressBase.setIng(userDetails.getIng());
-		addressBase.setNumber(userDetails.getNumber());
-		addressBase.setState(userDetails.getState());
-        final Address updatedAddress = addressRepository.save(addressBase);
-        return ResponseEntity.ok(updatedAddress);
-   }*/
-
-
 	@GetMapping
 	public ResponseEntity<List<Address>> getAllProfilesByOrganization() {
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		if(user != null && user.getOrganization() != null) {
+		if(user != null) {
 			return new ResponseEntity<List<Address>>(addressRepository.findAllByOrg(user.getOrganization().getName()), HttpStatus.OK);
 		}
 
@@ -77,7 +45,8 @@ public class AddressController {
 
 	@GetMapping(value = "/{id}")
 	//@PreAuthorize("hasAuthority('Admin') or hasAuthority('READ_PROFILE') or hasAuthority('WRITEPROFILE')")
-	public ResponseEntity<Address> getProfileById(@RequestParam final Long id) {
+	public ResponseEntity<Address> getProfileById(@PathVariable("id") final Long id) {
+		System.out.println(id);
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		Address address = addressRepository.findOneById(id);
 
@@ -103,7 +72,8 @@ public class AddressController {
 
 	@PutMapping("/{id}")
 	//@PreAuthorize("hasAuthority('Admin') or hasAuthority('WRITEPROFILE')")
-	public ResponseEntity<HttpStatus> updateProfile(@RequestParam Long id, @RequestBody Address address){
+	public ResponseEntity<HttpStatus> updateProfile(@PathVariable("id") Long id, @RequestBody Address address){
+		System.out.println(id);
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		Address addressTmp = addressRepository.findOneById(id);
 		if(user != null && addressTmp != null ) {
@@ -131,11 +101,12 @@ public class AddressController {
 
 	@DeleteMapping("/{id}")
 	//@PreAuthorize("hasAuthority('Admin') or hasAuthority('WRITEPROFILE')")
-	public ResponseEntity<HttpStatus> deleteProfile(@RequestParam Long id){
+	public ResponseEntity<HttpStatus> deleteProfile(@PathVariable("id") int id){
+		System.out.println(id);
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		Address addressTmp = addressRepository.findOneById(id);
+		Address addressTmp = addressRepository.findOneById(Long.valueOf(id));
 		if(user != null && addressTmp != null ) {
-			addressRepository.delete(id);
+			addressRepository.delete(Long.valueOf(id));
 		}
 
 		return new ResponseEntity<HttpStatus>(HttpStatus.OK);

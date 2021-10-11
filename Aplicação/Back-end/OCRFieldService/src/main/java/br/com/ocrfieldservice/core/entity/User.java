@@ -3,6 +3,7 @@ package br.com.ocrfieldservice.core.entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -59,10 +60,23 @@ public class User implements UserDetails{
 	@JsonIgnore
 	@UpdateTimestamp
 	private LocalDateTime updated;
+	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User createdBy;
 	
+	@OneToMany(cascade = CascadeType.PERSIST, targetEntity = Activity.class)
+	private List<Activity> activities;
+	
+	
+	public List<Activity> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(List<Activity> activities) {
+		this.activities = activities;
+	}
+
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = PasswordReset.class)
 	private Collection<PasswordReset> passwordResetList;
 

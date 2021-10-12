@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ocrfieldservice.core.entity.Profile;
@@ -93,7 +92,7 @@ public class ProfilesController {
 	
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:profile')")
-	public ResponseEntity<HttpStatus> deleteProfile(@RequestParam("id") Long id){
+	public ResponseEntity<HttpStatus> deleteProfile(@PathVariable("id") Long id){
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		Profile profileTmp = repository.findOneById(id);
 		if(user != null && profileTmp != null && profileTmp.getOrg() == user.getOrganization() ) {

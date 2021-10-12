@@ -25,7 +25,7 @@ import br.com.ocrfieldservice.core.repository.UserRepository;
 
 @RestController
 @RequestMapping(value = "/api/profiles")
-@CrossOrigin(allowCredentials = "", allowedHeaders = "")
+@CrossOrigin(origins = "*")
 public class ProfilesController {
 	
 	@Autowired

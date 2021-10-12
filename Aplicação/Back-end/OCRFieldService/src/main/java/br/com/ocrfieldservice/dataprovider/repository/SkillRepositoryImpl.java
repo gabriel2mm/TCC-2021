@@ -11,14 +11,15 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import br.com.ocrfieldservice.core.entity.Capacity;
 import br.com.ocrfieldservice.core.entity.Organization;
 import br.com.ocrfieldservice.core.entity.Skill;
 import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.SkillRepository;
 import br.com.ocrfieldservice.dataprovider.dao.SkillDao;
 
+@Repository
 public class SkillRepositoryImpl implements SkillRepository, Serializable{
 
 	private static final long serialVersionUID = 6641486967057262057L;

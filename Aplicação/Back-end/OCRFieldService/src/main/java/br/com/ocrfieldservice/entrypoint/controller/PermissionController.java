@@ -18,7 +18,7 @@ import br.com.ocrfieldservice.core.repository.UserRepository;
 
 @RestController
 @RequestMapping(value = "/api/permissions")
-@CrossOrigin(allowCredentials = "", allowedHeaders = "")
+@CrossOrigin(origins = "*")
 public class PermissionController {
 
 	@Autowired

@@ -27,7 +27,7 @@ import br.com.ocrfieldservice.entrypoint.viewModel.ChangePasswordProfile;
 
 @RestController
 @RequestMapping(value = "/api/users")
-@CrossOrigin(allowCredentials = "", allowedHeaders = "")
+@CrossOrigin(origins = "*")
 public class UserController {
 
 	@Autowired

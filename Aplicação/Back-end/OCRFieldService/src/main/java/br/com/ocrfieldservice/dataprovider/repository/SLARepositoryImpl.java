@@ -11,12 +11,14 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import br.com.ocrfieldservice.core.entity.Organization;
 import br.com.ocrfieldservice.core.entity.SLA;
 import br.com.ocrfieldservice.core.repository.SLARepository;
 import br.com.ocrfieldservice.dataprovider.dao.SLADao;
 
+@Repository
 public class SLARepositoryImpl implements SLARepository, Serializable {
 
 	private static final long serialVersionUID = -3858612210661050875L;

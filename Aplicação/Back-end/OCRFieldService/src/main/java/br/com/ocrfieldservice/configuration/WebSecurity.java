@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,16 +31,19 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	private String secret;
 	
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-	@Autowired
 	private UserDetailService userDetailService;
 	
 	@Autowired
 	private UserRepository repository;
+	
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
+	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder);
+		auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
 	}
 	
 	@Bean
@@ -67,10 +70,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.addFilter(authenticationFilter());
-		http.addFilter(jwtValidateTokenFilter());
 		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/api/auth/**").permitAll().anyRequest()
-				.authenticated().and().sessionManagement()
+				.authenticated()
+				.and().addFilter(authenticationFilter())
+				.addFilter(jwtValidateTokenFilter())
+				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
@@ -83,10 +87,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		return source;
 	}
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
 	
 	@Override
 	@Bean

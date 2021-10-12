@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,8 +46,8 @@ public class ProfilesController {
 	}
 	
 	@GetMapping("/{id}")
-	@PreAuthorize("hasAuthority('Admin') or hasAuthority('READ_PROFILE') or hasAuthority('WRITEPROFILE')")
-	public ResponseEntity<Profile> getProfileById(@RequestParam final Long id) {
+	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:profile') or hasAuthority('write:profile')")
+	public ResponseEntity<Profile> getProfileById(@PathVariable("id") final Long id) {
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		Profile profile = repository.findOneById(id);
 		
@@ -58,7 +59,7 @@ public class ProfilesController {
 	}
 	
 	@PostMapping
-	@PreAuthorize("hasAuthority('Admin') or hasAuthority('WRITEPROFILE')")
+	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:profile')")
 	public ResponseEntity<HttpStatus> createProfile(@RequestBody Profile profile){
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		if(user != null) {
@@ -75,8 +76,8 @@ public class ProfilesController {
 	}
 	
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAuthority('Admin') or hasAuthority('WRITEPROFILE')")
-	public ResponseEntity<HttpStatus> updateProfile(@RequestParam Long id, @RequestBody Profile profile){
+	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:profile')")
+	public ResponseEntity<HttpStatus> updateProfile(@PathVariable("id") Long id, @RequestBody Profile profile){
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		Profile profileTmp = repository.findOneById(id);
 		if(user != null && profileTmp != null && profileTmp.getOrg() == user.getOrganization() ) {
@@ -91,8 +92,8 @@ public class ProfilesController {
 	}
 	
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasAuthority('Admin') or hasAuthority('WRITEPROFILE')")
-	public ResponseEntity<HttpStatus> deleteProfile(@RequestParam Long id){
+	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:profile')")
+	public ResponseEntity<HttpStatus> deleteProfile(@RequestParam("id") Long id){
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		Profile profileTmp = repository.findOneById(id);
 		if(user != null && profileTmp != null && profileTmp.getOrg() == user.getOrganization() ) {

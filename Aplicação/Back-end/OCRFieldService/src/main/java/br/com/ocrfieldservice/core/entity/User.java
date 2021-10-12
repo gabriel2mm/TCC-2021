@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -34,7 +35,7 @@ public class User implements UserDetails{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long ID;
+	private long id;
 
 	@Column(name = "firstName", nullable = false, length = 50)
 	private String firstName;
@@ -48,6 +49,9 @@ public class User implements UserDetails{
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(name = "password_hash", nullable = false)
 	private String password;
+	
+	@Column(name="CPF", length = 14, nullable = false, unique = true)
+	private String CPF;
 
 	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = Organization.class)
 	private Organization organization;
@@ -57,6 +61,16 @@ public class User implements UserDetails{
 	
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = Profile.class, fetch = FetchType.EAGER)
 	private Profile profile;
+	
+	@ManyToMany(cascade = CascadeType.PERSIST, targetEntity = Skill.class)
+	private List<Skill> skills;
+	
+	@ElementCollection
+	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = PasswordReset.class)
+	private List<PasswordReset> passwordResetList;
+	
+	@ManyToOne(targetEntity = GroupUsers.class, cascade = CascadeType.PERSIST)
+	private GroupUsers group;
 
 	@JsonIgnore
 	@CreationTimestamp
@@ -65,14 +79,11 @@ public class User implements UserDetails{
 	@JsonIgnore
 	@UpdateTimestamp
 	private LocalDateTime updated;
+	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User createdBy;
 	
-	@ElementCollection
-	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = PasswordReset.class)
-	private List<PasswordReset> passwordResetList;
-
 	public User() {
 	}
 
@@ -203,4 +214,37 @@ public class User implements UserDetails{
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
+
+	public List<Skill> getSkills() {
+		return skills;
+	}
+
+	public void setSkills(List<Skill> skills) {
+		this.skills = skills;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public GroupUsers getGroup() {
+		return group;
+	}
+
+	public void setGroup(GroupUsers group) {
+		this.group = group;
+	}
+
+	public String getCPF() {
+		return CPF;
+	}
+
+	public void setCPF(String cPF) {
+		CPF = cPF;
+	}
+
 }

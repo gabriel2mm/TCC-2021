@@ -1,5 +1,6 @@
 package br.com.ocrfieldservice.dataprovider.repository;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,9 @@ import br.com.ocrfieldservice.core.repository.ProfileRepository;
 import br.com.ocrfieldservice.dataprovider.dao.ProfileDao;
 
 @Repository
-public class ProfileRepositoryImpl implements ProfileRepository {
+public class ProfileRepositoryImpl implements ProfileRepository, Serializable {
+
+	private static final long serialVersionUID = 2599546702549389317L;
 
 	@Autowired
 	private ProfileDao profileDao;

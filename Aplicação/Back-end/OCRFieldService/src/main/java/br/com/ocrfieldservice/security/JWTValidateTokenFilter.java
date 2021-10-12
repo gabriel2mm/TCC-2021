@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -69,7 +70,10 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 			constructorErrors("Acesso negado", 403, response);
 		}catch(JWTVerificationException | JwtException e){
 			constructorErrors("Token inválido", 403, response);
+		}catch(BadCredentialsException e) {
+			constructorErrors("Credenciais inválidas, tente novamente mais tarde!", 403, response);
 		}catch(Exception e) {
+			System.out.println(e.getMessage());
 			constructorErrors("Não foi possível processar sua solicitação", 500, response);
 		}
 	}

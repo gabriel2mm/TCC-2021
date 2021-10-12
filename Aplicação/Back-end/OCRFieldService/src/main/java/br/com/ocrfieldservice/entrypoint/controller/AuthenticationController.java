@@ -27,6 +27,7 @@ import br.com.ocrfieldservice.contracts.SendEmailService;
 import br.com.ocrfieldservice.contracts.SignInService;
 import br.com.ocrfieldservice.core.entity.Organization;
 import br.com.ocrfieldservice.core.entity.PasswordReset;
+import br.com.ocrfieldservice.core.entity.Permission;
 import br.com.ocrfieldservice.core.entity.Profile;
 import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.OrganizationRepository;
@@ -79,12 +80,37 @@ public class AuthenticationController {
 	@GetMapping
 	private @ResponseBody ResponseEntity<String> createUserTeste() {
 		
+		Organization org = new Organization();
+		org.setName("ADMINS");
+
+		
+		Permission p = new Permission();
+		p.setPermission("Admin");
+		
+		permissionRepository.save(p);
+		
+		Profile profile = new Profile();
+		profile.setName("ADMINS");
+		profile.setDescription("Perfil de administradores do sistema");
+		profile.setActive(true);
+		
+		List<Permission> permissions = new ArrayList<>();
+		permissions.add(p);
+		
+		profile.setPermissions(permissions); 
+		
+		profileRepository.save(profile);
+		
+		
 		User user = new User();
 		user.setActive(true);
 		user.setPassword(passwordEncoder.encode("teste"));
 		user.setEmail("teste@teste.com");
 		user.setFirstName("teste");
 		user.setLastName("teste");
+		user.setCPF("123456789");
+		user.setProfile(profile);
+		user.setOrganization(org);
 
 		repository.save(user);
 		
@@ -112,7 +138,7 @@ public class AuthenticationController {
 					{
 						add("Usuário e/ou senha inválidos");
 					}
-				}).build(), HttpStatus.OK);
+				}).build(), HttpStatus.FORBIDDEN);
 
 	}
 

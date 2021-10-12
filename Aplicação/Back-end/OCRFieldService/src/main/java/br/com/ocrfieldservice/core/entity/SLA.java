@@ -1,14 +1,11 @@
 package br.com.ocrfieldservice.core.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,35 +19,34 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 @Entity
-@Table(name="PROFILE")
-public class Profile {
-	
+@Table(name="SLA")
+public class SLA {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
-	@Column(name="name", length = 50, nullable = false)
+	@Column(length = 50, name = "name", nullable = false, unique = false)
 	private String name;
 	
-	@Column(name="description", length = 150, nullable = false)
+	@Column(length = 150, name = "description", nullable = false, unique = false)
 	private String description;
 	
 	@Column(name="active", nullable = false, columnDefinition = "tinyint default 1")
 	private boolean active;
 	
-	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
-	private List<User> users;
+	@Column(name = "time", length = 4)
+	private String time;
 	
-	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = Organization.class)
-	private Organization org;
+	@Column(name="unity", length = 10)
+	private String unity;
 	
-	@ElementCollection
-	@OneToMany(cascade = CascadeType.PERSIST, targetEntity = Permission.class, fetch = FetchType.EAGER)
-	private List<Permission> Permissions;
+	@OneToMany(cascade = CascadeType.PERSIST, targetEntity =  Category.class)
+	private List<Category> categories;
+	
+	@ManyToOne(cascade = CascadeType.PERSIST,targetEntity = Organization.class)
+	private Organization organization;
 	
 	@JsonIgnore
 	@CreationTimestamp
@@ -63,65 +59,92 @@ public class Profile {
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User createdBy;
-	
-	public long getId() {
+
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+
+	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public boolean isActive() {
 		return active;
 	}
+
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-	public List<Permission> getPermissions() {
-		return Permissions == null ? new ArrayList<>() : this.Permissions ;
+
+	public String getTime() {
+		return time;
 	}
-	public void setPermissions(List<Permission> permissions) {
-		Permissions = permissions;
+
+	public void setTime(String time) {
+		this.time = time;
 	}
-	public Organization getOrg() {
-		return org;
+
+	public String getUnity() {
+		return unity;
 	}
-	public void setOrg(Organization org) {
-		this.org = org;
+
+	public void setUnity(String unity) {
+		this.unity = unity;
 	}
+
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+
 	public LocalDateTime getCreated() {
 		return created;
 	}
+
 	public void setCreated(LocalDateTime created) {
 		this.created = created;
 	}
+
 	public LocalDateTime getUpdated() {
 		return updated;
 	}
+
 	public void setUpdated(LocalDateTime updated) {
 		this.updated = updated;
 	}
+
 	public User getCreatedBy() {
 		return createdBy;
 	}
+
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
 	}
-	public List<User> getUsers() {
-		return users;
+
+	public Organization getOrganization() {
+		return organization;
 	}
-	public void setUsers(List<User> users) {
-		this.users = users;
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
 	}
 }

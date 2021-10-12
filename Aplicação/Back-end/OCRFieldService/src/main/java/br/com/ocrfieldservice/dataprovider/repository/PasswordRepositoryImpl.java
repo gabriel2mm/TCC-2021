@@ -1,5 +1,6 @@
 package br.com.ocrfieldservice.dataprovider.repository;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -15,7 +16,9 @@ import br.com.ocrfieldservice.core.repository.PasswordResetRepository;
 import br.com.ocrfieldservice.dataprovider.dao.PasswordResetDao;
 
 @Repository
-public class PasswordRepositoryImpl implements PasswordResetRepository{
+public class PasswordRepositoryImpl implements PasswordResetRepository, Serializable{
+
+	private static final long serialVersionUID = -6904488891347069335L;
 
 	@Autowired
 	private PasswordResetDao passwordResetDao;

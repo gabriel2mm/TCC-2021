@@ -1,5 +1,6 @@
 package br.com.ocrfieldservice.dataprovider.repository;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,10 @@ import br.com.ocrfieldservice.core.repository.PermissionRepository;
 import br.com.ocrfieldservice.dataprovider.dao.PermissionDao;
 
 @Repository
-public class PermissionRepositoryImpl implements PermissionRepository{
+public class PermissionRepositoryImpl implements PermissionRepository, Serializable{
 
+	private static final long serialVersionUID = -1952909681968826648L;
+	
 	@Autowired
 	private PermissionDao permissionDao;
 	

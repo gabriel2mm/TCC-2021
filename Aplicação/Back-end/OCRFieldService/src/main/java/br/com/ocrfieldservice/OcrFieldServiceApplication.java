@@ -19,5 +19,4 @@ public class OcrFieldServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OcrFieldServiceApplication.class, args);
 	}
-
 }

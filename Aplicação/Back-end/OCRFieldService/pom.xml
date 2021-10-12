@@ -17,6 +17,7 @@
 	<description>Projeto de TCC 2 </description>
 	<properties>
 		<java.version>11</java.version>
+		<start-class>br.com.ocrfieldservice.OcrFieldServiceApplication</start-class>
 	</properties>
 	<dependencies>
 		<dependency>

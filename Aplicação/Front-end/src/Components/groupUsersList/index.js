@@ -90,7 +90,7 @@ export default function GroupUserListComponent() {
         });
 
     return (
-        <div className="hidden lg:block mr-0 md:mr-5 bg-white p-5 rounded-lg w-1/4 h-screen border-2 border-gray-200 ">
+        <div className="min-h-screen lg:block mr-0 md:mr-5 bg-white p-5 rounded-lg w-full lg:w-1/4 border-2 border-gray-200 ">
             <BasicInputComponent name="filterTree" placeholder="Buscar grupo" className="my-2" value={searchValue} onChange={onChange} />
             <Tree
                 defaultExpandAll

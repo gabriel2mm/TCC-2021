@@ -26,7 +26,7 @@ function NewCategoryPage() {
   useEffect(() => {
     async function fetchProfile() {
       const response = await axios.get(
-        `https://6096c51f116f3f00174b394c.mockapi.io/category/${params.id}`
+        `https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens/${params.id}`
       );
       if (response.status >= 200 && response.status < 300) {
         const tmpSLA = [];

@@ -18,7 +18,7 @@ function CategoryPage() {
     async function fetchProfiles() {
         setLoading(true);
         const response = await axios.get(
-            "https://6096c51f116f3f00174b394c.mockapi.io/category"
+            "https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens"
         );
         if (response.status >= 200 && response.status < 300) {
             setDataSource(response.data || []);
@@ -31,13 +31,13 @@ function CategoryPage() {
     const columns = [
         {
             title: "Nome",
-            dataIndex: "name",
-            key: "name",
+            dataIndex: "category",
+            key: "category",
         },
         {
             title: "Descrição",
-            dataIndex: "descricao",
-            key: "descricao",
+            dataIndex: "description",
+            key: "description",
             responsive: ["md"],
         },
         {

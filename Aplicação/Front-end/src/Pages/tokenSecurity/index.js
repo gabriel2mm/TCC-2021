@@ -24,11 +24,15 @@ function TokenSecurityPage() {
         },
     ];
 
+    function handleSubmit(){
+        setData({});
+    }
+
     return (
         <AuthenticatedLayoutComponent>
             <div className="container">
                 <h2 className="text-2xl font-bold text-gray-800 my-5">Integrações</h2>
-                <Form form={form} initialValues={data} scrollToFirstError>
+                <Form onFinish={handleSubmit} form={form} initialValues={data} scrollToFirstError>
                     <label htmlFor="application" className="font-semibold text-gray-600">Nome da aplicação: </label>
                     <Form.Item name="application" type="text">
                         <BasicInputComponent name="application" type="text" placeholder="Informe o nome da aplicação" />

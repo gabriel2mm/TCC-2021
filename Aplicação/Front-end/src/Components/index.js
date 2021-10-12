@@ -1,5 +1,5 @@
 import BasicInputComponent from './basicInput'
-import ButtonComponent from './basicInput/index'
+import ButtonComponent from './basicButton/index';
 import LoginLayoutComponent from './layouts/Login';
 import LoginComponent from './login/index';
 import AuthenticatedLayoutComponent from './layouts/Authenticated'
@@ -16,13 +16,20 @@ import LineChartComponent from './lineChart';
 import GroupUserListComponent from './groupUsersList';
 import QueueActivityComponent from './queueActivity';
 import BasicInputMaskComponent from './basicInputMask';
+import ActivitiesViewComponent from './activitiesView';
+import TableViewComponent from './activitiesView/tableView';
+import MapViewComponent from './activitiesView/mapView';
 import BarChart from './barChart';
 import PieChart from './pieChart';
 import DoughnutChart from './doughnutChart';
 import PolarArea from './polarChart';
 import RadarChart from './radarChart';
 
+
 export {
+    MapViewComponent,
+    TableViewComponent,
+    ActivitiesViewComponent,
     LineChartComponent,
     ActivitiesReportsComponent,
     ChatComponent,

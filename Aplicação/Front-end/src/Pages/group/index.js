@@ -19,7 +19,7 @@ function GroupPage() {
   async function fetchProfiles() {
     setLoading(true);
     try {
-      const response = await axios.get('https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/profiles');
+      const response = await axios.get('https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens');
       if (response.status >= 200 && response.status < 300) {
         setDataSource(response.data || []);
         setLoading(false);

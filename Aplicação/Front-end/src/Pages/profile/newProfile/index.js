@@ -15,7 +15,7 @@ function NewProfilePage() {
 
     async function handleSubmit() {
         try {
-            const response = await axios.post(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/profiles`, data, {});
+            const response = await axios.post(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens`, data, {});
             if (response.status >= 200 && response.status < 300) {
                 setData(initialData);
                 message.success("Perfil criado com sucesso!")

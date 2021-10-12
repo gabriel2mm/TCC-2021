@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import "./style.css"
 function SettingsComponent({ dataSource }) {
 
     const data = dataSource || [];
@@ -10,7 +10,7 @@ function SettingsComponent({ dataSource }) {
             return (
                 <div className="flex flex-col justify-items-start md:mx-20 md:pl-14 mt-5" key={`${d.title}-${i}`}>
                     <h1 className="text-gray-600 font-bold">{d.title}</h1>
-                    <div className="flex flex-row justify-items-start overflow-x-auto my-2">
+                    <div className="flex flex-row justify-items-start py-5 md:py-0 overflow-x-auto my-2">
                         {d.balloons.map( (b, i) => {
                             return (
                                 <Link to={b.link} key={`${b.title}-${i}`} >

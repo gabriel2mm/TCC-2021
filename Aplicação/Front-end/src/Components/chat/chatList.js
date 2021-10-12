@@ -17,7 +17,7 @@ export default function ChatListComponent() {
             setLoading(true);
             try {
                 
-                const response = await axios.get("https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/Contacts");
+                const response = await axios.get("https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/contacts");
                 if (response.status >= 200 && response.status < 300) {
                     setContactList(response.data);
                 }

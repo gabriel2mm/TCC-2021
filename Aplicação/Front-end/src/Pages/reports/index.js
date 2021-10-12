@@ -1,9 +1,10 @@
 import React from "react";
-import { AuthenticatedLayoutComponent, 
-  ActivitiesReportsComponent, 
-  LineChartComponent, 
-  BarChart, 
-  PieChart, 
+import {
+  AuthenticatedLayoutComponent,
+  ActivitiesReportsComponent,
+  LineChartComponent,
+  BarChart,
+  PieChart,
   DoughnutChart,
   PolarArea,
   RadarChart
@@ -13,9 +14,11 @@ import { AuthenticatedLayoutComponent,
 function DashboardPage() {
   return (
     <AuthenticatedLayoutComponent>
-      <div className="container">
-        <h2 className="text-2xl font-bold text-gray-800 my-5">Relatórios</h2>
-        <ActivitiesReportsComponent />
+      <div className="container mx-auto">
+        <h2 className="text-2xl font-bold text-gray-800 my-5">Dashboard</h2>
+        <div className="flex flex-row justify-center items-center content-center">
+          <ActivitiesReportsComponent />
+        </div>
         <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start lg:flex-row ">
           <div className="w-full md:w-1/2">
             <LineChartComponent />

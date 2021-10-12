@@ -35,7 +35,7 @@
   "scripts": {
     "build:style": "npm run tailwind build src/Assets/index.css -o src/Assets/tailwind.css",
     "start": "react-scripts start",
-    "build": "craco build",
+    "build": "react-scripts build",
     "test": "craco test",
     "cracoStart": "craco strat",
     "eject": "react-scripts eject"

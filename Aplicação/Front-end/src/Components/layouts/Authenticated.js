@@ -32,12 +32,27 @@ function AuthenticatedLayoutComponent({ children }) {
 
     function getCurrentRoute(menuPath) {
         const path = window.location.pathname;
-        if (path) {
-            if (path.includes(menuPath)) {
-                return buttonActive;
+        let isActive = false;
+
+        if(Array.isArray(menuPath)){  
+            if(path){
+                const arrayPath = path.split("/");
+                arrayPath.forEach(element => {
+                    if(menuPath.includes(path)){
+                       isActive = true;
+                    }
+                });
+            }
+            
+        }else{
+            if (path && path.includes(menuPath)) {
+                isActive = true;
             }
         }
-        return buttonNotActive;
+
+        console.log(isActive, menuPath, path, menuPath.includes(path));
+       
+        return isActive ? buttonActive : buttonNotActive;
     }
 
     return (
@@ -48,7 +63,7 @@ function AuthenticatedLayoutComponent({ children }) {
                         <div className="container px-4 mx-auto md:flex md:items-center">
                             <div className="flex justify-between items-center">
 
-                                <h1><Link to="/home" className="flex-shrink-0 text-gray-800 font-bold text-2xl md:text-lg lg:text-2xl hover:text-purple-800 focus:text-purple-800 transition-colors duration-800 focus:underline" tabIndex="1">Campify field service</Link></h1>
+                                <h1><Link to="/home" className="flex-shrink-0 text-gray-800 font-bold text-2xl md:text-lg lg:text-2xl hover:text-purple-800 focus:text-purple-800 transition-colors duration-800 focus:underline" tabIndex="1">OCR Field Service</Link></h1>
 
                                 <button onClick={openMenu} className="flex justify-center items-center border border-solid border-gray-600 w-10 h-10 rounded text-gray-600 opacity-50 hover:opacity-75 md:hidden" id="navbar-toggle">
                                     <MenuOutlined className="mt-0.5" />
@@ -56,7 +71,7 @@ function AuthenticatedLayoutComponent({ children }) {
                             </div>
 
                             <div ref={refMenu} className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
-                                <NavLink to="/home" className={`${getCurrentRoute("/home")}`} tabIndex="2">Atividades</NavLink>
+                                <NavLink to="/home" className={getCurrentRoute(["/home", "/", "/activity", "/activities", "/activities/new"])} tabIndex="2">Atividades</NavLink>
                                 <NavLink to="/dashboard" className={`${getCurrentRoute("/dashboard")}`} tabIndex="3">Relatórios</NavLink>
                                 <NavLink to="/settings" className={`${getCurrentRoute("/settings")}`} tabIndex="4">Configurações</NavLink>
                                 <ul className="flex flex-row justify-around md:justify-center items-center ml-2 mt-5 md:mt-0">
@@ -79,8 +94,8 @@ function AuthenticatedLayoutComponent({ children }) {
                         </div>
                     </nav>
                 </header>
-                <div className="container mx-auto pt-20 md:pt-3"><BreadCrumbComponent /></div>
-                <div className="container mx-auto bg-gray-100 px-10 py-5 mt-5 mb-10 min-w-max"> {children}</div>
+                <div className="lg:container mx-auto pt-20 md:pt-3"><BreadCrumbComponent /></div>
+                <div className="mx-auto bg-gray-100 p-5 mt-5 mb-10 min-h-screen h-auto"> {children}</div>
                 <footer className="text-md text-gray-600 text-center pb-5 min-w-max">Todos os direitos reservados. <p><strong>Field Service Cloud &copy; 2021</strong></p> </footer>
                 <div className="hidden md:block"> <ChatComponent  defaultVisible={false}/> </div>
             </ChatContextProvider>

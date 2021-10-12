@@ -129,7 +129,7 @@ export default function NewActivityPage() {
             <div className="container">
                 <h2 className="text-2xl font-bold text-gray-800 my-5">Novo chamado</h2>
                 {!sendForm ? (
-                    <Form initialValues={data} onFinish={handleSubmit} initialValues={data} form={form} scrollToFirstError>
+                    <Form initialValues={data} onFinish={handleSubmit} form={form} scrollToFirstError>
                         <div className="flex flex-col w-full">
                             <div className="flex md:flex-row flex-col w-full">
                                 <div className="item-group w-full md:mr-2">
@@ -151,7 +151,7 @@ export default function NewActivityPage() {
                                 <div className="item-group w-full md:mr-2">
                                     <label htmlFor="status" className="font-semibold text-gray-600">Status:</label>
                                     <Form.Item name="status" type="text">
-                                        <BasicInputComponent name="status" type="text" placeholder="Informe o status" value="criado" value="Aberto" disabled />
+                                        <BasicInputComponent name="status" type="text" placeholder="Informe o status" value="Aberto" disabled />
                                     </Form.Item>
                                 </div>
                                 <div className="item-group w-full md:mr-2">

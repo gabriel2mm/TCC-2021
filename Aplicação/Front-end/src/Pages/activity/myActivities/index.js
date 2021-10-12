@@ -10,11 +10,11 @@ function MyActivitiesPage() {
   const [dataSource, setDataSource] = useState([]);
 
   const data = useMemo(() => {
-    const response = fetchProfiles();
+    const response = fetchActivities();
     return response;
   }, []);
 
-  async function fetchProfiles() {
+  async function fetchActivities() {
     setLoading(true);
     try {
       const response = await axios.get('https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/Organization/1/category/1/activity');

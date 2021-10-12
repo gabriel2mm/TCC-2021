@@ -13,7 +13,7 @@ function ProfileDetailPage() {
 
     useEffect(() => {
         async function fetchProfile() {
-            const response = await axios.get(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/profiles/${params.id}`);
+            const response = await axios.get(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens/${params.id}`);
             if (response.status >= 200 && response.status < 300) {
                 setData(response.data);
                 form.resetFields();
@@ -32,7 +32,7 @@ function ProfileDetailPage() {
 
     async function handleSubmit() {
         try {
-            const response = await axios.put(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/profiles/${params.id}`, data, {});
+            const response = await axios.put(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens/${params.id}`, data, {});
             if (response.status >= 200 && response.status < 300) {
                 message.success("Perfil atualizado com sucesso!")
             }

@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { BasicInputComponent, ButtonComponent } from '..';
 import {Form} from 'antd';
+import { useHistory } from "react-router-dom"
 
 function LoginComponent() {
+  const  history = useHistory();
   const [form] = Form.useForm();
 
   function handleSubmit(){
     console.log("finish");
+    history.push("/home")
   }
 
   return (

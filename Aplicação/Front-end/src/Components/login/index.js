@@ -11,15 +11,11 @@ function LoginComponent() {
   const [form] = Form.useForm();
 
   async function handleSubmit(e) {
-    try {
-      const postJson = JSON.stringify(e);
-      console.log(postJson);
-      const response = await api.post("/auth", postJson);
-      console.log("finish");
-      history.push("/home");
-    } catch (error) {
-      console.log(error);
-    }
+    const postJson = JSON.stringify(e);
+    console.log(postJson);
+    const response = await api.post("/auth", postJson)
+      .then(data => console.log(data))
+      .catch(err => console.log(err))
   }
 
   return (

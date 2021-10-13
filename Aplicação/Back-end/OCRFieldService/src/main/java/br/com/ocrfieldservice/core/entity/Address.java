@@ -1,10 +1,14 @@
 package br.com.ocrfieldservice.core.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -42,6 +46,9 @@ public class Address {
 	
 	@Column(name="CEP")
 	private String CEP;
+	
+	@OneToMany(cascade = CascadeType.PERSIST, targetEntity = Activity.class)
+	private List<Activity> activities;
 	
 	public long getId() {
 		return id;

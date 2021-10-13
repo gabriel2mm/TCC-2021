@@ -1,7 +1,6 @@
 package br.com.ocrfieldservice.entrypoint.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +89,7 @@ public class ActivityController {
 			activityTmp.setCategory(activity.getCategory());
 			activityTmp.setStatus(activity.getStatus());
 			activityTmp.setAttachment(activity.getAttachment());
-			activityTmp.setComplement(activity.getComplement());
+			//activityTmp.setComplement(activity.getComplement());
 			//activityTmp.getAddress(activity.getAddress());
 			activityTmp.setProof(activity.getProof());
 			activityTmp.setLocation(activity.getLocation());

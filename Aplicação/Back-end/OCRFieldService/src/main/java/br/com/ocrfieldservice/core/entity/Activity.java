@@ -46,34 +46,8 @@ public class Activity {
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User assignedUser;
 	
-	public User getRequester() {
-		return requester;
-	}
-
-
-	public void setRequester(User requester) {
-		this.requester = requester;
-	}
-
-
-	public User getAssignedUser() {
-		return assignedUser;
-	}
-
-
-	public void setAssignedUser(User assignedUser) {
-		this.assignedUser = assignedUser;
-	}
-
-
-	public User getCreatedBy() {
-		return createdBy;
-	}
-
-
-	public void setCreatedBy(User createdBy) {
-		this.createdBy = createdBy;
-	}
+	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = Complement.class)
+	private Complement complement;
 
 	@Column(name="category")
 	private String category;
@@ -83,9 +57,6 @@ public class Activity {
 	
 	@Column(name="attachment")
 	private File attachment;
-	
-	@Column(name="complement")
-	private String complement;
 	
 	/*
 	@ManyToOne
@@ -105,7 +76,6 @@ public class Activity {
 	public Activity() {
 	}
 	
-
 	public long getId() {
 		return id;
 	}
@@ -154,6 +124,11 @@ public class Activity {
 		return description;
 	}
 
+	public void setComplement(Complement complement) {
+		this.complement = complement;
+	}
+
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -164,14 +139,6 @@ public class Activity {
 
 	public void setAttachment(File attachment) {
 		this.attachment = attachment;
-	}
-
-	public String getComplement() {
-		return complement;
-	}
-
-	public void setComplement(String complement) {
-		this.complement = complement;
 	}
 
 	public String getStatus() {
@@ -196,6 +163,34 @@ public class Activity {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+	
+	public User getRequester() {
+		return requester;
+	}
+
+	public void setRequester(User requester) {
+		this.requester = requester;
+	}
+
+
+	public User getAssignedUser() {
+		return assignedUser;
+	}
+
+
+	public void setAssignedUser(User assignedUser) {
+		this.assignedUser = assignedUser;
+	}
+
+
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
 	}
 	
 }

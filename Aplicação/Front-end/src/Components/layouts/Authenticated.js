@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { MenuOutlined, MessageOutlined, UserOutlined } from "@ant-design/icons";
 import { BreadCrumbComponent, SearchActivityComponent, ChatComponent } from '../index';
-import { ChatContextProvider } from '../../Contexts';
+import { ChatContextProvider, useUserContext } from '../../Contexts';
 import { Menu, Dropdown } from 'antd';
 
 function AuthenticatedLayoutComponent({ children }) {
@@ -10,6 +10,7 @@ function AuthenticatedLayoutComponent({ children }) {
     const refMenu = useRef();
     const buttonActive = "px-5 flex md:justify-center items-center hover:text-white focus:text-white flex-shrink-0 bg-purple-600 text-white text-base font-semibold py-2 px-4 rounded-3xl hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200";
     const buttonNotActive = "p-2 lg:px-4 px-5 md:px-0 my-2 flex md:justify-center items-center md:my-0 md:mx-2 text-md text-gray-800 font-semibold flex-shrink-0 rounded-3xl focus:bg-gray-200 hover:bg-gray-200 hover:text-gray-700 transition-colors duration-800"
+    const context = useUserContext();
 
     const menu = (
         <Menu>
@@ -20,7 +21,7 @@ function AuthenticatedLayoutComponent({ children }) {
                 <Link to="/settings/change-password">Alterar senha</Link>
             </Menu.Item>
             <Menu.Item>
-                <Link to="/">Sair</Link>
+                <Link to="/" onClick={context.logout}>Sair</Link>
             </Menu.Item>
         </Menu>
     );
@@ -49,9 +50,7 @@ function AuthenticatedLayoutComponent({ children }) {
                 isActive = true;
             }
         }
-
-        console.log(isActive, menuPath, path, menuPath.includes(path));
-       
+        
         return isActive ? buttonActive : buttonNotActive;
     }
 

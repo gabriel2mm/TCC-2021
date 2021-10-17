@@ -34,7 +34,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private UserRepository repository;
-
+	
+	private static final String[] MATCHERS_PUBLIC = { "/api/auth/**", "/ws", "/ws/**", "/app", "/app/**" };
 	
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -70,9 +71,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/api/auth/**").permitAll().anyRequest()
+		http.cors().and().csrf().disable();
+		http.authorizeRequests().antMatchers(MATCHERS_PUBLIC).permitAll().anyRequest()
 				.authenticated()
-				.and().addFilter(authenticationFilter())
+				.and()
+				.addFilter(authenticationFilter())
 				.addFilter(jwtValidateTokenFilter())
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

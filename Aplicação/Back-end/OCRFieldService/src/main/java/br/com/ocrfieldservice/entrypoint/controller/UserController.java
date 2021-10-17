@@ -141,4 +141,10 @@ public class UserController {
 		
 		return new ResponseEntity<String>("Não foi possível atualizar senha", HttpStatus.BAD_REQUEST);
 	}
+	
+	@GetMapping("/my-user")
+	public @ResponseBody ResponseEntity<User> getMyUser(){
+		User userLogged = repository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+		return new ResponseEntity<User>(userLogged, HttpStatus.OK);
+	}
 }

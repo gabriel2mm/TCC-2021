@@ -14,6 +14,10 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name="MESSAGES")
 public class Messages {
@@ -25,13 +29,19 @@ public class Messages {
 	@Column(name="message", length = 1000, nullable = false)
 	private String message;
 	
-	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
+	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+	@JsonIdentityReference(alwaysAsId=true) 
+	@OneToOne(cascade = CascadeType.MERGE, targetEntity = User.class)
 	private User to;
 	
-	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
+	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+	@JsonIdentityReference(alwaysAsId=true) 
+	@OneToOne(cascade = CascadeType.MERGE, targetEntity = User.class)
 	private User from;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = ChatRoom.class)
+	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+	@JsonIdentityReference(alwaysAsId=true) 
+	@ManyToOne(cascade = CascadeType.MERGE, targetEntity = ChatRoom.class)
 	private ChatRoom chatRoom;
 	
 	@CreationTimestamp

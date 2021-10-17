@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,21 +27,22 @@ public class ChatRoom {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
+	@OneToOne(cascade = CascadeType.MERGE, targetEntity = User.class)
 	private User user1;
 	
-	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
+	@OneToOne(cascade = CascadeType.MERGE, targetEntity = User.class)
 	private User user2;
 	
-	@Column(name = "active", columnDefinition = "tinyint(1) default 0")
+	@Column(name = "notificiation", columnDefinition = "tinyint(1) default 0")
 	private boolean notificiation;
 	
 	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime created;
 	
+	@JsonIgnore
 	@ElementCollection
-	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = Messages.class)
+	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = Messages.class, fetch = FetchType.EAGER)
 	private List<Messages> messages;
 
 	public Long getId() {

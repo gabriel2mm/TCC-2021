@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import { BasicInputComponent, ButtonComponent, LoginLayoutComponent } from '../../Components';
 import { ArrowLeftOutlined, MailOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Form } from 'antd';
+import { Form, message } from 'antd';
+import { API } from '../../Services/API';
 
 function ForgotPasswordPage() {
     const [form] = Form.useForm();
@@ -12,8 +13,11 @@ function ForgotPasswordPage() {
         setData({...data, [e.target.name]: e.target.value});
     }
 
-    function handleSubmit(){
-        console.log("finish");
+    async function handleSubmit(){
+        if(data && data.email){
+            const response = await API().post('/api/auth/forgot', {email : data.email});
+            message.info("Se o e-mail inserido for válido, você receberá um link para redefinir sua senha!");
+        }
     }
 
     return (

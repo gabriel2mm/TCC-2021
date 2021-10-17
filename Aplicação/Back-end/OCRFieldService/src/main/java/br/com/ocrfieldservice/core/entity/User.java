@@ -26,6 +26,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import br.com.ocrfieldservice.helpers.AuthoritiesDeserializer;
 
 @Entity
 @Table(name = "USERS")
@@ -72,6 +75,7 @@ public class User implements UserDetails {
 
 	@ManyToOne(targetEntity = GroupUsers.class, cascade = CascadeType.PERSIST)
 	private GroupUsers group;
+	
 
 	@JsonIgnore
 	@CreationTimestamp
@@ -165,6 +169,7 @@ public class User implements UserDetails {
 		this.createdBy = createdBy;
 	}
 
+	@JsonDeserialize(using = AuthoritiesDeserializer.class)
 	@Override
 	public List<? extends GrantedAuthority> getAuthorities() {
 		if (this.profile == null) {

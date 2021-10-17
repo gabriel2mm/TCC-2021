@@ -8,7 +8,7 @@ export function ChatContextProvider({children}){
     const [screen, setScreen] = useState(types.chatList);
     const [selectedChat, setSelectedChat] = useState({});
     const [selectedContact, setSelectedContact] = useState({});
-
+    
     function handleChangeScreen(ScreenName){
         setScreen(ScreenName);
     }

@@ -1,19 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BasicInputComponent, ButtonComponent, LoginLayoutComponent } from '../../Components';
 import { ArrowLeftOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Form } from 'antd';
+import { Form, message } from 'antd';
+import { useParams } from 'react-router-dom';
+import { API } from '../../Services/API';
+import { useLocation } from "react-router-dom";
 
 function ResetPasswordPage() {
     const [form] = Form.useForm();
     const [data, setData] = useState({ newPassword: "", confirmPassword: ""});
+    const [token, setToken] = useState();
+    const params = useLocation();
+
+    useEffect(() => {
+        const t = new URLSearchParams(params.search).get("t");
+        setToken(t);
+    }, [params]);
 
     function changeText(e) {
         setData({ ...data, [e.target.name]: e.target.value });
     }
 
-    function handleSubmit() {
-        console.log("finish");
+    async function handleSubmit() {
+        if(data && data.newPassword && token){
+            const response = await API().post('/api/auth/reset', { token: token, newPassword : data.newPassword})
+            if(response.status >= 200 && response.status < 300){
+                message.success("Senha redefinida com sucesso!");
+            }else{
+                message.success("Não foi possível redefinir senha, tente novamente mais tarde!");
+            }
+        }
     }
 
     return (

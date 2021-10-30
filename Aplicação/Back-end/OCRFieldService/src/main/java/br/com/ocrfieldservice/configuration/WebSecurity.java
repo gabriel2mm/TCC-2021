@@ -21,6 +21,7 @@ import br.com.ocrfieldservice.security.JWTAuthenticationFilter;
 import br.com.ocrfieldservice.security.JWTValidateTokenFilter;
 import br.com.ocrfieldservice.security.UserDetailService;
 
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -61,7 +62,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Bean
 	public JWTValidateTokenFilter jwtValidateTokenFilter() {
 		try {
-			return new JWTValidateTokenFilter(authenticationManager(), repository);
+			return new JWTValidateTokenFilter(authenticationManager());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,10 +76,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers(MATCHERS_PUBLIC).permitAll().anyRequest()
 				.authenticated()
 				.and()
-				.addFilter(authenticationFilter())
-				.addFilter(jwtValidateTokenFilter())
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
+		http.addFilter(authenticationFilter()).addFilter(jwtValidateTokenFilter());
 	}
 
 	@Bean

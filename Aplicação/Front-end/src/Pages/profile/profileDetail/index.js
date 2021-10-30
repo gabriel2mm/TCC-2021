@@ -4,16 +4,16 @@ import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, Gro
 import { Divider, Form, message, Switch } from 'antd';
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { configuration } from '../../../Components/groupList/dataSource';
-import axios from 'axios';
+import { API } from '../../../Services/API';
 
 function ProfileDetailPage() {
     const [form] = Form.useForm();
-    const [data, setData] = useState({ id: null, profile: "", description: "", status: "", permissions: [] });
+    const [data, setData] = useState({ id: null, name: "", description: "", active: 0, permissions: [] });
     const params = useParams();
 
     useEffect(() => {
         async function fetchProfile() {
-            const response = await axios.get(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens/${params.id}`);
+            const response = await API().get(`/api/profiles/${params.id}`);
             if (response.status >= 200 && response.status < 300) {
                 setData(response.data);
                 form.resetFields();
@@ -32,7 +32,7 @@ function ProfileDetailPage() {
 
     async function handleSubmit() {
         try {
-            const response = await axios.put(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens/${params.id}`, data, {});
+            const response = await API().put(`/api/profiles/${params.id}`, { id: params.id, name: data.name, description: data.description, active: data.active, permissions: null}, {});
             if (response.status >= 200 && response.status < 300) {
                 message.success("Perfil atualizado com sucesso!")
             }
@@ -43,9 +43,9 @@ function ProfileDetailPage() {
 
     function toggleActive(e) {
         if (e) {
-            setData({ ...data, status: "ativo" })
+            setData({ ...data, active: 1 })
         } else {
-            setData({ ...data, status: "suspended" })
+            setData({ ...data, active: 0 })
         }
     }
 
@@ -54,9 +54,9 @@ function ProfileDetailPage() {
             <div className="container">
                 <h2 className="text-2xl font-bold text-gray-800 my-5">Detalhe perfil de acesso</h2>
                 <Form onFinish={handleSubmit} initialValues={data} form={form} scrollToFirstError>
-                    <label htmlFor="profile" className="font-semibold text-gray-600">Nome do perfil: </label>
-                    <Form.Item name="profile" type="text" rules={[{ required: true, message: 'Insira o nome do perfil'}]}>
-                        <BasicInputComponent name="profile" placeholder="Informe o nome do perfil"  value={data.profile} onChange={e => onChangeText(e)}/>
+                    <label htmlFor="name" className="font-semibold text-gray-600">Nome do perfil: </label>
+                    <Form.Item name="name" type="text" rules={[{ required: true, message: 'Insira o nome do perfil'}]}>
+                        <BasicInputComponent name="name" placeholder="Informe o nome do perfil"  value={data.name} onChange={e => onChangeText(e)}/>
                     </Form.Item>
                     <label htmlFor="description" className="font-semibold text-gray-600">Descrição do perfil:</label>
                     <Form.Item name="description"  type="textarea" rules={[{ required: true, message: 'Insira a descrição do perfil' }]}>
@@ -64,7 +64,7 @@ function ProfileDetailPage() {
                     </Form.Item>
                     <label htmlFor="Ativo" className="font-semibold text-gray-600 mr-2">Ativo? </label>
                     <Form.Item>
-                        <Switch checked={data.status !== "suspended"} onChange={e => toggleActive(e)} checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
+                        <Switch checked={data.active} onChange={e => toggleActive(e)} checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
                     </Form.Item>
                     <Divider />
                     <div>

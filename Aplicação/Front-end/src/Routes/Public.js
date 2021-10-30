@@ -12,7 +12,6 @@ export default function PublicRoutes(){
             <Route path="/" exact component={LoginPage}/>
             <Route path="/forgot-password" exact component={ForgotPasswordPage}/>
             <Route path="/reset-password" exact component={ResetPasswordPage}/>
-            <Route path="/**" render={() => <Redirect to="/" />} />
         </Switch>
     );
 }

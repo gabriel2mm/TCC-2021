@@ -41,7 +41,7 @@ public class Profile {
 	private boolean active;
 	
 	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
+	@OneToMany(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private List<User> users;
 	
 	@JsonIgnore

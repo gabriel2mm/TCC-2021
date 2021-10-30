@@ -41,7 +41,7 @@ public class Category {
 	private boolean automaticAssignment;
 	
 	@ElementCollection
-	@OneToMany(cascade =CascadeType.PERSIST, targetEntity = Skill.class)
+	@OneToMany(cascade = CascadeType.PERSIST, targetEntity = Skill.class)
 	private List<Skill> skills;
 	
 	@ElementCollection

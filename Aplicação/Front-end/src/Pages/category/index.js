@@ -4,6 +4,7 @@ import { message, Popconfirm, Table, Tag } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { AuthenticatedLayoutComponent, ButtonComponent } from "../../Components";
 import axios from "axios";
+import { API } from "../../Services";
 
 function CategoryPage() {
     const [loading, setLoading] = useState(true);
@@ -17,9 +18,7 @@ function CategoryPage() {
 
     async function fetchProfiles() {
         setLoading(true);
-        const response = await axios.get(
-            "https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens"
-        );
+        const response = await API().get("/api/categories");
         if (response.status >= 200 && response.status < 300) {
             setDataSource(response.data || []);
             setLoading(false);
@@ -31,8 +30,8 @@ function CategoryPage() {
     const columns = [
         {
             title: "Nome",
-            dataIndex: "category",
-            key: "category",
+            dataIndex: "name",
+            key: "name",
         },
         {
             title: "Descrição",
@@ -42,10 +41,10 @@ function CategoryPage() {
         },
         {
             title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
+            dataIndex: 'active',
+            key: 'active',
             render: tag => {
-                if (tag === "suspended") {
+                if (tag === 0) {
                     return (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>)
                 }
 
@@ -75,9 +74,7 @@ function CategoryPage() {
 
     async function handleDelete(record) {
         try {
-            const response = await axios.delete(
-                `https://6096c51f116f3f00174b394c.mockapi.io/category/${record.id}`
-            );
+            const response = await API().delete(`/api/categories/${record.id}`);
             if (response.status >= 200 && response.status < 300) {
                 message.success(`Categoria "${record.name}" deletada com sucesso!`);
                 setDeletedFilter([...deletedFilter, record.name]);

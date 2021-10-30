@@ -63,7 +63,7 @@ public class User implements UserDetails {
 	@Column(name = "active", columnDefinition = "tinyint(1) default 1")
 	private boolean active;
 
-	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = Profile.class, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = Profile.class, fetch = FetchType.EAGER)
 	private Profile profile;
 
 	@ManyToMany(cascade = CascadeType.PERSIST, targetEntity = Skill.class)

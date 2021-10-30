@@ -1,13 +1,24 @@
 import React, { useState } from 'react'
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent } from '../../../Components'
-import { Divider, Form } from 'antd';
+import { Divider, Form, message } from 'antd';
+import { useUserContext } from '../../../Contexts';
+import { API } from '../../../Services';
 
 export default function ChangePasswordPage() {
     const [form] = Form.useForm();
     const [data, setData] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    const userContext = useUserContext();
 
-    function handleSubmit() {
-        console.log("finish")
+    async function handleSubmit() {
+        try{
+            const email = userContext.user.email;
+            const response = await API().post('/api/users/change-password', { email, ...data });  
+            if(response.status >= 200 && response.status < 300 ){
+                message.success("Troca de senha realizada com sucesso!");
+            }
+        }catch(e){
+            message.error("Não foi possível alterar sua senha!");
+        }
     }
 
     function changeText(e) {

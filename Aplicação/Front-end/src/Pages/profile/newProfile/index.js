@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, GroupListComponent } from '../../../Components';
 import { Divider, Form, message } from 'antd';
 import { configuration } from '../../../Components/groupList/dataSource';
-import axios from 'axios';
-
+import { API } from '../../../Services/API';
 
 function NewProfilePage() {
     const [form] = Form.useForm();
-    const initialData = { id: null, profile: "", description: "", status: "ativo", permissions: [] };
+    const initialData = { id: null, name: "", description: "", active: 1, permissions: [] };
     const [data, setData] = useState(initialData);
     function onChangeText(event) {
         setData({ ...data, [event.target.name]: event.target.value })
@@ -15,7 +14,7 @@ function NewProfilePage() {
 
     async function handleSubmit() {
         try {
-            const response = await axios.post(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens`, data, {});
+            const response = await API().post(`/api/profiles`, data, {});
             if (response.status >= 200 && response.status < 300) {
                 setData(initialData);
                 message.success("Perfil criado com sucesso!")
@@ -32,9 +31,9 @@ function NewProfilePage() {
                 <h2 className="text-2xl font-bold text-gray-800 my-5">Novo perfil de acesso</h2>
 
                 <Form onFinish={handleSubmit} initialValues={initialData} form={form} scrollToFirstError>
-                    <label htmlFor="profile" className="font-semibold text-gray-600">Nome do perfil</label>
-                    <Form.Item name="profile" type="text" rules={[{ required: true, message: 'Insira o nome do perfil' }]}>
-                        <BasicInputComponent name="profile" type="text" placeholder="Informe o nome do perfil" value={data.profile} onChange={e => onChangeText(e)} />
+                    <label htmlFor="name" className="font-semibold text-gray-600">Nome do perfil</label>
+                    <Form.Item name="name" type="text" rules={[{ required: true, message: 'Insira o nome do perfil' }]}>
+                        <BasicInputComponent name="name" type="text" placeholder="Informe o nome do perfil" value={data.name} onChange={e => onChangeText(e)} />
                     </Form.Item>
                     <label htmlFor="description" className="font-semibold text-gray-600">Descrição do perfil</label>
                     <Form.Item name="description" type="textarea" rules={[{ required: true, message: 'Insira a descrição do perfil' }]}>

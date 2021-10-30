@@ -6,11 +6,12 @@ function GroupListComponent({ dataSource, data, setData, ...props }) {
 
     function handleChangePermission(e, permission) {
         if (e) {
-            if (!data.permissions.includes(permission)) {
-                setData({ ...data, permissions: [...data.permissions, permission] })
+            const isAditionalPermission = data.permissions?.find(item => item.permission === permission);
+            if(!isAditionalPermission){
+                setData({ ...data, permissions: [...data.permissions, {permission}] })
             }
         } else {
-            setData({ ...data, permissions: data.permissions.filter(i => i !== permission) })
+            setData({ ...data, permissions: data.permissions.filter(item => item.permission !== permission) })
         }
     }
 
@@ -26,7 +27,7 @@ function GroupListComponent({ dataSource, data, setData, ...props }) {
                         </div>
 
                         <div className="switch ml-10 flex flex-row items-center">
-                            <Switch checked={data.permissions.includes(p.permission)} onChange={e => handleChangePermission(e, p.permission)} checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
+                            <Switch checked={data.permissions?.find(item => item.permission === p.permission) !== undefined} onChange={e => handleChangePermission(e, p.permission)} checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
                         </div>
                     </div>
                 ))}

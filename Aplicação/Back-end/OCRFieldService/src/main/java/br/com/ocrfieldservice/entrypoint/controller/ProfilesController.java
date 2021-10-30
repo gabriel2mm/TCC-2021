@@ -65,6 +65,7 @@ public class ProfilesController {
 			profile.setActive(true);
 			profile.setCreatedBy(user);
 			profile.setOrg(user.getOrganization());
+			profile.setCreatedBy(user);
 			
 			repository.save(profile);
 			
@@ -80,10 +81,13 @@ public class ProfilesController {
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		Profile profileTmp = repository.findOneById(id);
 		if(user != null && profileTmp != null && profileTmp.getOrg() == user.getOrganization() ) {
-			profile.setCreatedBy(user);
-			profile.setOrg(user.getOrganization());
+			profileTmp.setCreatedBy(user);
+			profileTmp.setOrg(user.getOrganization());
+			profileTmp.setName(profile.getName());
+			profileTmp.setDescription(profile.getDescription());
+			profileTmp.setActive(profile.isActive());
 			
-			repository.update(profile);
+			repository.update(profileTmp);
 			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 		}
 		

@@ -1,6 +1,5 @@
 package br.com.ocrfieldservice.dataprovider.repository;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,18 +11,15 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import br.com.ocrfieldservice.core.entity.Organization;
 import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 import br.com.ocrfieldservice.dataprovider.dao.UserDao;
 
-@Repository
-public class UserRepositoryImpl implements UserRepository, Serializable {
-
-
-	private static final long serialVersionUID = -5764869091108364774L;
+@Component
+public class UserRepositoryImpl implements UserRepository {
 
 	@PersistenceContext
     private EntityManager entityManager;

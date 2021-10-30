@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,11 +38,11 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 	private static final String HEADER = "Authorization";
 	private static final String PREFIX = "Bearer ";
 	
-	private final UserRepository repository;
+	@Autowired
+	private UserRepository repository;
 	
-	public JWTValidateTokenFilter(AuthenticationManager authenticationManager, UserRepository repository) {
+	public JWTValidateTokenFilter(AuthenticationManager authenticationManager) {
 		super(authenticationManager);		
-		this.repository = repository;
 	}
 	
 	@Override
@@ -75,6 +76,7 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 		}catch(BadCredentialsException e) {
 			constructorErrors("Credenciais inválidas, tente novamente mais tarde!", 403, response);
 		}catch(Exception e) {
+			e.printStackTrace();
 			System.out.println(e.getMessage());
 			constructorErrors("Não foi possível processar sua solicitação", 500, response);
 		}

@@ -2,8 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { AuthenticatedLayoutComponent, ButtonComponent } from '../../Components';
 import { Table, Tag, Popconfirm, message } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { API } from '../../Services/API';
 
 
 function ProfilePage() {
@@ -19,7 +19,7 @@ function ProfilePage() {
   async function fetchProfiles() {
     setLoading(true);
     try {
-      const response = await axios.get('https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens');
+      const response = await API().get('/api/profiles');
       if (response.status >= 200 && response.status < 300) {
         setDataSource(response.data || []);
         setLoading(false);
@@ -35,11 +35,37 @@ function ProfilePage() {
     return [];
   }
 
+  async function handleDelete(record) {
+    try {
+      const response = await API().delete(`/api/profiles/${record.id}`);
+      if (response.status >= 200 && response.status < 300) {
+        message.success(`Perfil "${record.profile}" deletado com sucesso!`);
+        setDeletedFilter([...deletedFilter, record.name]);
+        fetchProfiles();
+      }
+    } catch (e) {
+      console.log(e);
+      message.error(`Não foi possível deletar o perfil "${record.name}"!`);
+    }
+  }
+
+  async function handleSearch(event) {
+    const text = event.target.value;
+    data.then(item => {
+      if (text && item) {
+        const filteredData = item.filter(entry => entry.name.toLowerCase().includes(text.toLowerCase()) && !deletedFilter.includes(entry.name));
+        setDataSource(filteredData);
+      } else {
+        setDataSource(item.filter(entry => !deletedFilter.includes(entry.name)));
+      }
+    }).catch(err => console.log("Não foi possível gerar data"))
+  }
+
   const cols = [
     {
       title: 'Perfil',
-      dataIndex: 'profile',
-      key: 'perfil',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: 'Descrição',
@@ -49,10 +75,10 @@ function ProfilePage() {
     },
     {
       title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'active',
+      key: 'active',
       render: tag => {
-        if (tag === "suspended") {
+        if (!tag) {
           return (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>)
         }
 
@@ -70,39 +96,13 @@ function ProfilePage() {
             </Link>
           </div>
           <div className="mx-1">
-            <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o perfil ${record.profile}?`} onConfirm={() => handleDelete(record)}>
+            <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o perfil ${record.name}?`} onConfirm={() => handleDelete(record)}>
               <a href="!#">Deletar</a>
             </Popconfirm>
           </div>
         </div>
     },
   ]
-
-  async function handleDelete(record) {
-    try {
-      const response = await axios.delete(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/profiles/${record.id}`);
-      if (response.status >= 200 && response.status < 300) {
-        message.success(`Perfil "${record.profile}" deletado com sucesso!`);
-        setDeletedFilter([...deletedFilter, record.profile]);
-        fetchProfiles();
-      }
-    } catch (e) {
-      console.log(e);
-      message.error(`Não foi possível deletar o perfil "${record.profile}"!`);
-    }
-  }
-
-  async function handleSearch(event) {
-    const text = event.target.value;
-    data.then(item => {
-      if (text && item) {
-        const filteredData = item.filter(entry => entry.profile.toLowerCase().includes(text.toLowerCase()) && !deletedFilter.includes(entry.profile));
-        setDataSource(filteredData);
-      } else {
-        setDataSource(item.filter(entry => !deletedFilter.includes(entry.profile)));
-      }
-    }).catch(err => console.log("Não foi possível gerar data"))
-  }
 
   return (
     <AuthenticatedLayoutComponent>

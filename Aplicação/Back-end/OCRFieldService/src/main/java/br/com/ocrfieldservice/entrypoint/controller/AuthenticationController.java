@@ -122,7 +122,7 @@ public class AuthenticationController {
 	private @ResponseBody ResponseEntity<TokenResponse> signIn(@RequestBody SignRequest signRequest) {
 
 		User user = repository.findByEmail(signRequest.getEmail());	
-		if (user != null && signIn.sigin(signRequest.getPassword(), user.getPassword())) {
+		if (user != null && user.isActive() &&  signIn.sigin(signRequest.getPassword(), user.getPassword())) {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signRequest.getEmail(),
 					signRequest.getPassword(), user.getProfile() == null ? new ArrayList<>() : user.getProfile().getPermissions()));
 			

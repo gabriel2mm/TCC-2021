@@ -32,6 +32,7 @@ import ActivityDetailPage from './activity/activityDetail';
 import MyActivitiesPage from './activity/myActivities';
 import DashboardPage from './reports';
 import TokenSecurityPage from './tokenSecurity';
+import UserDetailsPage from './user/userDetails';
 
 export {
     LoginPage,
@@ -67,5 +68,6 @@ export {
     ActivityDetailPage,
     MyActivitiesPage,
     DashboardPage,
-    TokenSecurityPage
+    TokenSecurityPage,
+    UserDetailsPage
 }

@@ -74,8 +74,10 @@ public class UserController {
 			Long licenses = repository.countUsersByOrganizationId(userLogged.getOrganization().getId());
 
 			if (licenses <= limit) {
+				user.setActive(true);
 				user.setOrganization(userLogged.getOrganization());
 				user.setPassword(passwordEncoder.encode(userpassword));
+				user.setCreatedBy(userLogged);
 				repository.save(user);
 				return new ResponseEntity<String>("Criado com sucesso!", HttpStatus.CREATED);
 			} else {
@@ -100,7 +102,7 @@ public class UserController {
 				tmp.setLastName(user.getLastName() != null ? user.getLastName() : tmp.getLastName());
 				tmp.setEmail(user.getEmail() != null ? user.getEmail() : tmp.getEmail());
 				tmp.setCPF(user.getCPF() != null ? user.getCPF() : tmp.getCPF());
-
+				tmp.setActive(user.isActive());
 				repository.save(tmp);
 
 				return new ResponseEntity<String>("Usuário atualizado com sucesso!", HttpStatus.OK);

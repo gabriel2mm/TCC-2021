@@ -31,7 +31,8 @@ import {
     ActivityDetailPage,
     NewActivityPage,
     DashboardPage,
-    TokenSecurityPage
+    TokenSecurityPage,
+    UserDetailsPage
 } from '../Pages';
 
 export default function AuthenticatedRoutes(){
@@ -51,7 +52,7 @@ export default function AuthenticatedRoutes(){
             <Route path="/settings/categories/:id" exact component={CategoryDetailPage} />
             <Route path="/settings/users" exact component={UserPage} />
             <Route path="/settings/users/new" exact component={NewUserPage} />
-            <Route path="/settings/users/:id" exact component={NewUserPage} />
+            <Route path="/settings/users/:id" exact component={UserDetailsPage} />
             <Route path="/settings/my-profile" component={MyProfilePage}/>
             <Route path="/settings/change-password" exact component={ChangePasswordPage}/>
             <Route path="/settings/skills" exact component={SkillPage}/>

@@ -45,6 +45,7 @@ public class SLA {
 	@OneToMany(cascade = CascadeType.PERSIST, targetEntity =  Category.class)
 	private List<Category> categories;
 	
+	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.PERSIST,targetEntity = Organization.class)
 	private Organization organization;
 	

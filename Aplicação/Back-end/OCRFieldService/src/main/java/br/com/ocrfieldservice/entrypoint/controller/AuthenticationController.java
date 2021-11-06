@@ -3,6 +3,7 @@ package br.com.ocrfieldservice.entrypoint.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -98,7 +99,7 @@ public class AuthenticationController {
 		List<Permission> permissions = new ArrayList<>();
 		permissions.add(p);
 		
-		profile.setPermissions(permissions); 
+		profile.setPermissions(permissions.stream().collect(Collectors.toSet())); 
 		
 		profileRepository.save(profile);
 		

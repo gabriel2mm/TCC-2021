@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.ocrfieldservice.core.entity.Profile;
 import br.com.ocrfieldservice.core.entity.User;
+import br.com.ocrfieldservice.core.repository.ProfileRepository;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 import br.com.ocrfieldservice.entrypoint.viewModel.ChangePasswordProfile;
 
@@ -35,6 +37,9 @@ public class UserController {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private ProfileRepository profileRepository;
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:user') or hasAuthority('write:user')")
@@ -78,6 +83,11 @@ public class UserController {
 				user.setOrganization(userLogged.getOrganization());
 				user.setPassword(passwordEncoder.encode(userpassword));
 				user.setCreatedBy(userLogged);
+				if(user.getProfile() != null) {
+					Profile profile = profileRepository.findOneByName(user.getProfile().getName());
+					user.setProfile(profile);
+				}
+				
 				repository.save(user);
 				return new ResponseEntity<String>("Criado com sucesso!", HttpStatus.CREATED);
 			} else {
@@ -103,6 +113,11 @@ public class UserController {
 				tmp.setEmail(user.getEmail() != null ? user.getEmail() : tmp.getEmail());
 				tmp.setCPF(user.getCPF() != null ? user.getCPF() : tmp.getCPF());
 				tmp.setActive(user.isActive());
+				if(user.getProfile() != null) {
+					Profile profile = profileRepository.findOneByName(user.getProfile().getName());
+					tmp.setProfile(profile);
+				}
+				
 				repository.save(tmp);
 
 				return new ResponseEntity<String>("Usuário atualizado com sucesso!", HttpStatus.OK);

@@ -2,6 +2,7 @@ package br.com.ocrfieldservice.entrypoint.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,14 +19,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.ocrfieldservice.core.entity.Permission;
 import br.com.ocrfieldservice.core.entity.Profile;
 import br.com.ocrfieldservice.core.entity.User;
+import br.com.ocrfieldservice.core.repository.PermissionRepository;
 import br.com.ocrfieldservice.core.repository.ProfileRepository;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/api/profiles")
-@CrossOrigin(origins = "*")
 public class ProfilesController {
 	
 	@Autowired
@@ -34,7 +37,11 @@ public class ProfilesController {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private PermissionRepository permissionRepository;
+	
 	@GetMapping
+	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:profile') or hasAuthority('write:profile')")
 	public ResponseEntity<List<Profile>> getAllProfilesByOrganization() {
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		if(user != null && user.getOrganization() != null)
@@ -67,6 +74,21 @@ public class ProfilesController {
 			profile.setOrg(user.getOrganization());
 			profile.setCreatedBy(user);
 			
+			List<Permission> permissions = new ArrayList<>();
+			for(Permission p : profile.getPermissions()) {
+				Permission permission = permissionRepository.findByName(p.getPermission());
+				if(permission != null) {
+					permissions.add(permission);
+				}else {
+					Permission tmp = new Permission();
+					tmp.setPermission(p.getPermission());
+					permissionRepository.save(tmp);
+					permissions.add(tmp);
+				}
+			}
+			
+			profile.setPermissions(permissions.stream().collect(Collectors.toSet()));
+			
 			repository.save(profile);
 			
 			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
@@ -86,6 +108,21 @@ public class ProfilesController {
 			profileTmp.setName(profile.getName());
 			profileTmp.setDescription(profile.getDescription());
 			profileTmp.setActive(profile.isActive());
+			
+			List<Permission> permissions = new ArrayList<>();
+			for(Permission p : profile.getPermissions()) {
+				Permission permission = permissionRepository.findByName(p.getPermission());
+				if(permission != null) {
+					permissions.add(permission);
+				}else {
+					Permission tmp = new Permission();
+					tmp.setPermission(p.getPermission());
+					permissionRepository.save(tmp);
+					permissions.add(tmp);
+				}
+			}
+			
+			profileTmp.setPermissions(permissions.stream().collect(Collectors.toSet()));
 			
 			repository.update(profileTmp);
 			return new ResponseEntity<HttpStatus>(HttpStatus.OK);

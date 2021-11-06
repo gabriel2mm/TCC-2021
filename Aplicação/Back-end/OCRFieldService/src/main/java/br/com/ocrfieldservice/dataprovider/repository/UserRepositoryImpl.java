@@ -11,17 +11,17 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import br.com.ocrfieldservice.core.entity.Organization;
 import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 import br.com.ocrfieldservice.dataprovider.dao.UserDao;
 
-@Component
+@Repository("userRepository")
 public class UserRepositoryImpl implements UserRepository {
 
-	@PersistenceContext
+	@Autowired
     private EntityManager entityManager;
 	
 	@Autowired

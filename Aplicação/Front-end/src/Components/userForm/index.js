@@ -1,13 +1,26 @@
-import React, {useState, useEffect} from "react";
-import { BasicInputComponent, ButtonComponent } from '..';
+import React, {useEffect, useState} from "react";
+import { BasicInputComponent, ButtonComponent, BasicSelectComponent } from '..';
 import { Form, message } from 'antd';
 import { API } from "../../Services";
-import { useParams } from 'react-router-dom';
-
 
 function UserFormComponent() {
     const [form] = Form.useForm();
-    const [data, setData] = useState({id: null, firstName: "" , lastName: "", email: "", cpf: "", password: ""});
+    const [profiles, setProfiles] = useState([]);
+    const [data, setData] = useState({id: null, firstName: "" , lastName: "", email: "", cpf: "", password: "", profile: {}});
+
+    useEffect(() => { loadProfiles(); }, [])
+
+    async function loadProfiles(){
+        try{
+            const response = await API().get("/api/profiles");
+            if(response.status >= 200 && response.status < 300){
+                setProfiles(response.data);
+            }
+        }catch(e){
+            console.log(e)
+            message.error(" Não foi possível recuperar a lista de perfis!");
+        }
+    }
 
     async function onFinish(values) {
         try{
@@ -23,6 +36,10 @@ function UserFormComponent() {
 
     function handleChangeText(e){
         setData({...data, [e.target.name]: e.target.value});
+    }
+
+    function handleChangeProfile(e){
+        setData({ ...data, profile: profiles.find(profile => profile.id == e.target.value)});
     }
 
     return (
@@ -45,6 +62,10 @@ function UserFormComponent() {
                 <Form.Item className="w-full form-control" type="number" name="cpf" rules={[{ required: true, message: 'Insira o CPF do Usuário' }]}>
                     <BasicInputComponent name="cpf" placeholder="Informe um CPF Válido. EX: 00000000056" onChange={e => handleChangeText(e)} value={data.cpf}/>
                 </Form.Item>
+                <label htmlFor="profile" className="font-semibold text-gray-600 mr-2">Selecione o perfil do usuário:</label>
+                    <Form.Item>
+                       <BasicSelectComponent dataSource={profiles.map(p => ({ option: p.name, value: p.id}))} name="profile" value={data.profile?.id} onChange={e => handleChangeProfile(e)} />
+                    </Form.Item>
                 <label htmlFor="password" className="font-semibold text-gray-600">Senha:</label>
                 <Form.Item className="w-full form-control" type="password" name="password" rules={[{ required: true, message: 'Insira a senha do Usuário' }]} >
                     <BasicInputComponent name="password" type="password" placeholder="Informe a senha" onChange={e => handleChangeText(e)} value={data.password}/>

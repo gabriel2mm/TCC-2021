@@ -1,7 +1,9 @@
 package br.com.ocrfieldservice.core.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -39,11 +41,12 @@ public class Skill {
 	
 	@ElementCollection
 	@ManyToMany(cascade = CascadeType.PERSIST, targetEntity = User.class)
-	private List<User> users;
+	private Set<User> users = new HashSet<>();
 	
 	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = Category.class)
 	private Category category;
 	
+	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.PERSIST,targetEntity = Organization.class)
 	private Organization organization;
 	
@@ -107,14 +110,6 @@ public class Skill {
 		this.createdBy = createdBy;
 	}
 
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-
 	public boolean isActive() {
 		return active;
 	}
@@ -137,6 +132,14 @@ public class Skill {
 
 	public void setOrganization(Organization organization) {
 		this.organization = organization;
+	}
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
 	}
 	
 	

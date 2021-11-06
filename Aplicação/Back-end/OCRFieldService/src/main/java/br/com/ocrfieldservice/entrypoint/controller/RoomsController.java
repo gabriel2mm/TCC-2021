@@ -51,6 +51,7 @@ public class RoomsController {
 	}
 	
 	@PostMapping
+	@PreAuthorize("hasAuthority('Admin') or hasAuthority('admin:chat')")
 	public @ResponseBody ResponseEntity<ChatRoom> createChatRoom (@RequestBody ChatRoom chatRoom){
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		if(user != null) {
@@ -70,11 +71,13 @@ public class RoomsController {
 	}
 	
 	@GetMapping
+	@PreAuthorize("hasAuthority('Admin') or hasAuthority('admin:chat')")
 	public List<ChatRoom> getAllRooms(@RequestParam(name = "id") final Long userId){
 		return chatRoomRepository.findAllByUser(userId);
 	}
 	
 	@GetMapping("/messages")
+	@PreAuthorize("hasAuthority('Admin') or hasAuthority('admin:chat')")
 	public List<Messages> getAllMessages(@RequestParam(name="id") final Long roomId){
 		return messagesRepository.findAll(roomId);
 	}

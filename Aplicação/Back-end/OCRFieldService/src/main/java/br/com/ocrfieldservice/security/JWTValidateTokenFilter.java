@@ -35,11 +35,12 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 
 	@Value("${jwt.secret}")
 	private String secret;
+	
 	private static final String HEADER = "Authorization";
 	private static final String PREFIX = "Bearer ";
 	
 	@Autowired
-	private UserRepository repository;
+	private UserDetailService userDetailService;
 	
 	public JWTValidateTokenFilter(AuthenticationManager authenticationManager) {
 		super(authenticationManager);		
@@ -52,7 +53,7 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 			if(authorizationHeader != null && authorizationHeader.startsWith(PREFIX)) {
 				String token = authorizationHeader.replace(PREFIX, "");
 				String email = JWT.decode(token).getSubject();
-				User user = repository.findByEmail(email);
+				User user = (User) userDetailService.loadUserByUsername(email);
 				DecodedJWT decoded = JWT.require(Algorithm.HMAC512(this.secret)).build().verify(token);
 				
 				if(user != null && decoded != null) {

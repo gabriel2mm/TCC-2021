@@ -10,6 +10,7 @@ export const UserContext = createContext({
     permissions: [],
     signIn: null,
     logout: null,
+    containsPermission : null
 });
 
 export const UserContextProvider = ({ children }) => {
@@ -45,6 +46,10 @@ export const UserContextProvider = ({ children }) => {
 
     }, [token]);
 
+    function containsPermission(permission) {
+        return permissions.find(p => p === permission);
+    }
+
     async function signIn(email, password, persistSession = true) {
         try {
             delete axios.defaults.headers.common["Authorization"];
@@ -53,6 +58,7 @@ export const UserContextProvider = ({ children }) => {
                 const permissionResponse = await API().get('/api/permissions', { headers: { Authorization: `Bearer ${response.data.token}` } });
                 if (permissionResponse.status >= 200 && permissionResponse.status < 300) {
                     setPermissions(permissionResponse.data);
+                    console.log(permissionResponse);
                 }
 
                 const userResponse = await API().get('/api/users/my-user', { headers: { Authorization: `Bearer ${response.data.token}` } });
@@ -84,7 +90,7 @@ export const UserContextProvider = ({ children }) => {
     }
 
     return (
-        <UserContext.Provider value={{ user, token, signIn, logout, permissions, organization }}>
+        <UserContext.Provider value={{ user, token, signIn, logout, permissions, organization, containsPermission}}>
             {children}
         </UserContext.Provider>
     );

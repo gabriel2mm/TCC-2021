@@ -32,7 +32,7 @@ function ResetPasswordPage() {
             }
         }
     }
-
+    
     return (
         <LoginLayoutComponent>
             <div className="flex flex-row items-center">

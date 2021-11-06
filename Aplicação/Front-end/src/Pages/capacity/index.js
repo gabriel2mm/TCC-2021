@@ -4,6 +4,7 @@ import { Table, Tag, Popconfirm, message } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { API } from '../../Services';
 
 
 function CapacityPage() {
@@ -19,7 +20,7 @@ function CapacityPage() {
   async function fetchProfiles() {
     setLoading(true);
     try {
-      const response = await axios.get('https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens');
+      const response = await API().get('/api/capacities');
       if (response.status >= 200 && response.status < 300) {
         setDataSource(response.data || []);
         setLoading(false);
@@ -38,8 +39,8 @@ function CapacityPage() {
   const cols = [
     {
       title: 'Capacidade',
-      dataIndex: 'capacity',
-      key: 'capacity',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: 'Descrição',
@@ -48,16 +49,16 @@ function CapacityPage() {
       responsive: ['md'],
     },
     {
+      title: 'Quantidade de usuários',
+      dataIndex: 'qtd',
+      key: 'qtd',
+      render: (text, record, i) => <span key={`qtd-${i}`}>{record.users.length}</span>
+    },
+    {
       title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: tag => {
-        if (tag === "suspended") {
-          return (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>)
-        }
-
-        return (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
-      },
+      dataIndex: 'active',
+      key: 'active',
+      render: tag => !tag? (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>) : (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
     },
     {
       title: 'Ações',

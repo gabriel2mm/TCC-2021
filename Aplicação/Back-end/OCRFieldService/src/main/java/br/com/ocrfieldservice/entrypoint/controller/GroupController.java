@@ -1,13 +1,15 @@
 package br.com.ocrfieldservice.entrypoint.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,86 +27,97 @@ import br.com.ocrfieldservice.core.repository.GroupRepository;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 
 @RestController
-@RequestMapping(value = "/api/groups")
 @CrossOrigin(origins = "*")
+@RequestMapping(value = "/api/groups")
 public class GroupController {
-
-	@Autowired
-	private GroupRepository repository;
 	
-	@Autowired
-	private UserRepository userRepository;
+	@Autowired GroupRepository repository;
 	
+	@Autowired UserRepository userRep;
+	
+	@PostMapping
+	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:group')")
+	public @ResponseBody ResponseEntity<String> saveGroup(Authentication authentication, @RequestBody GroupUsers groups) {
+		User userLogged = userRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			groups.setCreatedBy(userLogged);
+			groups.setOrganization(userLogged.getOrganization());
+			groups.setActive(true);
+			repository.save(groups);
+			
+			return new ResponseEntity<String>("Grupo criado com sucesso! ", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<String>("Falha ao criar grupo!", HttpStatus.BAD_REQUEST);
+	}
 	
 	@GetMapping
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:group') or hasAuthority('write:group')")
-	public @ResponseBody ResponseEntity<List<GroupUsers>> getGroups(){
-		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		if(user != null && user.getOrganization() != null)
-			return new ResponseEntity<List<GroupUsers>>(repository.findByOrg(user.getOrganization()), HttpStatus.OK);
+	public @ResponseBody ResponseEntity<List<GroupUsers>> getAllGroups(Authentication authentication){
+		User userLogged = userRep.findByEmail(authentication.getName());
+		if(userLogged != null) {
+			return new ResponseEntity<List<GroupUsers>>(repository.findByOrg(userLogged.getOrganization()), HttpStatus.OK);
+		}
 		
-		
-		return new ResponseEntity<List<GroupUsers>>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<List<GroupUsers>>( new ArrayList<>(), HttpStatus.BAD_REQUEST);
 	}
-	
 	
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:group') or hasAuthority('write:group')")
-	public ResponseEntity<GroupUsers> getGroupById(@PathVariable("id") final Long id) {
-		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		GroupUsers group = repository.findOne(id);
-		
-		if(user != null && group != null) {			
-			return new ResponseEntity<GroupUsers>(group, HttpStatus.OK);
+	public @ResponseBody ResponseEntity<GroupUsers> getOne(Authentication authentication, @PathVariable("id") long id){
+		User userLogged = userRep.findByEmail(authentication.getName());
+		if(userLogged != null) {
+			return new ResponseEntity<GroupUsers>(repository.findOne(id), HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<GroupUsers>(new GroupUsers(),  HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<GroupUsers>( new GroupUsers(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:group')")
-	public ResponseEntity<HttpStatus> deleteGroup(@PathVariable("id") Long id){
-		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		GroupUsers group = repository.findOne(id);
-		if(user != null && group != null) {
+	public @ResponseBody ResponseEntity<String> deleteById(Authentication authentication, @PathVariable("id") long id){
+		User userLogged = userRep.findByEmail(authentication.getName());
+		if(userLogged != null) {
 			repository.deleteId(id);
-			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+			
+			return new ResponseEntity<String>("Registro deletado com sucesso!" , HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
-	}
-	
-	@PostMapping
-	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:group')")
-	private ResponseEntity<String> createGroup(@RequestBody GroupUsers group){
-	
-		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		if(user != null) {
-			repository.save(group);
-			return new ResponseEntity<String>("Não foi possível criar grupo!", HttpStatus.BAD_REQUEST);
-		}
-		
-		
-		return new ResponseEntity<String>("Não foi possível criar grupo!", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("Falha ao deletar registro" , HttpStatus.BAD_REQUEST);
 	}
 	
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:group')")
-	private ResponseEntity<String> updateGroup(@PathVariable("id") Long id,@RequestBody GroupUsers group){
-		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		if(user != null) {
-			GroupUsers tmp = repository.findOne(group.getId());
-			if(tmp != null) {
-				tmp.setName(group.getName() != null ? group.getName() : tmp.getName());
-				tmp.setDescription(group.getDescription() != null ? group.getDescription() : tmp.getDescription());
-				tmp.setUsers(group.getUsers() != null ? group.getUsers() : tmp.getUsers());
-				
-				repository.update(group);
-				
-				return new ResponseEntity<String>("Grupo atualizado com sucesso!", HttpStatus.BAD_REQUEST);
+	public @ResponseBody ResponseEntity<String> updateGroup(Authentication authentication, @PathVariable("id") long id, @RequestBody GroupUsers groups) {
+		User userLogged = userRep.findByEmail(authentication.getName());
+		
+		GroupUsers groupsTmp = repository.findOne(id);
+		
+		if(userLogged != null && userLogged.getOrganization() != null && groupsTmp != null) {
+			groupsTmp.setName(groups.getName());
+			groupsTmp.setDescription(groups.getDescription());
+			groupsTmp.setActive(groups.isActive());
+			groupsTmp.setCreatedBy(userLogged);
+			groupsTmp.setOrganization(userLogged.getOrganization());
+			
+			Set<User> users = new HashSet<>();
+			for(User user : groups.getUsers()) {
+				User tmp = userRep.findById(user.getId());
+				if(tmp != null) {
+					users.add(tmp);
+				}
 			}
+			
+			groupsTmp.setUsers(users);
+			
+			repository.update(groupsTmp);
+			
+			return new ResponseEntity<String>("Grupo atualizado com sucesso! ", HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<String>("Não foi possível Atualizar grupo", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("Falha ao atualizar grupo!", HttpStatus.BAD_REQUEST);
 	}
+	
 }
+
+

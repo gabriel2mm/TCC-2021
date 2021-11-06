@@ -1,15 +1,21 @@
 package br.com.ocrfieldservice.core.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="Permissions")
@@ -24,9 +30,10 @@ public class Permission implements GrantedAuthority {
 	@Column(name = "permission", length = 50, unique = true)
 	public String permission;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = Profile.class)
-	public Profile profile;
-
+	@JsonIgnore
+	@ManyToMany(cascade = CascadeType.ALL, targetEntity = Profile.class, fetch = FetchType.EAGER)
+	public Set<Profile> profiles = new HashSet<>();
+	
 	public long getId() {
 		return id;
 	}
@@ -43,16 +50,16 @@ public class Permission implements GrantedAuthority {
 		this.permission = permission;
 	}
 
-	public Profile getProfile() {
-		return profile;
-	}
-
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-	}
-
 	@Override
 	public String getAuthority() {
 		return this.permission;
+	}
+
+	public Set<Profile> getProfiles() {
+		return profiles;
+	}
+
+	public void setProfiles(Set<Profile> profiles) {
+		this.profiles = profiles;
 	}
 }

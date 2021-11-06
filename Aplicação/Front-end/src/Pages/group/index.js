@@ -2,8 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { AuthenticatedLayoutComponent, ButtonComponent } from '../../Components';
 import { Table, Tag, Popconfirm, message } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { API } from '../../Services';
 
 
 function GroupPage() {
@@ -19,7 +19,7 @@ function GroupPage() {
   async function fetchProfiles() {
     setLoading(true);
     try {
-      const response = await axios.get('https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens');
+      const response = await API().get('/api/groups');
       if (response.status >= 200 && response.status < 300) {
         setDataSource(response.data || []);
         setLoading(false);
@@ -38,8 +38,8 @@ function GroupPage() {
   const cols = [
     {
       title: 'Grupo',
-      dataIndex: 'group',
-      key: 'group',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: 'Descrição',
@@ -49,15 +49,9 @@ function GroupPage() {
     },
     {
       title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: tag => {
-        if (tag === "suspended") {
-          return (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>)
-        }
-
-        return (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
-      },
+      dataIndex: 'active',
+      key: 'active',
+      render: tag => (!tag ? <Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag> : <Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
     },
     {
       title: 'Ações',
@@ -70,7 +64,7 @@ function GroupPage() {
             </Link>
           </div>
           <div className="mx-1">
-            <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o grupo ${record.group}?`} onConfirm={() => handleDelete(record)}>
+            <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o grupo ${record.name}?`} onConfirm={() => handleDelete(record)}>
               <a href="!#">Deletar</a>
             </Popconfirm>
           </div>
@@ -80,15 +74,15 @@ function GroupPage() {
 
   async function handleDelete(record) {
     try {
-      const response = await axios.delete(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/profiles/${record.id}`);
+      const response = await API().delete(`/api/groups/${record.id}`);
       if (response.status >= 200 && response.status < 300) {
-        message.success(`grupo "${record.group}" deletado com sucesso!`);
-        setDeletedFilter([...deletedFilter, record.group]);
+        message.success(`grupo "${record.name}" deletado com sucesso!`);
+        setDeletedFilter([...deletedFilter, record.name]);
         fetchProfiles();
       }
     } catch (e) {
       console.log(e);
-      message.error(`Não foi possível deletar o grupo "${record.group}"!`);
+      message.error(`Não foi possível deletar o grupo "${record.name}"!`);
     }
   }
 
@@ -96,10 +90,10 @@ function GroupPage() {
     const text = event.target.value;
     data.then(item => {
       if (text && item) {
-        const filteredData = item.filter(entry => entry.group.toLowerCase().includes(text.toLowerCase()) && !deletedFilter.includes(entry.group));
+        const filteredData = item.filter(entry => entry.name.toLowerCase().includes(text.toLowerCase()) && !deletedFilter.includes(entry.name));
         setDataSource(filteredData);
       } else {
-        setDataSource(item.filter(entry => !deletedFilter.includes(entry.group)));
+        setDataSource(item.filter(entry => !deletedFilter.includes(entry.name)));
       }
     }).catch(err => console.log("Não foi possível gerar data"))
   }

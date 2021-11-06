@@ -2,7 +2,10 @@ package br.com.ocrfieldservice.core.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -67,14 +70,17 @@ public class User implements UserDetails {
 	private Profile profile;
 
 	@ManyToMany(cascade = CascadeType.PERSIST, targetEntity = Skill.class)
-	private List<Skill> skills;
+	private Set<Skill> skills = new HashSet<>();
+	
+	@ManyToMany(targetEntity = Capacity.class, cascade = CascadeType.MERGE)
+	private Set<Capacity> capacities = new HashSet<>();
 
 	@ElementCollection
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = PasswordReset.class)
 	private List<PasswordReset> passwordResetList;
 
-	@ManyToOne(targetEntity = GroupUsers.class, cascade = CascadeType.PERSIST)
-	private GroupUsers group;
+	@ManyToMany(targetEntity = GroupUsers.class, cascade = CascadeType.MERGE)
+	private Set<GroupUsers> groups = new HashSet<>();
 	
 
 	@JsonIgnore
@@ -176,7 +182,7 @@ public class User implements UserDetails {
 			return new ArrayList<GrantedAuthority>();
 		}
 
-		return profile.getPermissions();
+		return profile.getPermissions().stream().collect(Collectors.toList());
 	}
 
 	@Override
@@ -220,14 +226,6 @@ public class User implements UserDetails {
 		this.profile = profile;
 	}
 
-	public List<Skill> getSkills() {
-		return skills;
-	}
-
-	public void setSkills(List<Skill> skills) {
-		this.skills = skills;
-	}
-
 	public long getId() {
 		return id;
 	}
@@ -236,13 +234,7 @@ public class User implements UserDetails {
 		this.id = id;
 	}
 
-	public GroupUsers getGroup() {
-		return group;
-	}
 
-	public void setGroup(GroupUsers group) {
-		this.group = group;
-	}
 
 	public String getCPF() {
 		return CPF;
@@ -251,4 +243,29 @@ public class User implements UserDetails {
 	public void setCPF(String cPF) {
 		CPF = cPF;
 	}
+
+	public Set<GroupUsers> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<GroupUsers> groups) {
+		this.groups = groups;
+	}
+
+	public Set<Capacity> getCapacities() {
+		return capacities;
+	}
+
+	public void setCapacities(Set<Capacity> capacities) {
+		this.capacities = capacities;
+	}
+
+	public Set<Skill> getSkills() {
+		return skills;
+	}
+
+	public void setSkills(Set<Skill> skills) {
+		this.skills = skills;
+	}
+
 }

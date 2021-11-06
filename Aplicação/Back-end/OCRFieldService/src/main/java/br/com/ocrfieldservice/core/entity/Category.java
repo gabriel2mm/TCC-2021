@@ -1,12 +1,14 @@
 package br.com.ocrfieldservice.core.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,14 +43,14 @@ public class Category {
 	private boolean automaticAssignment;
 	
 	@ElementCollection
-	@OneToMany(cascade = CascadeType.PERSIST, targetEntity = Skill.class)
-	private List<Skill> skills;
+	@OneToMany(cascade = CascadeType.MERGE, targetEntity = Skill.class)
+	private Set<Skill> skills = new HashSet<>();
 	
 	@ElementCollection
-	@OneToMany(cascade = CascadeType.PERSIST, targetEntity = Capacity.class)
-	private List<Capacity> capacities;
+	@OneToMany(cascade = CascadeType.MERGE, targetEntity = Capacity.class)
+	private Set<Capacity> capacities = new HashSet<>();
 	
-	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = SLA.class)
+	@ManyToOne(cascade = CascadeType.MERGE, targetEntity = SLA.class, fetch = FetchType.EAGER)
 	private SLA sla;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST,targetEntity = Organization.class)
@@ -106,22 +108,6 @@ public class Category {
 		this.automaticAssignment = automaticAssignment;
 	}
 
-	public List<Skill> getSkills() {
-		return skills;
-	}
-
-	public void setSkills(List<Skill> skills) {
-		this.skills = skills;
-	}
-
-	public List<Capacity> getCapacities() {
-		return capacities;
-	}
-
-	public void setCapacities(List<Capacity> capacities) {
-		this.capacities = capacities;
-	}
-
 	public LocalDateTime getCreated() {
 		return created;
 	}
@@ -160,5 +146,21 @@ public class Category {
 
 	public void setOrganization(Organization organization) {
 		this.organization = organization;
+	}
+
+	public Set<Skill> getSkills() {
+		return skills;
+	}
+
+	public void setSkills(Set<Skill> skills) {
+		this.skills = skills;
+	}
+
+	public Set<Capacity> getCapacities() {
+		return capacities;
+	}
+
+	public void setCapacities(Set<Capacity> capacities) {
+		this.capacities = capacities;
 	}
 }

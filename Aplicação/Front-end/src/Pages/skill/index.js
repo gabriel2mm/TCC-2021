@@ -3,7 +3,7 @@ import { AuthenticatedLayoutComponent, ButtonComponent } from '../../Components'
 import { Table, Tag, Popconfirm, message } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { API } from '../../Services';
 
 function SkillPage() {
   const [loading, setLoading] = useState(true);
@@ -11,14 +11,14 @@ function SkillPage() {
   const [deletedFilter, setDeletedFilter] = useState([]);
 
   const data = useMemo(() => {
-    const response = fetchProfiles();
+    const response = loadSkills();
     return response;
   }, []);
 
-  async function fetchProfiles() {
+  async function loadSkills() {
     setLoading(true);
     try {
-      const response = await axios.get('https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens');
+      const response = await API().get('/api/skills');
       if (response.status >= 200 && response.status < 300) {
         setDataSource(response.data || []);
         setLoading(false);
@@ -37,8 +37,8 @@ function SkillPage() {
   const cols = [
     {
       title: 'Habilidade',
-      dataIndex: 'skill',
-      key: 'skill',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: 'Descrição',
@@ -47,16 +47,16 @@ function SkillPage() {
       responsive: ['md'],
     },
     {
+      title: 'Quantidade de usuários',
+      dataIndex: 'qtd',
+      key: 'qtd',
+      render: (text, record, i) => <span key={`qtd-${i}`}>{record.users.length}</span>
+    },
+    {
       title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: tag => {
-        if (tag === "suspended") {
-          return (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>)
-        }
-
-        return (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
-      },
+      dataIndex: 'active',
+      key: 'active',
+      render: tag =>  !tag? (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>) : (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
     },
     {
       title: 'Ações',
@@ -69,7 +69,7 @@ function SkillPage() {
             </Link>
           </div>
           <div className="mx-1">
-            <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o habilidade ${record.skill}?`} onConfirm={() => handleDelete(record)}>
+            <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o habilidade ${record.name}?`} onConfirm={() => handleDelete(record)}>
               <a href="!#">Deletar</a>
             </Popconfirm>
           </div>
@@ -79,15 +79,15 @@ function SkillPage() {
 
   async function handleDelete(record) {
     try {
-      const response = await axios.delete(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/profiles/${record.id}`);
+      const response = await API().delete(`/api/skills/${record.id}`);
       if (response.status >= 200 && response.status < 300) {
-        message.success(`Habilidade "${record.skill}" deletada com sucesso!`);
-        setDeletedFilter([...deletedFilter, record.skill]);
-        fetchProfiles();
+        message.success(`Habilidade "${record.name}" deletada com sucesso!`);
+        setDeletedFilter([...deletedFilter, record.name]);
+        loadSkills();
       }
     } catch (e) {
       console.log(e);
-      message.error(`Não foi possível deletar a habilidade "${record.skill}"!`);
+      message.error(`Não foi possível deletar a habilidade "${record.name}"!`);
     }
   }
 
@@ -95,10 +95,10 @@ function SkillPage() {
     const text = event.target.value;
     data.then(item => {
       if (text && item) {
-        const filteredData = item.filter(entry => entry.skill.toLowerCase().includes(text.toLowerCase()) && !deletedFilter.includes(entry.skill));
+        const filteredData = item.filter(entry => entry.name.toLowerCase().includes(text.toLowerCase()) && !deletedFilter.includes(entry.name));
         setDataSource(filteredData);
       } else {
-        setDataSource(item.filter(entry => !deletedFilter.includes(entry.skill)));
+        setDataSource(item.filter(entry => !deletedFilter.includes(entry.name)));
       }
     }).catch(err => console.log("Não foi possível gerar data"))
   }

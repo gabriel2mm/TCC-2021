@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import br.com.ocrfieldservice.core.entity.Organization;
 import br.com.ocrfieldservice.core.entity.User;
 
-@Repository
+@Repository("userRepository")
 public interface UserRepository {
 	
 	public User save(User user);

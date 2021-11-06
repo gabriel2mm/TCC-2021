@@ -1,13 +1,15 @@
 package br.com.ocrfieldservice.entrypoint.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,89 +26,92 @@ import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.CapacityRepository;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/api/capacities")
-@CrossOrigin(origins = "*")
 public class CapacityController {
 
-	@Autowired
-	private CapacityRepository repository;
+	@Autowired CapacityRepository repository;
 	
-	@Autowired
-	private UserRepository userRepository;
-	
+	@Autowired UserRepository useRep;
 	
 	@GetMapping
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:capacity') or hasAuthority('write:capacity')")
-	public @ResponseBody ResponseEntity<List<Capacity>> getCapacitys(){
-		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		if(user != null && user.getOrganization() != null)
-			return new ResponseEntity<List<Capacity>>(repository.findByOrg(user.getOrganization()), HttpStatus.OK);
+	public @ResponseBody ResponseEntity<List<Capacity>> getAllCapacities(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			return new ResponseEntity<List<Capacity>>(repository.findByOrg(userLogged.getOrganization()) , HttpStatus.OK);
+		}
 		
-		
-		return new ResponseEntity<List<Capacity>>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<List<Capacity>>(new ArrayList<>() , HttpStatus.BAD_REQUEST);
 	}
-	
 	
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:capacity') or hasAuthority('write:capacity')")
-	public ResponseEntity<Capacity> getCapacityById(@PathVariable("id") final Long id) {
-		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		Capacity capacity = repository.findOne(id);
-		
-		if(user != null && capacity != null) {			
-			return new ResponseEntity<Capacity>(capacity, HttpStatus.OK);
+	public @ResponseBody ResponseEntity<Capacity> getOneCapacity(Authentication authentication, @PathVariable("id") long id){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			return new ResponseEntity<Capacity>(repository.findOne(id) , HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<Capacity>(new Capacity(),  HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Capacity>(new Capacity() , HttpStatus.BAD_REQUEST);
 	}
 	
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:capacity')")
-	public ResponseEntity<HttpStatus> deleteCapacity(@PathVariable("id") Long id){
-		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		Capacity capacity = repository.findOne(id);
-		if(user != null && capacity != null) {
+	public @ResponseBody ResponseEntity<String>  deleteCapacity(Authentication authentication, @PathVariable("id") long id){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
 			repository.deleteId(id);
-			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+			return new ResponseEntity<String>("Deletado com sucesso!", HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("Falha ao deletar Capacidade!", HttpStatus.BAD_REQUEST);
 	}
 	
 	@PostMapping
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:capacity')")
-	private ResponseEntity<String> createCapacity(@RequestBody Capacity capacity){
-	
-		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		if(user != null) {
+	public @ResponseBody ResponseEntity<String> createCapacity(Authentication authentication, @RequestBody Capacity capacity){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			capacity.setActive(true);
+			capacity.setCreatedBy(userLogged);
+			capacity.setOrganization(userLogged.getOrganization());
+			
 			repository.save(capacity);
-			return new ResponseEntity<String>("Não foi possível criar Capacity!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Criado com sucesso!", HttpStatus.OK);
 		}
 		
-		
-		return new ResponseEntity<String>("Não foi possível criar Capacity!", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("Falha ao criar capacidade!", HttpStatus.BAD_REQUEST);
 	}
 	
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:capacity')")
-	private ResponseEntity<String> updateCapacity(@PathVariable("id") Long id,@RequestBody Capacity capacity){
-		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		if(user != null) {
-			Capacity tmp = repository.findOne(capacity.getId());
-			if(tmp != null) {
-				tmp.setName(capacity.getName() != null ? capacity.getName() : tmp.getName());
-				tmp.setDescription(capacity.getDescription() != null ? capacity.getDescription() : tmp.getDescription());
-				tmp.setActive(capacity.isActive());
-				tmp.setOrganization(user.getOrganization());
-				tmp.setCategory(capacity.getCategory() != null ? capacity.getCategory() : tmp.getCategory());
-				tmp.setUsers(capacity.getUsers() != null ? capacity.getUsers() : tmp.getUsers());
-				repository.update(capacity);
-				
-				return new ResponseEntity<String>("Capacity atualizado com sucesso!", HttpStatus.BAD_REQUEST);
+	public @ResponseBody ResponseEntity<String> updateCapacity(Authentication authentication, @PathVariable("id") long id, @RequestBody Capacity capacity){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		
+		Capacity capacityTmp = repository.findOne(id);
+		if(userLogged != null && userLogged.getOrganization() != null && capacityTmp!= null) {
+			capacityTmp.setActive(capacity.isActive());
+			capacityTmp.setName(capacity.getName());
+			capacityTmp.setDescription(capacity.getDescription());
+			capacityTmp.setCreatedBy(userLogged);
+			capacityTmp.setOrganization(userLogged.getOrganization());
+			
+			Set<User> users = new HashSet<>();
+			for(User user : capacity.getUsers()) {
+				User tmp = useRep.findById(user.getId());
+				if(tmp != null) {
+					users.add(tmp);
+				}
 			}
+			
+			capacityTmp.setUsers(users);
+			repository.save(capacityTmp);
+			
+			return new ResponseEntity<String>("Atualizado com sucesso!", HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<String>("Não foi possível Atualizar Capacity", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("Falha ao Atualizar capacidade!", HttpStatus.BAD_REQUEST);
 	}
 }

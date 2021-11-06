@@ -5,13 +5,17 @@ import { Divider, Form, message, Switch } from 'antd';
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { configuration } from '../../../Components/groupList/dataSource';
 import { API } from '../../../Services/API';
+import { useUserContext } from '../../../Contexts';
 
 function ProfileDetailPage() {
     const [form] = Form.useForm();
     const [data, setData] = useState({ id: null, name: "", description: "", active: 0, permissions: [] });
     const params = useParams();
+    const context = useUserContext();
 
     useEffect(() => {
+        console.log(context);
+
         async function fetchProfile() {
             const response = await API().get(`/api/profiles/${params.id}`);
             if (response.status >= 200 && response.status < 300) {
@@ -32,7 +36,7 @@ function ProfileDetailPage() {
 
     async function handleSubmit() {
         try {
-            const response = await API().put(`/api/profiles/${params.id}`, { id: params.id, name: data.name, description: data.description, active: data.active, permissions: null}, {});
+            const response = await API().put(`/api/profiles/${params.id}`, { id: params.id, name: data.name, description: data.description, active: data.active, permissions: data.permissions}, {});
             if (response.status >= 200 && response.status < 300) {
                 message.success("Perfil atualizado com sucesso!")
             }
@@ -56,11 +60,11 @@ function ProfileDetailPage() {
                 <Form onFinish={handleSubmit} initialValues={data} form={form} scrollToFirstError>
                     <label htmlFor="name" className="font-semibold text-gray-600">Nome do perfil: </label>
                     <Form.Item name="name" type="text" rules={[{ required: true, message: 'Insira o nome do perfil'}]}>
-                        <BasicInputComponent name="name" placeholder="Informe o nome do perfil"  value={data.name} onChange={e => onChangeText(e)}/>
+                        <BasicInputComponent name="name" placeholder="Informe o nome do perfil"  value={data.name || ''} onChange={e => onChangeText(e)}/>
                     </Form.Item>
                     <label htmlFor="description" className="font-semibold text-gray-600">Descrição do perfil:</label>
                     <Form.Item name="description"  type="textarea" rules={[{ required: true, message: 'Insira a descrição do perfil' }]}>
-                        <BasicInputComponent name="description" type="textarea" placeholder="Informe a descrição do perfil" value={data.description} onChange={e => onChangeText(e)} />
+                        <BasicInputComponent name="description" type="textarea" placeholder="Informe a descrição do perfil" value={data.description || ''} onChange={e => onChangeText(e)} />
                     </Form.Item>
                     <label htmlFor="Ativo" className="font-semibold text-gray-600 mr-2">Ativo? </label>
                     <Form.Item>

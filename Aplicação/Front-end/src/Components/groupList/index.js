@@ -3,15 +3,14 @@ import { Switch } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 
 function GroupListComponent({ dataSource, data, setData, ...props }) {
-
     function handleChangePermission(e, permission) {
-        if (e) {
-            const isAditionalPermission = data.permissions?.find(item => item.permission === permission);
-            if(!isAditionalPermission){
-                setData({ ...data, permissions: [...data.permissions, {permission}] })
+        if(e){
+            const issetPermission = data.permissions.find(item => item.name === permission);
+            if(!issetPermission){
+                setData({...data, permissions: [...data.permissions, { permission: permission, authority: permission } ]})
             }
-        } else {
-            setData({ ...data, permissions: data.permissions.filter(item => item.permission !== permission) })
+        }else{
+            setData({...data, permissions: data.permissions.filter(item => item.permission !== permission)});
         }
     }
 

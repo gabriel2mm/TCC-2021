@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BasicInputComponent, ButtonComponent } from '../../../Components/index';
+import { BasicInputComponent, ButtonComponent, BasicSelectComponent } from '../../../Components/index';
 import { Form, message, Switch } from 'antd';
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { API } from "../../../Services";
@@ -9,21 +9,38 @@ import {AuthenticatedLayoutComponent} from '../../../Components';
 function UserDetailsPage() {
     const params = useParams();
     const [form] = Form.useForm();
-    const [data, setData] = useState({ id: params.id, firstName: "", lastName: "", email: "", cpf: "", password: "" , active: false });
-
+    const [profiles, setProfiles] = useState([]);
+    const [data, setData] = useState({ id: params.id, firstName: "", lastName: "", email: "", cpf: "", password: "" , active: false , profile: null});
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await API().get(`/api/users/${params.id}`);
-                setData(response.data);
-                form.resetFields();
-            } catch (e) {
-                message.error("Não foi possível carregar usuário!");
-            }
-        }
-        fetchData();
+       async function handleLoads(){
+           await fetchData();
+           await loadProfiles();
+       }
+       handleLoads();
     }, [form, params.id]);
+
+    async function loadProfiles(){
+        try{
+            const response = await API().get("/api/profiles");
+            if(response.status >= 200 && response.status < 300){
+                setProfiles(response.data);
+            }
+        }catch(e){
+            console.log(e)
+            message.error(" Não foi possível recuperar a lista de perfis!");
+        }
+    }
+
+    async function fetchData() {
+        try {
+            const response = await API().get(`/api/users/${params.id}`);
+            setData(response.data);
+            form.resetFields();
+        } catch (e) {
+            message.error("Não foi possível carregar usuário!");
+        }
+    }
 
     async function onFinish() {
         try {
@@ -43,6 +60,10 @@ function UserDetailsPage() {
 
     function toggleActive(e){
         setData({ ...data, active: e });
+    }
+
+    function handleChangeProfile(e){
+        setData({ ...data, profile: profiles.find(profile => profile.id == e.target.value)});
     }
 
     return (
@@ -69,6 +90,10 @@ function UserDetailsPage() {
                     <label htmlFor="Ativo" className="font-semibold text-gray-600 mr-2">Ativo? </label>
                     <Form.Item>
                         <Switch checked={data.active} onChange={e => toggleActive(e)} checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
+                    </Form.Item>
+                    <label htmlFor="profile" className="font-semibold text-gray-600 mr-2">Selecione o perfil do usuário:</label>
+                    <Form.Item>
+                       <BasicSelectComponent dataSource={profiles.map(p => ({ option: p.name, value: p.id}))} name="profile" value={data.profile?.id} onChange={e => handleChangeProfile(e)} />
                     </Form.Item>
                     <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>
                     <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>

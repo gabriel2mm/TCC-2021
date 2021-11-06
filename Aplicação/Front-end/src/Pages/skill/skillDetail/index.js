@@ -3,35 +3,50 @@ import { useParams, Link } from 'react-router-dom';
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent } from '../../../Components';
 import { Form, message, Switch } from 'antd';
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
-import axios from 'axios';
 import { Transfer } from 'antd';
+import { API } from '../../../Services';
 
 function SkillDetailPage() {
     const [form] = Form.useForm();
-    const [data, setData] = useState({ id: null, skill: "", description: "", status: "", users: [] });
+    const [users, setUsers] = useState([]);
+    const [data, setData] = useState({ id: null, name: "", description: "", active: false, users: [] });
     const params = useParams();
 
     const [targetKeys, setTargetKeys] = useState(data.users);
     const [selectedKeys, setSelectedKeys] = useState([]);
-
     useEffect(() => {
-        async function fetchskill() {
-            const response = await axios.get(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens/${params.id}`);
-            if (response.status >= 200 && response.status < 300) {
-                setData(response.data);
-
-                const tmpUsers = [];
-                response.data.users.map( (u,i) => tmpUsers.push({ key: u.id, title: u.first, description: u.first}))
-                setTargetKeys(tmpUsers);
-                form.resetFields();
-            }
+        async function initialise(){
+            await loadUsers();
+            await loadSkills();
         }
-
-        if (params && params.id) {
-            fetchskill();
-        }
-
+        initialise();
     }, [params, form]);
+
+    useEffect(() => {setTargetKeys(data.users?.map(user => user.id));}, [data]);
+
+    async function loadSkills() {
+        const response = await API().get(`/api/skills/${params.id}`);
+        if (response.status >= 200 && response.status < 300) {
+            setData(response.data);
+
+            const tmpUsers = [];
+            response.data.users.map( (u,i) => tmpUsers.push({ key: u.id, title: u.first, description: u.first}))
+            setTargetKeys(tmpUsers);
+            form.resetFields();
+        }
+    }
+
+    async function loadUsers(){
+        try{
+            const response = await API().get('/api/users');
+            if(response.status >= 200 && response.status < 300){
+                setUsers(response.data.map(item => ({key: item.id, title: `${item.firstName} ${item.lastName}`})));   
+            }
+        }catch(e){
+            console.error(e);
+            message.error("Não foi possível carregar usuários!");
+        }
+    }
 
     function onChangeText(event) {
         setData({ ...data, [event.target.name]: event.target.value });
@@ -39,7 +54,7 @@ function SkillDetailPage() {
 
     async function handleSubmit() {
         try {
-            const response = await axios.put(`https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/screens/${params.id}`, data, {});
+            const response = await API().put(`/api/skills/${params.id}`, {name: data.name, description: data.description, active: data.active, users: users.filter(u => targetKeys.includes(u.key)).map(u => ({id: u.key}))});
             if (response.status >= 200 && response.status < 300) {
                 message.success("Habilidade atualizado com sucesso!")
             }
@@ -49,32 +64,29 @@ function SkillDetailPage() {
     }
 
     function toggleActive(e) {
-        if (e) {
-            setData({ ...data, status: "ativo" })
-        } else {
-            setData({ ...data, status: "suspended" })
-        }
+        setData({ ...data, active: e })
     }
 
-    const onChange = (nextTargetKeys, direction, moveKeys) => {
+    function onChangeText(event) {
+        setData({ ...data, [event.target.name]: event.target.value });
+    }
+    function onChange(nextTargetKeys, direction, moveKeys) {
         setTargetKeys(nextTargetKeys);
     };
 
-    const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+    function onSelectChange(sourceSelectedKeys, targetSelectedKeys) {
         setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
-        if(data.users && !data.users.includes(sourceSelectedKeys)){
-            setData({...data, users: [ ...data.users, selectedKeys.filter(k => k === sourceSelectedKeys)]});
-        }
     };
+
 
     return (
         <AuthenticatedLayoutComponent>
             <div className="container">
                 <h2 className="text-2xl font-bold text-gray-800 my-5">Detalhe da habilidade</h2>
                 <Form onFinish={handleSubmit} initialValues={data} form={form} scrollToFirstError>
-                    <label htmlFor="skill" className="font-semibold text-gray-600">Nome da habilidade: </label>
-                    <Form.Item name="skill" type="text" rules={[{ required: true, message: 'Insira o nome da habilidade' }]}>
-                        <BasicInputComponent name="skill" placeholder="Informe o nome da habilidade" value={data.skill} onChange={e => onChangeText(e)} />
+                    <label htmlFor="name" className="font-semibold text-gray-600">Nome da habilidade: </label>
+                    <Form.Item name="name" type="text" rules={[{ required: true, message: 'Insira o nome da habilidade' }]}>
+                        <BasicInputComponent name="name" placeholder="Informe o nome da habilidade" value={data.skill} onChange={e => onChangeText(e)} />
                     </Form.Item>
                     <label htmlFor="description" className="font-semibold text-gray-600">Descrição da habilidade:</label>
                     <Form.Item name="description" type="textarea" rules={[{ required: true, message: 'Insira a descrição da habilidade' }]}>
@@ -82,21 +94,18 @@ function SkillDetailPage() {
                     </Form.Item>
                     <Form.Item>
                         <label htmlFor="Ativo" className="font-semibold text-gray-600 mr-2">habilidade ativa? </label>
-                        <Switch checked={data.status !== "suspended"} onChange={e => toggleActive(e)} checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
+                        <Switch checked={data.active} onChange={e => toggleActive(e)} checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
                     </Form.Item>
                     <Form.Item>
                         <label htmlFor="selectUsers" className="font-semibold text-gray-600">Selecionar usuários:</label>
                         <Transfer
-                            rowKey={record => record.key}
-                            name="selectUsers"
-                            dataSource={targetKeys}
-                            titles={['Usuários selecionados', 'Selecionar usuários']}
-                            targetKeys={targetKeys}
-                            selectedKeys={selectedKeys}
-                            onChange={onChange}
-                            onSelectChange={onSelectChange}
-                            render={item => item.title}
-                            onItemSelect={ item => console.log(item)}
+                        dataSource={users}
+                        titles={['Usuários', 'Usuários selecionados']}
+                        targetKeys={targetKeys}
+                        selectedKeys={selectedKeys}
+                        onChange={onChange}
+                        onSelectChange={onSelectChange}
+                        render={item => item.title}
                         />
                     </Form.Item>
                     <Form.Item>

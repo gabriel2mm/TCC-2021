@@ -1,7 +1,8 @@
 package br.com.ocrfieldservice.core.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,14 +36,15 @@ public class Capacity {
 	
 	@Column(name="active", nullable = false, columnDefinition = "tinyint default 1")
 	private boolean active;
+
+	@ManyToMany(cascade = CascadeType.MERGE, targetEntity = User.class)
+	private Set<User> users = new HashSet<>();
 	
-	@ManyToMany(cascade = CascadeType.PERSIST, targetEntity = User.class)
-	private List<User> users;
-	
-	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = Category.class)
+	@ManyToOne(cascade = CascadeType.MERGE, targetEntity = Category.class)
 	private Category category;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST,targetEntity = Organization.class)
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.MERGE,targetEntity = Organization.class)
 	private Organization organization;
 	
 	@JsonIgnore
@@ -89,14 +91,6 @@ public class Capacity {
 		this.active = active;
 	}
 
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-
 	public LocalDateTime getCreated() {
 		return created;
 	}
@@ -135,5 +129,13 @@ public class Capacity {
 
 	public void setOrganization(Organization organization) {
 		this.organization = organization;
+	}
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
 	}
 }

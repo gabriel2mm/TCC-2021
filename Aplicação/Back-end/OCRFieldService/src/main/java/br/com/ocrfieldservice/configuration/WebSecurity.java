@@ -33,9 +33,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailService userDetailService;
 	
-	@Autowired
-	private UserRepository repository;
-	
 	private static final String[] MATCHERS_PUBLIC = { "/api/auth/**", "/ws", "/ws/**", "/app", "/app/**" };
 	
 	@Bean
@@ -76,10 +73,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers(MATCHERS_PUBLIC).permitAll().anyRequest()
 				.authenticated()
 				.and()
+				.addFilter(authenticationFilter())
+				.addFilter(jwtValidateTokenFilter())
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
-		http.addFilter(authenticationFilter()).addFilter(jwtValidateTokenFilter());
 	}
 
 	@Bean
@@ -97,3 +94,4 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	    return super.authenticationManagerBean();
 	}
 }
+

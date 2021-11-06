@@ -11,5 +11,7 @@ public interface PermissionRepository {
 	
 	public List<Permission> findAllPermissions();
 	
+	public Permission findByName(final String name);
+	
 	public void save(Permission permissions);
 }

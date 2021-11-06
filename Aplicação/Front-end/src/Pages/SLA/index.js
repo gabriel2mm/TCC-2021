@@ -19,7 +19,7 @@ function SLAPage() {
   async function fetchProfiles() {
     setLoading(true);
     try {
-      const response = await API().get('/api/sla');
+      const response = await API().get('/api/slas');
       if (response.status >= 200 && response.status < 300) {
         setDataSource(response.data || []);
         setLoading(false);
@@ -48,16 +48,17 @@ function SLAPage() {
       responsive: ['md'],
     },
     {
+      title: 'Prazo',
+      dataIndex: 'time',
+      key: 'time',
+      render: (text, record, i) => <span key={`prazo-${i}`}>{record.time} {record.unity}</span>
+    },
+    {
       title: 'Status',
       dataIndex: 'active',
       key: 'active',
-      render: tag => {
-        if (tag === 0) {
-          return (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>)
-        }
-
-        return (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
-      },
+      render: tag =>
+        !tag? (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>) : (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
     },
     {
       title: 'Ações',
@@ -80,15 +81,15 @@ function SLAPage() {
 
   async function handleDelete(record) {
     try {
-      const response = await API().delete(`/api/sla/${record.id}`);
+      const response = await API().delete(`/api/slas/${record.id}`);
       if (response.status >= 200 && response.status < 300) {
-        message.success(`acordo "${record.sla}" deletado com sucesso!`);
-        setDeletedFilter([...deletedFilter, record.sla]);
+        message.success(`acordo "${record.name}" deletado com sucesso!`);
+        setDeletedFilter([...deletedFilter, record.name]);
         fetchProfiles();
       }
     } catch (e) {
       console.log(e);
-      message.error(`Não foi possível deletar o acordo "${record.sla}"!`);
+      message.error(`Não foi possível deletar o acordo "${record.name}"!`);
     }
   }
 
@@ -96,10 +97,10 @@ function SLAPage() {
     const text = event.target.value;
     data.then(item => {
       if (text && item) {
-        const filteredData = item.filter(entry => entry.sla.toLowerCase().includes(text.toLowerCase()) && !deletedFilter.includes(entry.sla));
+        const filteredData = item.filter(entry => entry.name.toLowerCase().includes(text.toLowerCase()) && !deletedFilter.includes(entry.name));
         setDataSource(filteredData);
       } else {
-        setDataSource(item.filter(entry => !deletedFilter.includes(entry.sla)));
+        setDataSource(item.filter(entry => !deletedFilter.includes(entry.name)));
       }
     }).catch(err => console.log("Não foi possível gerar data"))
   }

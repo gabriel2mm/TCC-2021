@@ -1,7 +1,9 @@
 package br.com.ocrfieldservice.core.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,7 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -32,8 +35,14 @@ public class GroupUsers {
 	@Column(length = 150, name = "description", nullable = false, unique = false)
 	private String description;
 	
-	@OneToMany(cascade = CascadeType.PERSIST, targetEntity = User.class)
-	private List<User> users;
+	@Column(name = "active", columnDefinition = "tinyint(1) default 1")
+	private boolean active;
+	
+	@ManyToMany(cascade = CascadeType.MERGE, targetEntity = User.class)
+	private Set<User> users = new HashSet<>();
+	
+	@ManyToOne
+	private Organization organization;
 	
 	@JsonIgnore
 	@CreationTimestamp
@@ -71,14 +80,6 @@ public class GroupUsers {
 		this.description = description;
 	}
 
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-
 	public LocalDateTime getCreated() {
 		return created;
 	}
@@ -101,5 +102,29 @@ public class GroupUsers {
 
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
 	}
 }

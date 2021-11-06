@@ -3,6 +3,11 @@ package br.com.ocrfieldservice.dataprovider.repository;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +22,9 @@ public class PermissionRepositoryImpl implements PermissionRepository, Serializa
 	@Autowired
 	private PermissionDao permissionDao;
 	
+	@Autowired
+	private EntityManager entityManager;
+	
 	@Override
 	public void save(Permission permission) {
 		permissionDao.save(permission);
@@ -26,5 +34,22 @@ public class PermissionRepositoryImpl implements PermissionRepository, Serializa
 	@Override
 	public List<Permission> findAllPermissions() {
 		return permissionDao.findAll();
+	}
+
+	@Override
+	public Permission findByName(String name) {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Permission> query  = builder.createQuery(Permission.class);
+		Root<Permission> root = query.from(Permission.class);
+		
+		query.distinct(true).select(root).where(builder.equal(root.get("permission"), name));
+		
+		List<Permission> permissions = entityManager.createQuery(query).getResultList();
+		
+		if(permissions.size() > 0) {
+			return permissions.get(0);
+		}
+		
+		return null;
 	}
 }

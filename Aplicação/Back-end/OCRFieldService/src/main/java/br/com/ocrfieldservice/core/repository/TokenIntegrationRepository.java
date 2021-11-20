@@ -9,11 +9,11 @@ import br.com.ocrfieldservice.core.entity.TokenIntegration;
 
 @Repository
 public interface TokenIntegrationRepository extends Serializable {
-	
+
 	public void Save(final TokenIntegration tokenIntegrarion);
-	
+
 	public List<TokenIntegration> getAllByOrganization(final long id);
-	
+
 	public void DeleteToken(final long id);
-}	
+}
 

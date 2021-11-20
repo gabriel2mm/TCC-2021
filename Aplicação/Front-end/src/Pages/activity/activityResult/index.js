@@ -6,7 +6,7 @@ function ActivityResultPage({ activityNumber }) {
         <Result
             status="success"
             title="Chamado aberto com sucesso"
-            subTitle={`Seu chamado #${activityNumber} foi aberto com sucesso`}
+            subTitle={`Seu chamado ${activityNumber} foi aberto com sucesso`}
             extra={[
                 <Link to="/activities" key="my-activities">
                     <Button type="primary">

@@ -4,6 +4,7 @@ import { Form, Transfer, Switch, message } from "antd";
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, BasicSelectComponent } from "../../../Components";
 import { API } from '../../../Services';
+import { useUserContext } from '../../../Contexts';
 
 function CategoryDetailPage(props) {
   const params = useParams();
@@ -12,7 +13,8 @@ function CategoryDetailPage(props) {
   const [skills, setSkills] = useState([]);
   const [capacities, setCapacities] = useState([]);
   const [data, setData] = useState({ id: "", name: "", description: "", active: false, automaticAssignment: false, sla: {}, skills: [], capacities: [] });
-
+  const context = useUserContext();
+  
   //Transfer tratamentos
   const [targetKeysSkills, setTargetKeysSkills] = useState([]);
   const [selectedKeysSkills, setSelectedKeysSkills] = useState([]);
@@ -186,7 +188,7 @@ function CategoryDetailPage(props) {
               <Transfer dataSource={capacities} titles={["Todas as capacidades", "Capacidades selecionadas"]} targetKeys={targetKeysCapacities} selectedKeys={selectedKeysCapacities} onChange={onChangeCapacities} onSelectChange={onSelectChangeCapacities} render={(item) => item.title} />
             </div>
           </div>
-          <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>
+          { context.containsPermission("Admin") || context.containsPermission("write:category") ? (<ButtonComponent type="submit">Salvar</ButtonComponent>) : (null)}
           <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>
         </Form>
       </div>

@@ -4,15 +4,17 @@ import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, Bas
 import { Form, message, Switch } from 'antd';
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { API } from '../../../Services';
+import { useUserContext } from '../../../Contexts';
 
 function SLADetailPage() {
     const formRef = useRef();
     const params = useParams();
     const [form] = Form.useForm();
     const [data, setData] = useState({ id: null, name: "", description: "", active: false, time: 0 });
+    const context = useUserContext();
 
     useEffect(() => {
-        async function fetchProfile() {
+        async function fetchSLA() {
             const response = await API().get(`/api/slas/${params.id}`);
             if (response.status >= 200 && response.status < 300) {
                 setData(response.data);
@@ -21,7 +23,7 @@ function SLADetailPage() {
         }
 
         if (params && params.id) {
-            fetchProfile();
+            fetchSLA();
         }
 
     }, [params, form]);
@@ -89,8 +91,7 @@ function SLADetailPage() {
                         <label htmlFor="active" className="font-semibold text-gray-600 mr-2">Acordo ativo? </label>
                         <Switch name="active" checked={data.active} onChange={e => toggleActive(e)} checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} />
                     </Form.Item>
-
-                <ButtonComponent type="submit">Salvar</ButtonComponent>
+                { context.containsPermission("Admin") || context.containsPermission("write:sla") ? (<ButtonComponent type="submit">Salvar</ButtonComponent>) : (null)}
                 <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>
             </Form>
         </div>

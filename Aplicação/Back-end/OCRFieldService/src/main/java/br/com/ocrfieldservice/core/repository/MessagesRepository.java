@@ -12,10 +12,10 @@ import br.com.ocrfieldservice.core.entity.User;
 public interface MessagesRepository {
 
 	public void save(final Messages message);
-	
+
 	public List<Messages> findAll(final ChatRoom chatRoom);
-	
+
 	public List<Messages> findAll(final Long id);
-	
+
 	public List<Messages> findAll(final User user);
 }

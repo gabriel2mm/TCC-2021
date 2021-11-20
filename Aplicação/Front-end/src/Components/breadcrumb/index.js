@@ -23,16 +23,17 @@ function BreadCrumbComponent() {
 
         return last ? (
             <span className="text-gray-800 font-bold  ">{route.breadcrumbName.toLowerCase().charAt(0).toUpperCase() + route.breadcrumbName.substr(1)}</span>
-        ) : (
+        ) : 
+        (
             <Link to={`/${paths.join('/')}`} className="text-gray-300 hover:text-purple-800 visited:text-purple-600">{route.breadcrumbName.toLowerCase().charAt(0).toUpperCase() + route.breadcrumbName.substr(1)}</Link>
         );
     }
 
-    return (
-        <div className="w-max py-2 px-5 m-2 bg-gray-200 rounded-2xl ">
-            <Breadcrumb itemRender={itemRender} routes={pages} />
-        </div>
-    );
+    return pages && pages.length > 0 ? (
+            <div className="w-max py-2 px-5 m-2 bg-gray-200 rounded-2xl ">
+                <Breadcrumb itemRender={itemRender} routes={pages} />
+             </div>
+        ) : (null)
 }
 
 export default BreadCrumbComponent;

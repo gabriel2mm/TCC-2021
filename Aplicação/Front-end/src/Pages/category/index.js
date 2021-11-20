@@ -4,11 +4,13 @@ import { message, Popconfirm, Table, Tag } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { AuthenticatedLayoutComponent, ButtonComponent } from "../../Components";
 import { API } from "../../Services";
+import { useUserContext } from "../../Contexts";
 
 function CategoryPage() {
     const [loading, setLoading] = useState(true);
     const [dataSource, setDataSource] = useState([]);
     const [deletedFilter, setDeletedFilter] = useState([]);
+    const context = useUserContext();
 
     const data = useMemo(() => {
         const response = fetchProfiles();
@@ -42,13 +44,13 @@ function CategoryPage() {
             title: 'Atribuição automatica?',
             dataIndex: 'automaticAssignment',
             key: 'automaticAssignment',
-            render: tag => tag? (<span>Sim</span>) : (<span>Não</span>)
+            render: tag => tag ? (<span>Sim</span>) : (<span>Não</span>)
         },
         {
             title: 'Status',
             dataIndex: 'active',
             key: 'active',
-            render: tag => !tag? (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>) : (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
+            render: tag => !tag ? (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>) : (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
         },
         {
             title: "Ações",
@@ -61,11 +63,12 @@ function CategoryPage() {
                             Visualizar
                         </Link>
                     </div>
-                    <div className="mx-1">
-                        <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o perfil ${record.name}?`} onConfirm={() => handleDelete(record)}>
-                            <a href="!#">Deletar</a>
-                        </Popconfirm>
-                    </div>
+                    {context.containsPermission("Admin") || context.containsPermission("write:category") ? (
+                        <div className="mx-1">
+                            <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o perfil ${record.name}?`} onConfirm={() => handleDelete(record)}>
+                                <a href="!#">Deletar</a>
+                            </Popconfirm>
+                        </div>) : null}
                 </div>
             ),
         },
@@ -106,18 +109,20 @@ function CategoryPage() {
     }
 
     return (
-         <AuthenticatedLayoutComponent>
-         <div className="container">
-           <h2 className="text-2xl font-bold text-gray-800 my-5">Categorias</h2>
-           <div className="mt-5 w-full flex flex-col md:flex-row flex-shrink-0 justify-start md:justify-between md:items-center">
-             <input onChange={(event) => handleSearch(event)} type="text" name="search" placeholder="Buscar perfil" className="order-2 md:order-1 w-full md:w-80 pl-3 pr-10 py-2 border-2 border-gray-200 rounded-xl hover:border-gray-300 focus:outline-none focus:border-purple-500 transition-colors" />
-             <Link to="/settings/categories/new" className="order-1 md:order-2">
-               <ButtonComponent className="float-left md:float-right mb-4 w-28 md:w-48 ">Nova categoria</ButtonComponent>
-             </Link>
-           </div>
-           <Table rowKey={ record => record.id} loading={loading} columns={columns} dataSource={dataSource || []} />
-         </div>
-       </AuthenticatedLayoutComponent>
+        <AuthenticatedLayoutComponent>
+            <div className="container">
+                <h2 className="text-2xl font-bold text-gray-800 my-5">Categorias</h2>
+                <div className="mt-5 w-full flex flex-col md:flex-row flex-shrink-0 justify-start md:justify-between md:items-center">
+                    <input onChange={(event) => handleSearch(event)} type="text" name="search" placeholder="Buscar perfil" className="order-2 md:order-1 w-full md:w-80 pl-3 pr-10 py-2 border-2 border-gray-200 rounded-xl hover:border-gray-300 focus:outline-none focus:border-purple-500 transition-colors" />
+                    {context.containsPermission("Admin") || context.containsPermission("write:category") ? (
+                        <Link to="/settings/categories/new" className="order-1 md:order-2">
+                            <ButtonComponent className="float-left md:float-right mb-4 w-28 md:w-48 ">Nova categoria</ButtonComponent>
+                        </Link>
+                    ) : null }
+                </div>
+                <Table rowKey={record => record.id} loading={loading} columns={columns} dataSource={dataSource || []} />
+            </div>
+        </AuthenticatedLayoutComponent>
     );
 }
 

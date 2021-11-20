@@ -37,35 +37,35 @@ import br.com.ocrfieldservice.entrypoint.viewModel.TokenResponse;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final AuthenticationManager authenticationManager;
-	
+
 	@Value("${jwt.secret}")
 	private String secret;
-	
+
 	@Value("${jwt.token-expired}")
 	private long expiration;
-	
+
 	@Autowired
 	private UserRepository repository;
-	
+
 	@Autowired
 	private SignInService signIn;
-	
-	
+
+
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
 	}
-	
+
 	@Override
 	@Autowired
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
 	    super.setAuthenticationManager(authenticationManager);
 	}
-	
+
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			SignRequest signRequest = new ObjectMapper().readValue(request.getInputStream(), SignRequest.class);
-			
+
 			User user = repository.findByEmail(signRequest.getEmail());
 			if(user != null && signIn.sigin(signRequest.getPassword(), user.getPassword())) {
 				return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signRequest.getEmail(), signRequest.getPassword(), user.getProfile().getPermissions()));
@@ -75,33 +75,33 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		} catch (IOException e) {
 			logger.error("Não foi possível ler o conteúdo da requisição");
 		}
-		
+
 		throw new RuntimeException("Não foi possível realizar a autenticação");
 	}
-	
+
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		
+
 		User user = (User) authResult.getPrincipal();
-		
+
 		String token = JWT.create()
 				.withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + expiration))
 				.sign(Algorithm.HMAC512(this.secret.getBytes()));
-		
+
 		response.getWriter().write(new ObjectMapper().writeValueAsString(new TokenResponse.Builder().token(token).type("Bearer").erros(new ArrayList<>()).build()));
 		response.getWriter().flush();
 	}
-	
+
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException failed) throws IOException, ServletException {
-		
+
 		response.setStatus(403);
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().write(new ObjectMapper().writeValueAsString(new TokenResponse.Builder().token("").type("").erros(new ArrayList<String>() {{ add("Usuário e/ou senha inválidos"); }}).build()));
 		response.getWriter().flush();
 	}
-	
+
 }

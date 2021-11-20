@@ -26,14 +26,14 @@ public class Permission implements GrantedAuthority {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public long id;
-	
+
 	@Column(name = "permission", length = 50, unique = true)
 	public String permission;
-	
+
 	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL, targetEntity = Profile.class, fetch = FetchType.EAGER)
 	public Set<Profile> profiles = new HashSet<>();
-	
+
 	public long getId() {
 		return id;
 	}

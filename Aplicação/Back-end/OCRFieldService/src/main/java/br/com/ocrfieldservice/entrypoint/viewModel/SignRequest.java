@@ -5,7 +5,7 @@ public class SignRequest {
 
 	private String email;
 	private String password;
-	
+
 	public String getEmail() {
 		return email;
 	}

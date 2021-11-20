@@ -1,39 +1,36 @@
-import { FolderOutlined, UserOutlined, ClusterOutlined } from '@ant-design/icons';
+import {API} from '../../Services';
+import { TeamOutlined, UserOutlined, ClusterOutlined } from '@ant-design/icons';
 
-export const treeData = [
-    {
-        key: '0',
-        title: "Organização",
-        icon: <ClusterOutlined />,
-        children: [
-            {
-                key: '1',
-                title: "Paraná",
-                icon: <FolderOutlined />,
-                children: [
-                    {
-                        key: '10',
-                        title: "João da silva",
-                        icon: <UserOutlined/>,
-                    },
-                    {
-                        key: '12',
-                        title: "João Silva 2",
-                        icon: <UserOutlined />,
-                    },
-                    {
-                        key: '13',
-                        title: "Joãozinho Silva 3",
-                        icon: <UserOutlined />,
-                    },
-                ]
-            },
-            {
-                key: '2',
-                title: "João sem grupo 1",
-                icon: <UserOutlined />,
-                children: []
-            }
-        ],
+let data = [];
+
+const DataSource = async () => {
+    try{
+        const response = await API().get('/api/groups');
+        if(response.status >= 200 && response.status < 300){
+            data = {
+                key : 0,
+                title : "organização",
+                icon : <ClusterOutlined />,
+                type: "org",
+                children : response.data?.map(group => ({
+                    key : group.id,
+                    title : group.name,
+                    icon : <TeamOutlined />,
+                    type: "group",
+                    children : group.users?.map(user => ({
+                        key : user.id,
+                        title : user.name,
+                        icon : <UserOutlined />,
+                        type: "user"
+                    }))
+                }))
+            };
+        }
+    }catch(err){
+        console.log(err);
     }
-];
+
+    return data;
+}
+
+export const Data = DataSource();

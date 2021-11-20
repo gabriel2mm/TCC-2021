@@ -50,7 +50,7 @@ public class AuthenticationController {
 
 	@Autowired
 	private UserRepository repository;
-	
+
 	@Autowired
 	private SendEmailService sendMailService;
 
@@ -62,13 +62,13 @@ public class AuthenticationController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private PermissionRepository permissionRepository;
-	
+
 	@Autowired
 	private ProfileRepository profileRepository;
-	
+
 	@Autowired
 	private OrganizationRepository organizationRepository;
 
@@ -80,30 +80,30 @@ public class AuthenticationController {
 
 	@GetMapping
 	private @ResponseBody ResponseEntity<String> createUserTeste() {
-		
+
 
 		Organization org = new Organization();
 		org.setName("ADMINS");
 
-		
+
 		Permission p = new Permission();
 		p.setPermission("Admin");
-		
+
 		permissionRepository.save(p);
-		
+
 		Profile profile = new Profile();
 		profile.setName("ADMINS");
 		profile.setDescription("Perfil de administradores do sistema");
 		profile.setActive(true);
-		
+
 		List<Permission> permissions = new ArrayList<>();
 		permissions.add(p);
-		
-		profile.setPermissions(permissions.stream().collect(Collectors.toSet())); 
-		
+
+		profile.setPermissions(permissions.stream().collect(Collectors.toSet()));
+
 		profileRepository.save(profile);
-		
-		
+
+
 		User user = new User();
 		user.setActive(true);
 		user.setPassword(passwordEncoder.encode("teste"));
@@ -115,27 +115,27 @@ public class AuthenticationController {
 		user.setOrganization(org);
 
 		repository.save(user);
-		
-		return new ResponseEntity<String>("Criado com sucesso!", HttpStatus.OK);
+
+		return new ResponseEntity<>("Criado com sucesso!", HttpStatus.OK);
 	}
 
 	@PostMapping
 	private @ResponseBody ResponseEntity<TokenResponse> signIn(@RequestBody SignRequest signRequest) {
 
-		User user = repository.findByEmail(signRequest.getEmail());	
+		User user = repository.findByEmail(signRequest.getEmail());
 		if (user != null && user.isActive() &&  signIn.sigin(signRequest.getPassword(), user.getPassword())) {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signRequest.getEmail(),
 					signRequest.getPassword(), user.getProfile() == null ? new ArrayList<>() : user.getProfile().getPermissions()));
-			
+
 			String token = JWT.create().withSubject(user.getUsername())
 					.withExpiresAt(new Date(System.currentTimeMillis() + expiration))
 					.sign(Algorithm.HMAC512(this.secret.getBytes()));
 
-			return new ResponseEntity<TokenResponse>(new TokenResponse.Builder().token(token).type("Bearer").erros(new ArrayList<String>()).build(),
+			return new ResponseEntity<>(new TokenResponse.Builder().token(token).type("Bearer").erros(new ArrayList<String>()).build(),
 					HttpStatus.OK);
 		}
 
-		return new ResponseEntity<TokenResponse>(
+		return new ResponseEntity<>(
 				new TokenResponse.Builder().token("").type("").erros(new ArrayList<String>() {
 					{
 						add("Usuário e/ou senha inválidos");
@@ -154,12 +154,12 @@ public class AuthenticationController {
 				sendMailService.sendEmail("Esqueci minha senha", "Para trocar sua senha clique no link:  http://ocrfieldservice.com.br/reset-password?t=" + token, user.getEmail());
 			}
 			else
-				return new ResponseEntity<String>("Não foi possível realizar envio do email!", HttpStatus.BAD_REQUEST);
-			
-			return new ResponseEntity<String>("E-mail enviado com sucesso!", HttpStatus.OK);
-			
+				return new ResponseEntity<>("Não foi possível realizar envio do email!", HttpStatus.BAD_REQUEST);
+
+			return new ResponseEntity<>("E-mail enviado com sucesso!", HttpStatus.OK);
+
 		} catch (Exception e) {
-			return new ResponseEntity<String>("Não foi possível realizar envio do email!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Não foi possível realizar envio do email!", HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -169,10 +169,10 @@ public class AuthenticationController {
 
 		try {
 			passwordResetService.ResetPassword(passwordResetInput.getToken(), passwordResetInput.getNewPassword());
-			return new ResponseEntity<String>("Reset realizado com sucesso!", HttpStatus.OK);
+			return new ResponseEntity<>("Reset realizado com sucesso!", HttpStatus.OK);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			return new ResponseEntity<String>("Não foi possível realizar reset de password", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Não foi possível realizar reset de password", HttpStatus.BAD_REQUEST);
 		}
 	}
 }

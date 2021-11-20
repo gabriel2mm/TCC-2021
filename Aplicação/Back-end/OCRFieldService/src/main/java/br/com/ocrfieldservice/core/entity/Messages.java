@@ -21,29 +21,29 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(name="MESSAGES")
 public class Messages {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(name="message", length = 1000, nullable = false)
 	private String message;
-	
+
 	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
-	@JsonIdentityReference(alwaysAsId=true) 
+	@JsonIdentityReference(alwaysAsId=true)
 	@OneToOne(cascade = CascadeType.MERGE, targetEntity = User.class)
 	private User to;
-	
+
 	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
-	@JsonIdentityReference(alwaysAsId=true) 
+	@JsonIdentityReference(alwaysAsId=true)
 	@OneToOne(cascade = CascadeType.MERGE, targetEntity = User.class)
 	private User from;
-	
+
 	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
-	@JsonIdentityReference(alwaysAsId=true) 
+	@JsonIdentityReference(alwaysAsId=true)
 	@ManyToOne(cascade = CascadeType.MERGE, targetEntity = ChatRoom.class)
 	private ChatRoom chatRoom;
-	
+
 	@CreationTimestamp
 	private Date created;
 
@@ -94,5 +94,5 @@ public class Messages {
 	public void setCreated(Date created) {
 		this.created = created;
 	}
-	
+
 }

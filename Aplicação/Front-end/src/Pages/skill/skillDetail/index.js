@@ -5,13 +5,15 @@ import { Form, message, Switch } from 'antd';
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { Transfer } from 'antd';
 import { API } from '../../../Services';
+import { useUserContext } from '../../../Contexts';
 
 function SkillDetailPage() {
     const [form] = Form.useForm();
     const [users, setUsers] = useState([]);
     const [data, setData] = useState({ id: null, name: "", description: "", active: false, users: [] });
     const params = useParams();
-
+    const context = useUserContext();
+    
     const [targetKeys, setTargetKeys] = useState(data.users);
     const [selectedKeys, setSelectedKeys] = useState([]);
     useEffect(() => {
@@ -109,7 +111,7 @@ function SkillDetailPage() {
                         />
                     </Form.Item>
                     <Form.Item>
-                        <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>
+                    { context.containsPermission("Admin") || context.containsPermission("write:skill") ? (<ButtonComponent type="submit">Salvar</ButtonComponent>) : (null)}
                         <Link to="/settings/skills" className="ml-5 text-blue-500">Cancelar</Link>
                     </Form.Item>
                 </Form>

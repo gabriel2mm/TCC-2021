@@ -26,20 +26,20 @@ public class ChatRoom {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@OneToOne(cascade = CascadeType.MERGE, targetEntity = User.class)
 	private User user1;
-	
+
 	@OneToOne(cascade = CascadeType.MERGE, targetEntity = User.class)
 	private User user2;
-	
+
 	@Column(name = "notificiation", columnDefinition = "tinyint(1) default 0")
 	private boolean notificiation;
-	
+
 	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime created;
-	
+
 	@JsonIgnore
 	@ElementCollection
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = Messages.class, fetch = FetchType.EAGER)
@@ -92,5 +92,5 @@ public class ChatRoom {
 	public void setMessages(List<Messages> messages) {
 		this.messages = messages;
 	}
-	
+
 }

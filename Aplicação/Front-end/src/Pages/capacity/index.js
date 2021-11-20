@@ -5,12 +5,14 @@ import { CloseOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { API } from '../../Services';
+import { useUserContext } from '../../Contexts';
 
 
 function CapacityPage() {
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState([]);
   const [deletedFilter, setDeletedFilter] = useState([]);
+  const context = useUserContext();
 
   const data = useMemo(() => {
     const response = fetchProfiles();
@@ -58,7 +60,7 @@ function CapacityPage() {
       title: 'Status',
       dataIndex: 'active',
       key: 'active',
-      render: tag => !tag? (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>) : (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
+      render: tag => !tag ? (<Tag className={"text-red-700 bg-red-100 border-0 font-bold rounded-full"}>Suspenso</Tag>) : (<Tag className={"text-green-900 bg-green-200 border-0 font-bold rounded-full"}>Ativo</Tag>)
     },
     {
       title: 'Ações',
@@ -70,11 +72,13 @@ function CapacityPage() {
               Visualizar
             </Link>
           </div>
-          <div className="mx-1">
-            <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o grupo ${record.capacity}?`} onConfirm={() => handleDelete(record)}>
-              <a href="!#">Deletar</a>
-            </Popconfirm>
-          </div>
+          {context.containsPermission("Admin") || context.containsPermission("write:capacity") ? (
+            <div className="mx-1">
+              <Popconfirm icon={<CloseOutlined />} key={`Delete-${i}`} title={`Deseja excluír o grupo ${record.capacity}?`} onConfirm={() => handleDelete(record)}>
+                <a href="!#">Deletar</a>
+              </Popconfirm>
+            </div>
+          ) : null}
         </div>
     },
   ]
@@ -111,9 +115,11 @@ function CapacityPage() {
         <h2 className="text-2xl font-bold text-gray-800 my-5">Capacidades</h2>
         <div className="mt-5 w-full flex flex-col md:flex-row flex-shrink-0 justify-start md:justify-between md:items-center">
           <input onChange={(event) => handleSearch(event)} type="text" name="search" placeholder="Buscar capacidade" className="order-2 md:order-1 w-full md:w-80 pl-3 pr-10 py-2 border-2 border-gray-200 rounded-xl hover:border-gray-300 focus:outline-none focus:border-purple-500 transition-colors" />
-          <Link to="/settings/capacities/new" className="order-1 md:order-2">
+          {context.containsPermission("Admin") || context.containsPermission("write:capacity") ? (
+            <Link to="/settings/capacities/new" className="order-1 md:order-2">
             <ButtonComponent className="float-left md:float-right mb-4 w-28 md:w-48 ">Nova capacidade</ButtonComponent>
           </Link>
+          ) : (null)}
         </div>
         <Table rowKey={record => record.id} loading={loading} columns={cols} dataSource={dataSource || []} onRow={(record, rowIndex) => { return { onClick: event => { console.log(record, rowIndex, event) }, } }} />
       </div>

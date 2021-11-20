@@ -30,40 +30,40 @@ import br.com.ocrfieldservice.core.repository.UserRepository;
 @RestController
 @RequestMapping(value = "/api/profiles")
 public class ProfilesController {
-	
+
 	@Autowired
 	private ProfileRepository repository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private PermissionRepository permissionRepository;
-	
+
 	@GetMapping
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:profile') or hasAuthority('write:profile')")
 	public ResponseEntity<List<Profile>> getAllProfilesByOrganization() {
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		if(user != null && user.getOrganization() != null)
-			return new ResponseEntity<List<Profile>>(repository.findAllByOrg(user.getOrganization().getName()), HttpStatus.OK);
-		
-		
-		return new ResponseEntity<List<Profile>>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(repository.findAllByOrg(user.getOrganization().getName()), HttpStatus.OK);
+
+
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:profile') or hasAuthority('write:profile')")
 	public ResponseEntity<Profile> getProfileById(@PathVariable("id") final Long id) {
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		Profile profile = repository.findOneById(id);
-		
-		if(user != null && profile != null && profile.getOrg() == user.getOrganization() ) {			
-			return new ResponseEntity<Profile>(profile, HttpStatus.OK);
+
+		if(user != null && profile != null && profile.getOrg() == user.getOrganization() ) {
+			return new ResponseEntity<>(profile, HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<Profile>(new Profile(),  HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>(new Profile(),  HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@PostMapping
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:profile')")
 	public ResponseEntity<HttpStatus> createProfile(@RequestBody Profile profile){
@@ -73,7 +73,7 @@ public class ProfilesController {
 			profile.setCreatedBy(user);
 			profile.setOrg(user.getOrganization());
 			profile.setCreatedBy(user);
-			
+
 			List<Permission> permissions = new ArrayList<>();
 			for(Permission p : profile.getPermissions()) {
 				Permission permission = permissionRepository.findByName(p.getPermission());
@@ -86,17 +86,17 @@ public class ProfilesController {
 					permissions.add(tmp);
 				}
 			}
-			
+
 			profile.setPermissions(permissions.stream().collect(Collectors.toSet()));
-			
+
 			repository.save(profile);
-			
-			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:profile')")
 	public ResponseEntity<HttpStatus> updateProfile(@PathVariable("id") Long id, @RequestBody Profile profile){
@@ -108,7 +108,7 @@ public class ProfilesController {
 			profileTmp.setName(profile.getName());
 			profileTmp.setDescription(profile.getDescription());
 			profileTmp.setActive(profile.isActive());
-			
+
 			List<Permission> permissions = new ArrayList<>();
 			for(Permission p : profile.getPermissions()) {
 				Permission permission = permissionRepository.findByName(p.getPermission());
@@ -121,16 +121,16 @@ public class ProfilesController {
 					permissions.add(tmp);
 				}
 			}
-			
+
 			profileTmp.setPermissions(permissions.stream().collect(Collectors.toSet()));
-			
+
 			repository.update(profileTmp);
-			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:profile')")
 	public ResponseEntity<HttpStatus> deleteProfile(@PathVariable("id") Long id){
@@ -139,8 +139,8 @@ public class ProfilesController {
 		if(user != null && profileTmp != null && profileTmp.getOrg() == user.getOrganization() ) {
 			repository.delete(id);
 		}
-		
-		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 }

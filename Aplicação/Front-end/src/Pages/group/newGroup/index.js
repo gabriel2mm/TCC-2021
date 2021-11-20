@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent } from '../../../Components';
 import { Divider, Form, message, Transfer } from 'antd';
 import { API } from "../../../Services";
+import { useUserContext } from "../../../Contexts";
 
 function NewGroupPage() {
     const [form] = Form.useForm();
@@ -9,6 +10,7 @@ function NewGroupPage() {
     const [users, setUsers] = useState([]);
     const [targetKeys, setTargetKeys] = useState([]);
     const [selectedKeys, setSelectedKeys] = useState([]);
+    const context = useUserContext();
 
     useEffect(() => {
         loadUsers();
@@ -84,7 +86,7 @@ function NewGroupPage() {
                         render={item => item.title}
                     />
                     </Form.Item>
-                    <ButtonComponent type="submit">Salvar</ButtonComponent>
+                    { context.containsPermission("Admin") || context.containsPermission("write:group") ? (<ButtonComponent type="submit">Salvar</ButtonComponent>) : (null)}
                     <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>
                 </Form>
             </div>

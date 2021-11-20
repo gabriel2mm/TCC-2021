@@ -23,10 +23,10 @@ public class SendEmailServiceImpl implements SendEmailService {
 
 	@Value("${spring.mail.username}")
 	private String emailFrom;
-	
+
 	@Autowired
 	private JavaMailSender javaMailSender;
-	
+
 	@Override
 	public void sendEmail(String subject, String body, String toEmail) throws MailException{
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -34,29 +34,30 @@ public class SendEmailServiceImpl implements SendEmailService {
 		mailMessage.setSubject(subject);
 		mailMessage.setTo(toEmail);
 		mailMessage.setText(body);
-		
+
 		javaMailSender.send(mailMessage);
 	}
 
 	@Override
 	public void sendEmail(String subject, String body, String toEmail, String fileAttchment, String filename, String extension) throws MailException {
-		MimeMessagePreparator preparator = new MimeMessagePreparator() 
+		MimeMessagePreparator preparator = new MimeMessagePreparator()
 	    {
-	        public void prepare(MimeMessage mimeMessage) throws Exception 
+	        @Override
+			public void prepare(MimeMessage mimeMessage) throws Exception
 	        {
 	            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
 	            mimeMessage.setFrom(new InternetAddress(emailFrom));
 	            mimeMessage.setSubject(subject);
 	            mimeMessage.setText(body);
-	             
+
 	            FileSystemResource file = new FileSystemResource(new File(fileAttchment));
 	            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 	            helper.addAttachment(filename + "." + extension, file);
 	        }
 	    };
-	    
+
 	    javaMailSender.send(preparator);
-		
+
 	}
 
 }

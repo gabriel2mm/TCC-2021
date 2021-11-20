@@ -14,16 +14,16 @@ public class UserDetailService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository repository;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		User user = repository.findByEmail(email);
-		
+
 		if(user == null) {
 			throw new UsernameNotFoundException("Usuário não encontrado");
 		}
-		
-		
+
+
 		return user;
 	}
 

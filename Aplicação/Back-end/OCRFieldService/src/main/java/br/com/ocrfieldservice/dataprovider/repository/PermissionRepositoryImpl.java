@@ -21,10 +21,10 @@ public class PermissionRepositoryImpl implements PermissionRepository, Serializa
 	private static final long serialVersionUID = -1952909681968826648L;
 	@Autowired
 	private PermissionDao permissionDao;
-	
+
 	@Autowired
 	private EntityManager entityManager;
-	
+
 	@Override
 	public void save(Permission permission) {
 		permissionDao.save(permission);
@@ -41,15 +41,15 @@ public class PermissionRepositoryImpl implements PermissionRepository, Serializa
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Permission> query  = builder.createQuery(Permission.class);
 		Root<Permission> root = query.from(Permission.class);
-		
+
 		query.distinct(true).select(root).where(builder.equal(root.get("permission"), name));
-		
+
 		List<Permission> permissions = entityManager.createQuery(query).getResultList();
-		
+
 		if(permissions.size() > 0) {
 			return permissions.get(0);
 		}
-		
+
 		return null;
 	}
 }

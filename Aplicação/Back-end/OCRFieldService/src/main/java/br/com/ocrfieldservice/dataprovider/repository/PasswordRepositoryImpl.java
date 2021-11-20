@@ -23,27 +23,27 @@ public class PasswordRepositoryImpl implements PasswordResetRepository, Serializ
 
 	@Autowired
 	private PasswordResetDao passwordResetDao;
-	
+
 	@Autowired
 	private EntityManager entityManager;
-	
+
 	@Override
 	public PasswordReset findByToken(String token) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<PasswordReset> criteria = builder.createQuery(PasswordReset.class);
 		Root<PasswordReset> root = criteria.from(PasswordReset.class);
-		
+
 		criteria.where(
 				builder.equal(root.get("token"), token)
 		);
-		
+
 		List<PasswordReset> passwords = entityManager.createQuery(criteria).getResultList();
-		
+
 		if(passwords.size() > 0) {
 			return passwords.get(0);
 		}
-		
-		
+
+
 		return null;
 	}
 

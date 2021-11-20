@@ -37,7 +37,7 @@ public class UserController {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private ProfileRepository profileRepository;
 
@@ -46,9 +46,9 @@ public class UserController {
 	public @ResponseBody ResponseEntity<List<User>> getUsers() {
 		User user = repository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		if (user != null && user.getOrganization() != null) {
-			return new ResponseEntity<List<User>>(repository.findByOrg(user.getOrganization()), HttpStatus.OK);
+			return new ResponseEntity<>(repository.findByOrg(user.getOrganization()), HttpStatus.OK);
 		}
-		return new ResponseEntity<List<User>>(new ArrayList<>(), HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NO_CONTENT);
 	}
 
 	@GetMapping("/{id}")
@@ -61,11 +61,11 @@ public class UserController {
 
 			if (user.getOrganization() != null && tmp.getOrganization() != null
 					&& user.getOrganization() == tmp.getOrganization()) {
-				return new ResponseEntity<User>(tmp, HttpStatus.OK);
+				return new ResponseEntity<>(tmp, HttpStatus.OK);
 			}
 
 		}
-		return new ResponseEntity<User>(new User(), HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(new User(), HttpStatus.NO_CONTENT);
 	}
 
 	@PostMapping
@@ -75,7 +75,7 @@ public class UserController {
 		String userpassword = user.getPassword();
 
 		if (userLogged != null && userLogged.getOrganization() != null) {
-			Long limit = Long.valueOf(userLogged.getOrganization().getLimitLicenses());
+			long limit = userLogged.getOrganization().getLimitLicenses();
 			Long licenses = repository.countUsersByOrganizationId(userLogged.getOrganization().getId());
 
 			if (licenses <= limit) {
@@ -87,16 +87,16 @@ public class UserController {
 					Profile profile = profileRepository.findOneByName(user.getProfile().getName());
 					user.setProfile(profile);
 				}
-				
+
 				repository.save(user);
-				return new ResponseEntity<String>("Criado com sucesso!", HttpStatus.CREATED);
+				return new ResponseEntity<>("Criado com sucesso!", HttpStatus.CREATED);
 			} else {
-				return new ResponseEntity<String>(
+				return new ResponseEntity<>(
 						"Não é possível criar mais usuários. Você estorou o limite de licenças!",
 						HttpStatus.BAD_REQUEST);
 			}
 		}
-		return new ResponseEntity<String>("Não foi possível criar usuário!", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>("Não foi possível criar usuário!", HttpStatus.BAD_REQUEST);
 	}
 
 	@PutMapping("/{id}")
@@ -117,13 +117,13 @@ public class UserController {
 					Profile profile = profileRepository.findOneByName(user.getProfile().getName());
 					tmp.setProfile(profile);
 				}
-				
+
 				repository.save(tmp);
 
-				return new ResponseEntity<String>("Usuário atualizado com sucesso!", HttpStatus.OK);
+				return new ResponseEntity<>("Usuário atualizado com sucesso!", HttpStatus.OK);
 			}
 		}
-		return new ResponseEntity<String>("Não foi possível atualizar usuário", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>("Não foi possível atualizar usuário", HttpStatus.BAD_REQUEST);
 	}
 
 	@DeleteMapping("/{id}")
@@ -136,32 +136,32 @@ public class UserController {
 		if (user != null && user.getOrganization() != null && userLogged != null
 				&& userLogged.getOrganization() == user.getOrganization()) {
 			repository.deleteById(id);
-			return new ResponseEntity<String>("Usuário deleteado com sucesso!", HttpStatus.OK);
+			return new ResponseEntity<>("Usuário deleteado com sucesso!", HttpStatus.OK);
 		}
 
-		return new ResponseEntity<String>("Não foi possível deletar usuário", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>("Não foi possível deletar usuário", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@PostMapping("/change-password")
 	public @ResponseBody ResponseEntity<String> changePasswordProfile(@RequestBody ChangePasswordProfile changePasswordProfile){
 		User userLogged = repository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		if(userLogged != null && userLogged.getEmail().equals(changePasswordProfile.getEmail())) {
 			User tmp = repository.findByEmail(changePasswordProfile.getEmail());
-			
+
 			if(tmp != null && passwordEncoder.matches(changePasswordProfile.getCurrentPassword(), tmp.getPassword())) {
 				tmp.setPassword(passwordEncoder.encode(changePasswordProfile.getNewPassword()));
 				repository.save(tmp);
-				
-				return new ResponseEntity<String>("Atualizado com sucesso!", HttpStatus.OK);
+
+				return new ResponseEntity<>("Atualizado com sucesso!", HttpStatus.OK);
 			}
 		}
-		
-		return new ResponseEntity<String>("Não foi possível atualizar senha", HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>("Não foi possível atualizar senha", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@GetMapping("/my-user")
 	public @ResponseBody ResponseEntity<User> getMyUser(){
 		User userLogged = repository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		return new ResponseEntity<User>(userLogged, HttpStatus.OK);
+		return new ResponseEntity<>(userLogged, HttpStatus.OK);
 	}
 }

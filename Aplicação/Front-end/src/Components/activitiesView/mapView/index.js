@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { layout } from '../../../Pages/activity/maps/optionsLayout';
-import axios from 'axios';
 import {message} from 'antd';
 import {useActivityViewContext} from '../../../Contexts';
+import { API } from '../../../Services';
 
 
 function MapViewComponent() {
@@ -23,8 +23,7 @@ function MapViewComponent() {
 
   useEffect(() => {
     async function fetchActivities(){
-        const response = await axios.get("https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/Organization/1/category/1/activity");
-      
+        const response = await API().get("/api/activities");
         try{
           if(response.status >= 200 && response.status < 300){
             console.log(response.data)
@@ -54,7 +53,7 @@ function MapViewComponent() {
               options={{ styles: layout, disableDefaultUI: true, zoomControl: true }}>
               {activities.map( (a,i ) => {
                 return <Marker key={`map-${i}`} onClick={() => toggleActivity(a)}
-                      position={{lat: parseFloat(a.lat), lng: parseFloat(a.lng)}}
+                      position={{lat: parseFloat(a.address?.lat), lng: parseFloat(a.address?.lng)}}
                   />
               }
               )}

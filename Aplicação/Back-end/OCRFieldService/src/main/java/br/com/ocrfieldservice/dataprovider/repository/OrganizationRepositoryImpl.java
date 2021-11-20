@@ -17,7 +17,7 @@ public class OrganizationRepositoryImpl implements OrganizationRepository, Seria
 
 	@Autowired
 	private OrganizationDao organizationDao;
-	
+
 	@Override
 	public void save(Organization organization) {
 		organizationDao.saveAndFlush(organization);

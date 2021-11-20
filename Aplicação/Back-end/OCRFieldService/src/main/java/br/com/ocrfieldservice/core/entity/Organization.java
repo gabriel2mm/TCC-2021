@@ -27,57 +27,57 @@ public class Organization {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	@Column(name="name", unique=true, nullable = false)
 	private String name;
-	
+
 	@Column(name="limitLicenses", length = 4, nullable = false)
 	private int limitLicenses;
-	
+
 	@JsonIgnore
 	@ElementCollection
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = User.class)
 	private List<User> users;
-	
+
 	@JsonIgnore
 	@ElementCollection
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = Organization.class)
 	private List<Profile> profiles;
 
-	
+
 	@JsonIgnore
 	@ElementCollection
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = GroupUsers.class)
 	private List<GroupUsers> groups;
-	
+
 	@JsonIgnore
 	@ElementCollection
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = Capacity.class)
 	private List<Capacity> capacities;
-	
+
 	@JsonIgnore
 	@ElementCollection
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = Skill.class)
 	private List<Capacity> skills;
-	
+
 	@JsonIgnore
 	@ElementCollection
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = SLA.class)
 	private List<SLA> slas;
-	
+
 	@JsonIgnore
 	@ElementCollection
 	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = Category.class)
 	private List<Category> categories;
-	
+
 	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime created;
-	
+
 	@JsonIgnore
 	@UpdateTimestamp
 	private LocalDateTime updated;
-	
+
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, targetEntity = User.class, fetch = FetchType.LAZY)
 	private User createdBy;
@@ -186,5 +186,5 @@ public class Organization {
 	public void setLimitLicenses(int limitLicenses) {
 		this.limitLicenses = limitLicenses;
 	}
-	
+
 }

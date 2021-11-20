@@ -1,19 +1,86 @@
-import React, { useState } from 'react'
-import { Tree } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { message, Tree } from 'antd';
 import {BasicInputComponent} from '../../Components';
-import { DownOutlined } from '@ant-design/icons';
-import { treeData as initialData } from './dataSource';
+import {API} from '../../Services';
+import { TeamOutlined, UserOutlined, ClusterOutlined , DownOutlined} from '@ant-design/icons';
+import { useUserContext } from '../../Contexts';
 
 export default function GroupUserListComponent() {
-
-
-    const [autoExpandParent, setAutoExpandParent] = useState(false);
+    const context = useUserContext();
+    const [initialData, setInitialData] = useState([]);
     const [searchValue, setSearchValue] = useState("");
-    const [treeData, setTreeData] = useState(initialData);
+    const [autoExpandParent, setAutoExpandParent] = useState(false);
+    const [treeData, setTreeData] = useState([]);
+
+    useEffect(() => {
+        loadGroups();
+    }, []);
+
+    useEffect(() => {
+        console.log(treeData);
+    }, [treeData])
+
+    async function loadGroups(){
+        try{
+            const response = await API().get('/api/groups');
+            if(response.status >= 200 && response.status < 300){
+                const data = [{
+                    key : `o-${context.organization.id}`,
+                    title : context.organization.name,
+                    icon : <ClusterOutlined />,
+                    type: "org",
+                    children : response.data?.map(group => ({
+                        key : `g-${group.id}`,
+                        title : group.name,
+                        icon : <TeamOutlined />,
+                        type: "group",
+                        children : group.users?.map(user => ({
+                            key : `u-${user.id}`,
+                            title : `${user.firstName} ${user.lastName}`,
+                            icon : <UserOutlined />,
+                            type: "user"
+                        }))
+                    }))
+                }];
+                setTreeData(data);
+                setInitialData(data);
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
 
     function onChangeSelect(keySelected, node) {
-        console.log(keySelected, node.node);
+        const type = node.node.key.split("-")[0];
+        const id = node.node.key.split("-")[1];
+        console.log(type ,id );
     }
+
+    const loop = (data) =>
+    data.map((item) => {
+        const index = item.title.indexOf(searchValue);
+        const beforeStr = item.title.substr(0, index);
+        const afterStr = item.title.substr(index + searchValue.length);
+        const title =
+            index > -1 ? (
+                <span>
+                    {beforeStr}
+                    <span className="site-tree-search-value">{searchValue}</span>
+                    {afterStr}
+                </span>
+            ) : (
+                <span>{item.title}</span>
+            );
+        if (item.children) {
+            return { title, key: item.key, icon: item.icon, children: loop(item.children) };
+        }
+
+        return {
+            title,
+            key: item.key,
+            icon: item.icon
+        };
+    });
 
     const dataList = [];
     const generateList = (data) => {
@@ -26,7 +93,7 @@ export default function GroupUserListComponent() {
             }
         }
     };
-    generateList(initialData);
+    generateList(initialData || []);
 
     function onExpand(expandedKeys) {
         setAutoExpandParent(true);
@@ -63,36 +130,12 @@ export default function GroupUserListComponent() {
         return result;
     };
 
-    const loop = (data) =>
-        data.map((item) => {
-            const index = item.title.indexOf(searchValue);
-            const beforeStr = item.title.substr(0, index);
-            const afterStr = item.title.substr(index + searchValue.length);
-            const title =
-                index > -1 ? (
-                    <span>
-                        {beforeStr}
-                        <span className="site-tree-search-value">{searchValue}</span>
-                        {afterStr}
-                    </span>
-                ) : (
-                    <span>{item.title}</span>
-                );
-            if (item.children) {
-                return { title, key: item.key, icon: item.icon, children: loop(item.children) };
-            }
-
-            return {
-                title,
-                key: item.key,
-                icon: item.icon
-            };
-        });
-
     return (
         <div className="min-h-screen lg:block mr-0 md:mr-5 bg-white p-5 rounded-lg w-full lg:w-1/4 border-2 border-gray-200 ">
             <BasicInputComponent name="filterTree" placeholder="Buscar grupo" className="my-2" value={searchValue} onChange={onChange} />
-            <Tree
+    
+            {treeData ? (
+                <Tree
                 defaultExpandAll
                 defaultExpandParent
                 showLine={true}
@@ -103,8 +146,9 @@ export default function GroupUserListComponent() {
                 treeData={loop(treeData)}
                 filterTreeNode={filterTreeNode}
                 switcherIcon={<DownOutlined />}
-                onSelect={onChangeSelect}
-            />
+                onSelect={ onChangeSelect}
+                />
+            ) : null}
         </div>
     )
 }

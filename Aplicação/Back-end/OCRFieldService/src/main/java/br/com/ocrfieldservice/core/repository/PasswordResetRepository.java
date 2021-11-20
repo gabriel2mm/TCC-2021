@@ -8,6 +8,6 @@ import br.com.ocrfieldservice.core.entity.PasswordReset;
 public interface PasswordResetRepository {
 
 	public void save(final PasswordReset passwordReset);
-	
+
 	public PasswordReset findByToken(final String token);
 }

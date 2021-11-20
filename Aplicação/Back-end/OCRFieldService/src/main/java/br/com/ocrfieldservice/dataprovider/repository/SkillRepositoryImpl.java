@@ -23,10 +23,10 @@ import br.com.ocrfieldservice.dataprovider.dao.SkillDao;
 public class SkillRepositoryImpl implements SkillRepository, Serializable{
 
 	private static final long serialVersionUID = 6641486967057262057L;
-	
+
 	@Autowired
 	private SkillDao skillDao;
-	
+
 	@Autowired
 	private EntityManager entityManager;
 
@@ -40,7 +40,7 @@ public class SkillRepositoryImpl implements SkillRepository, Serializable{
 		Optional<Skill> skill = skillDao.findById(id);
 		if(skill.isPresent())
 			return skill.get();
-		
+
 		return null;
 	}
 

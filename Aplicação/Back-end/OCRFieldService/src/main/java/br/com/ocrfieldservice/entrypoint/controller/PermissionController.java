@@ -23,17 +23,17 @@ public class PermissionController {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@GetMapping
 	public @ResponseBody ResponseEntity<List<String>> getPermissionIntoLoggedUser(){
 		User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		
-		List<String> authorities = new ArrayList<String>();
+
+		List<String> authorities = new ArrayList<>();
 		if(user != null ) {
 			return new ResponseEntity(user.getAuthorities().stream().map( a -> a.getAuthority()), HttpStatus.OK);
 		}
-		
+
 		return new ResponseEntity(null, HttpStatus.NO_CONTENT);
-		
+
 	}
 }

@@ -11,7 +11,7 @@ public class PasswordResetInput {
 
 	private String token;
 	private String newPassword;
-	
+
 	public String getToken() {
 		return token;
 	}

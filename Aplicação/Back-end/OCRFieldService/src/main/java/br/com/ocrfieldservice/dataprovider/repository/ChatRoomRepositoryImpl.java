@@ -25,10 +25,10 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository, Serializable 
 
 	@Autowired
 	private ChatRoomDao dao;
-	
+
 	@Autowired
 	private EntityManager entityManager;
-	
+
 	@Override
 	public void save(ChatRoom chatRoom) {
 		dao.saveAndFlush(chatRoom);
@@ -37,11 +37,11 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository, Serializable 
 	@Override
 	public ChatRoom findOne(Long id) {
 		Optional<ChatRoom> chatroom = dao.findById(id);
-		
+
 		if(chatroom.isPresent()) {
 			return chatroom.get();
 		}
-		
+
 		return null;
 	}
 
@@ -50,7 +50,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository, Serializable 
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<ChatRoom> query = builder.createQuery(ChatRoom.class);
 		Root<ChatRoom> root = query.from(ChatRoom.class);
-		
+
 		query.select(root).distinct(true).where(
 				builder.or(
 						builder.and(
@@ -63,7 +63,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository, Serializable 
 						)
 				)
 		);
-		
+
 		return entityManager.createQuery(query).getResultList();
 	}
 
@@ -74,16 +74,16 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository, Serializable 
 		Root<ChatRoom> root = query.from(ChatRoom.class);
 		Join<ChatRoom, User> joinChatRoomUser = root.join("user1");
 		Join<ChatRoom, User> joinChatRoomUser2 = root.join("user2");
-		
+
 		query.select(root).distinct(true).where(
 				builder.or(
 					builder.equal(joinChatRoomUser.get("id"), userId),
-					builder.equal(joinChatRoomUser2.get("id"), userId)	
+					builder.equal(joinChatRoomUser2.get("id"), userId)
 				)
 		);
-		
+
 		return entityManager.createQuery(query).getResultList();
 	}
 
-	
+
 }

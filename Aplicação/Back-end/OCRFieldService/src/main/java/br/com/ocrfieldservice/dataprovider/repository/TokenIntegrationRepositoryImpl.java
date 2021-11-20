@@ -20,16 +20,16 @@ import br.com.ocrfieldservice.dataprovider.dao.TokenIntegrationDao;
 public class TokenIntegrationRepositoryImpl implements TokenIntegrationRepository {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -1618302751648169674L;
 
 	@Autowired
 	private TokenIntegrationDao dao;
-	
+
 	@Autowired
 	private EntityManager entityManager;
-	
+
 	@Override
 	public void Save(TokenIntegration tokenIntegrarion) {
 		dao.saveAndFlush(tokenIntegrarion);
@@ -39,14 +39,14 @@ public class TokenIntegrationRepositoryImpl implements TokenIntegrationRepositor
 	public List<TokenIntegration> getAllByOrganization(long id) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<TokenIntegration> query = builder.createQuery(TokenIntegration.class);
-		
+
 		Root<TokenIntegration> root = query.from(TokenIntegration.class);
 		Join<TokenIntegration, Organization> joinTokenOrganization = root.join("org");
-		
+
 		query.select(root).distinct(true).where(
 			builder.equal(joinTokenOrganization.get("id"), id)
 		);
-		
+
 		return entityManager.createQuery(query).getResultList();
 	}
 

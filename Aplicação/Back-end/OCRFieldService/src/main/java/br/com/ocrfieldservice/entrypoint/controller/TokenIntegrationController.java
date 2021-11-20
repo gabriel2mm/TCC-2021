@@ -32,46 +32,46 @@ import br.com.ocrfieldservice.core.repository.UserRepository;
 @RequestMapping(value = "/api/tokens")
 @CrossOrigin(origins = "*")
 public class TokenIntegrationController {
-	
+
 	@Autowired
 	private TokenIntegrationRepository repository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Value("${jwt.secret}")
 	private String secret;
-	
+
 	@GetMapping
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('integration')")
 	public @ResponseBody ResponseEntity<List<TokenIntegration>> getToken(){
 		User userLogged = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		if(userLogged != null && userLogged.getOrganization() != null) {
-			return new ResponseEntity<List<TokenIntegration>>(repository.getAllByOrganization(userLogged.getOrganization().getId()), HttpStatus.OK);
+			return new ResponseEntity<>(repository.getAllByOrganization(userLogged.getOrganization().getId()), HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<List<TokenIntegration>>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@PostMapping
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('integration')")
 	public @ResponseBody ResponseEntity<String> createToken(@RequestBody TokenIntegration token){
 		User userLogged = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		if(userLogged != null && userLogged.getOrganization() != null) {
-			
+
 			String tkn = JWT.create().withSubject(userLogged.getUsername())
 					.withExpiresAt(new Date(System.currentTimeMillis() + 15768000000L))
 					.sign(Algorithm.HMAC512(this.secret.getBytes()));
-			
+
 			token.setCreatedBy(userLogged);
 			token.setOrg(userLogged.getOrganization());
 			token.setToken(tkn);
 			repository.Save(token);
 		}
-		
-		return new ResponseEntity<String>("Token creado com sucesso!", HttpStatus.OK);
+
+		return new ResponseEntity<>("Token creado com sucesso!", HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('integration')")
 	public @ResponseBody ResponseEntity<String> deleteToken(@PathVariable("id") long id){
@@ -79,7 +79,7 @@ public class TokenIntegrationController {
 		if(userLogged != null && userLogged.getOrganization() != null) {
 			repository.DeleteToken(id);
 		}
-		
-		return new ResponseEntity<String>("Registro deletado com sucesso!" , HttpStatus.OK);
+
+		return new ResponseEntity<>("Registro deletado com sucesso!" , HttpStatus.OK);
 	}
 }

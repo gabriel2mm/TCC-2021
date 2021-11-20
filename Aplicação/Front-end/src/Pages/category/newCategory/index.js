@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Form, message, Transfer } from "antd";
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent, BasicSelectComponent } from "../../../Components";
 import { API } from '../../../Services';
+import { useUserContext } from '../../../Contexts';
 
 function NewCategoryPage() {
 
@@ -10,7 +11,7 @@ function NewCategoryPage() {
   const [dataSLA, setDataSLA] = useState([{}])
   const [skills, setSkills] = useState([]);
   const [capacities, setCapacities] = useState([]);
-
+  const  context = useUserContext();
   //Transfer tratamentos
   const [targetKeysSkills, setTargetKeysSkills] = useState([]);
   const [selectedKeysSkills, setSelectedKeysSkills] = useState([]);
@@ -159,8 +160,7 @@ function NewCategoryPage() {
                 render={(item) => item.title} />
             </div>
           </div>
-
-          <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>
+          { context.containsPermission("Admin") || context.containsPermission("write:category") ? (<ButtonComponent type="submit">Salvar</ButtonComponent>) : (null)}
           <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>
         </Form>
       </div>

@@ -22,21 +22,21 @@ public class TokenIntegration {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@JsonIgnore
 	@ManyToOne(targetEntity = Organization.class)
 	private Organization org;
-	
+
 	@Column(name="name" , length = 20, unique = false, nullable = false)
 	private String name;
-	
+
 	@Column(nullable = false, unique =  true)
 	private String token;
-	
+
 	@Column
 	@CreationTimestamp
 	private Date created;
-	
+
 	@JsonIgnore
 	@OneToOne(targetEntity = User.class)
 	private User createdBy;

@@ -36,6 +36,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 	@Autowired
 	private PasswordResetRepository repository;
 
+	@Override
 	public PasswordReset createToken(User user) {
 
 		Calendar date = Calendar.getInstance();
@@ -49,7 +50,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 		passwordReset.setToken(token);
 		passwordReset.setExpiration(new Date(date.getTimeInMillis()));
 		passwordReset.setActive(true);
-		
+
 		repository.save(passwordReset);
 
 		return passwordReset;
@@ -59,7 +60,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 	public void ResetPassword(final String token, final String newPassword) {
 
 		DecodedJWT decoded = JWT.require(Algorithm.HMAC512(this.secret)).build().verify(token);
-		
+
 		String email = decoded.getSubject();
 		Date expireToken = decoded.getExpiresAt();
 		Date currentDate = new Date();

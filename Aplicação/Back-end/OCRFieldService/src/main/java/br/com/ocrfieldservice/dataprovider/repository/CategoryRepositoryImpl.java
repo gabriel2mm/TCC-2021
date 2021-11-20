@@ -23,10 +23,10 @@ public class CategoryRepositoryImpl implements CategoryRepository, Serializable 
 
 
 	private static final long serialVersionUID = -892245858766732057L;
-	
+
 	@Autowired
 	private CategoryDao categoryDao;
-	
+
 	@Autowired
 	private EntityManager entityManager;
 
@@ -40,7 +40,7 @@ public class CategoryRepositoryImpl implements CategoryRepository, Serializable 
 		Optional<Category> category = categoryDao.findById(id);
 		if(category.isPresent())
 			return category.get();
-		
+
 		return null;
 	}
 
@@ -58,7 +58,7 @@ public class CategoryRepositoryImpl implements CategoryRepository, Serializable 
 	public void deleteId(Long id) {
 		if(id != null)
 			categoryDao.deleteById(id);
-		
+
 	}
 
 	@Override
@@ -67,14 +67,14 @@ public class CategoryRepositoryImpl implements CategoryRepository, Serializable 
 		CriteriaQuery<Category> query = builder.createQuery(Category.class);
 		Root<Category> root = query.from(Category.class);
 		Join<Category, Organization> joinCategoryrOganization = root.join("organization");
-		
+
 		query.select(root).distinct(true).where(
 				builder.or(
 						builder.equal(joinCategoryrOganization.get("name"), organization.getName()),
 						builder.equal(joinCategoryrOganization.get("id"), organization.getId())
 				)
 		);
-		
+
 		return entityManager.createQuery(query).getResultList();
 	}
 
@@ -84,11 +84,11 @@ public class CategoryRepositoryImpl implements CategoryRepository, Serializable 
 		CriteriaQuery<Category> query = builder.createQuery(Category.class);
 		Root<Category> root = query.from(Category.class);
 		Join<Category, Organization> joinCategoryrOganization = root.join("organization");
-		
+
 		query.select(root).distinct(true).where(
 				builder.equal(joinCategoryrOganization.get("id"), orgId)
 		);
-		
+
 		return entityManager.createQuery(query).getResultList();
 	}
 

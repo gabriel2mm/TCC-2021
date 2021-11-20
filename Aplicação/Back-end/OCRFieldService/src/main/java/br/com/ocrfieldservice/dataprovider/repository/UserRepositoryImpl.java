@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -23,7 +22,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Autowired
     private EntityManager entityManager;
-	
+
 	@Autowired
 	private UserDao userDao;
 
@@ -62,47 +61,47 @@ public class UserRepositoryImpl implements UserRepository {
 					builder.equal(root.get("email"), email),
 					builder.equal(root.get("password"), password)
 		));
-		
+
 		List<User> users = entityManager.createQuery(criteria).getResultList();
 		if(users != null && users.size() > 0) {
 			return users.get(0);
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public User findByEmail(String email) {
-		
+
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<User> query = builder.createQuery(User.class);
 		Root<User> root = query.from(User.class);
 		query.select(root).where(builder.equal(root.get("email"), email));
-		
-		
+
+
 		List<User> users = entityManager.createQuery(query).getResultList();
 		if(users != null && users.size() > 0) {
 			return users.get(0);
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public List<User> findByOrg(Organization organization) {
-		
+
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<User> query = builder.createQuery(User.class);
 		Root<User> root = query.from(User.class);
 		Join<User, Organization> joinUserOganization = root.join("organization");
-		
+
 		query.select(root).distinct(true).where(
 				builder.or(
 						builder.equal(joinUserOganization.get("name"), organization.getName()),
 						builder.equal(joinUserOganization.get("id"), organization.getId())
 				)
 		);
-		
+
 		return entityManager.createQuery(query).getResultList();
 	}
 
@@ -112,11 +111,11 @@ public class UserRepositoryImpl implements UserRepository {
 		CriteriaQuery<User> query = builder.createQuery(User.class);
 		Root<User> root = query.from(User.class);
 		Join<User, Organization> joinUserOganization = root.join("organization");
-		
+
 		query.select(root).distinct(true).where(
 				builder.equal(joinUserOganization.get("id"), orgId)
 		);
-		
+
 		return entityManager.createQuery(query).getResultList();
 	}
 
@@ -125,7 +124,7 @@ public class UserRepositoryImpl implements UserRepository {
 		Optional<User> user = userDao.findById(id);
 		if(user.isPresent())
 			return user.get();
-		
+
 		return null;
 	}
 
@@ -135,9 +134,9 @@ public class UserRepositoryImpl implements UserRepository {
 		CriteriaQuery<Long> query = builder.createQuery(Long.class);
 		Root<User> root = query.from(User.class);
 		Join<User, Organization> joinUserOganization = root.join("organization");
-		
+
 		query.select(builder.count(root)).distinct(true).where(builder.equal(joinUserOganization.get("id"), orgId));
-		
+
 		return entityManager.createQuery(query).getSingleResult();
 	}
 
@@ -145,6 +144,6 @@ public class UserRepositoryImpl implements UserRepository {
 	public void deleteById(Long id) {
 		if(id != null) {
 			userDao.deleteById(id);
-		}		
+		}
 	}
 }

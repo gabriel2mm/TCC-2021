@@ -4,6 +4,7 @@ import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent } fr
 import { Divider, Form, message, Switch, Transfer } from 'antd';
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { API } from '../../../Services';
+import { useUserContext } from '../../../Contexts';
 
 function GroupDetailPage() {
     const params = useParams();
@@ -12,6 +13,7 @@ function GroupDetailPage() {
     const [users, setUsers] = useState([]);
     const [selectedKeys, setSelectedKeys] = useState([]);
     const [targetKeys, setTargetKeys] = useState(users.filter(item => !selectedKeys.includes(item.id)).map(i => i.id));
+    const context = useUserContext();
 
     useEffect(() => {
 
@@ -99,7 +101,7 @@ function GroupDetailPage() {
                         render={item => item.title}
                     />
                     <Form.Item className="mt-5">
-                        <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>
+                        {context.containsPermission("Admin") || context.containsPermission("write:group") ? ( <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>) : null}
                         <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>
                     </Form.Item>
                 </Form>

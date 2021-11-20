@@ -2,6 +2,7 @@ import React, { useState, useEffect} from "react";
 import { AuthenticatedLayoutComponent, BasicInputComponent, ButtonComponent } from '../../../Components';
 import { Divider, Form, Transfer, message } from 'antd';
 import { API } from "../../../Services";
+import { useUserContext } from "../../../Contexts";
 
 function NewCapacityPage() {
     const [form] = Form.useForm();
@@ -9,6 +10,7 @@ function NewCapacityPage() {
     const [data, setData] = useState({ id: null, name: "", description: "", active: false, users: [] });
     const [targetKeys, setTargetKeys] = useState([]);
     const [selectedKeys, setSelectedKeys] = useState([]);
+    const context = useUserContext();
 
     useEffect(() => {
         loadUsers();
@@ -79,7 +81,7 @@ function NewCapacityPage() {
                         render={item => item.title}
                     />
                     </Form.Item>
-                    <ButtonComponent type="submit">Salvar</ButtonComponent>
+                    { context.containsPermission("Admin") || context.containsPermission("write:capacity") ? (<ButtonComponent type="submit">Salvar</ButtonComponent>) : (null)}
                     <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>
                 </Form>
             </div>

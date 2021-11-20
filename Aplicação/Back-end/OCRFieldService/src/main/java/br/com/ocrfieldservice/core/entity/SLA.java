@@ -26,29 +26,29 @@ public class SLA {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(length = 50, name = "name", nullable = false, unique = false)
 	private String name;
-	
+
 	@Column(length = 150, name = "description", nullable = false, unique = false)
 	private String description;
-	
+
 	@Column(name="active", nullable = false, columnDefinition = "tinyint default 1")
 	private boolean active;
-	
+
 	@Column(name = "time", length = 4)
 	private String time;
-	
+
 	@Column(name="unity", length = 10)
 	private String unity;
-	
+
 	@OneToMany(cascade = CascadeType.PERSIST, targetEntity =  Category.class)
 	private List<Category> categories;
-	
+
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.PERSIST,targetEntity = Organization.class)
 	private Organization organization;
-	
+
 	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime created;
@@ -56,7 +56,7 @@ public class SLA {
 	@JsonIgnore
 	@UpdateTimestamp
 	private LocalDateTime updated;
-	
+
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User createdBy;

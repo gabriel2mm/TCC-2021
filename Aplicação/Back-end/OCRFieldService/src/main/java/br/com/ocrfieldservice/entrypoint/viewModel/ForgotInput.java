@@ -1,7 +1,7 @@
 package br.com.ocrfieldservice.entrypoint.viewModel;
 
 public class ForgotInput{
-	
+
 	private String email;
 
 	public String getEmail() {
@@ -11,7 +11,7 @@ public class ForgotInput{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
+
+
 
 }

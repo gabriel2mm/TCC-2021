@@ -16,7 +16,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import br.com.ocrfieldservice.core.repository.UserRepository;
 import br.com.ocrfieldservice.security.JWTAuthenticationFilter;
 import br.com.ocrfieldservice.security.JWTValidateTokenFilter;
 import br.com.ocrfieldservice.security.UserDetailService;
@@ -29,12 +28,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	@Value("${jwt.secret}")
 	private String secret;
-	
+
 	@Autowired
 	private UserDetailService userDetailService;
-	
+
 	private static final String[] MATCHERS_PUBLIC = { "/api/auth/**", "/ws", "/ws/**", "/app", "/app/**" };
-	
+
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 	    return new BCryptPasswordEncoder();
@@ -44,7 +43,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
 	}
-	
+
 	@Bean
 	public JWTAuthenticationFilter authenticationFilter() {
 		try {
@@ -52,10 +51,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		return null;
 	}
-	
+
 	@Bean
 	public JWTValidateTokenFilter jwtValidateTokenFilter() {
 		try {
@@ -63,10 +62,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable();
@@ -87,7 +86,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 		return source;
 	}
-	
+
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {

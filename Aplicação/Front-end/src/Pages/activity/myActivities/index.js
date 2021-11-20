@@ -1,13 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { AuthenticatedLayoutComponent, ButtonComponent } from '../../../Components';
 import { Table, Tag, message } from 'antd';
-import axios from 'axios';
+import { API } from '../../../Services';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { useUserContext } from '../../../Contexts';
 
 function MyActivitiesPage() {
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState([]);
+  const context = useUserContext();
 
   const data = useMemo(() => {
     const response = fetchActivities();
@@ -17,7 +19,11 @@ function MyActivitiesPage() {
   async function fetchActivities() {
     setLoading(true);
     try {
-      const response = await axios.get('https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/Organization/1/category/1/activity');
+      let url = "/api/activities/my-activities";
+      if(context.containsPermission("Admin") || context.containsPermission("activities")){
+        url = "/api/activities";
+      }
+      const response = await API().get(url);
       console.log(response);
       if (response.status >= 200 && response.status < 300) {
         setDataSource(response.data || []);
@@ -37,8 +43,8 @@ function MyActivitiesPage() {
   const cols = [
     {
       title: 'Chamado',
-      dataIndex: 'activity',
-      key: 'activity',
+      dataIndex: 'number',
+      key: 'number',
     },
     {
       title: 'Descrição',
@@ -47,35 +53,35 @@ function MyActivitiesPage() {
       responsive: ['md'],
     },
     {
-        title: 'Categoria',
-        dataIndex: 'category',
-        key: 'category',
-        responsive: ['md'],
-        render: (text, record, i) => <span key={i}>{record.Category.category}</span>
+      title: 'Categoria',
+      dataIndex: 'category',
+      key: 'category',
+      responsive: ['md'],
+      render: (text, record, i) => <span key={i}>{record.category?.name}</span>
     },
     {
-        title: 'Criado em',
-        dataIndex: 'created',
-        key: 'created',
-        responsive: ['md'],
-        render: (text, record, i ) => <span key={i}>{moment(text).format("DD/MM/yy HH:mm")}</span>
+      title: 'Criado em',
+      dataIndex: 'created',
+      key: 'created',
+      render: (text, record, i) => <span key={i}>{moment(record.created).format('DD/MM/YYYY HH:mm')}</span>
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: tag => <Tag>{tag}</Tag>    
+      render: tag => <Tag>{tag}</Tag>
     },
     {
       title: 'Ações',
       dataIndex: 'acoes',
       render: (text, record, i) =>
         <div className="flex flex-row justify-center items-center">
+          {context.containsPermission("Admin") || context.containsPermission("read:activities") ? (
           <div className="mx-1">
             <Link to={`/activities/${record.id}`}>
               Visualizar
             </Link>
-          </div>
+          </div>) : (null) }
         </div>
     },
   ]
@@ -84,9 +90,9 @@ function MyActivitiesPage() {
     const text = event.target.value;
     data.then(item => {
       if (text && item) {
-        const filteredData = item.filter(entry => entry.activity.toLowerCase().includes(text.toLowerCase()) || entry.Category.category.toLowerCase().includes(text.toLowerCase()) || entry.status.toLowerCase().includes(text.toLowerCase()) || entry.description.toLowerCase().includes(text.toLowerCase()));
+        const filteredData = item.filter(entry => entry.number.toLowerCase().includes(text.toLowerCase()) || entry.category?.name.toLowerCase().includes(text.toLowerCase()) || entry.status.toLowerCase().includes(text.toLowerCase()) || entry.description.toLowerCase().includes(text.toLowerCase()));
         setDataSource(filteredData);
-      }else{
+      } else {
         setDataSource(item);
       }
     }).catch(err => console.log("Não foi possível gerar data"))
@@ -95,11 +101,11 @@ function MyActivitiesPage() {
   return (
     <AuthenticatedLayoutComponent>
       <div className="container">
-        <h2 className="text-2xl font-bold text-gray-800 my-5">Meus chamados</h2>
+        <h2 className="text-2xl font-bold text-gray-800 my-5">{context.containsPermission("Admin") || context.containsPermission("activities") ? "Todos os chamados" : "Meus chamados"}</h2>
         <div className="mt-5 w-full flex flex-col md:flex-row flex-shrink-0 justify-start md:justify-between md:items-center">
           <input onChange={(event) => handleSearch(event)} type="text" name="search" placeholder="Buscar chamado" className="order-2 md:order-1 w-full md:w-80 pl-3 pr-10 py-2 border-2 border-gray-200 rounded-xl hover:border-gray-300 focus:outline-none focus:border-purple-500 transition-colors" />
           <Link to="/activities/new" className="order-1 md:order-2">
-            <ButtonComponent className="float-left md:float-right mb-4 w-28 md:w-48 ">Novo chamado</ButtonComponent>
+          {context.containsPermission("Admin") || context.containsPermission("write:activities") ? (<ButtonComponent className="float-left md:float-right mb-4 w-28 md:w-48 ">Novo chamado</ButtonComponent>) : (null) }
           </Link>
         </div>
         <Table rowKey={record => record.id} loading={loading} columns={cols} dataSource={dataSource || []} onRow={(record, rowIndex) => { return { onClick: event => { console.log(record, rowIndex, event) }, } }} />

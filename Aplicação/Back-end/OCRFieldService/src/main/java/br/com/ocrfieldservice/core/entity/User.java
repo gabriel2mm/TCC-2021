@@ -71,7 +71,7 @@ public class User implements UserDetails {
 
 	@ManyToMany(cascade = CascadeType.PERSIST, targetEntity = Skill.class)
 	private Set<Skill> skills = new HashSet<>();
-	
+
 	@ManyToMany(targetEntity = Capacity.class, cascade = CascadeType.MERGE)
 	private Set<Capacity> capacities = new HashSet<>();
 
@@ -81,7 +81,7 @@ public class User implements UserDetails {
 
 	@ManyToMany(targetEntity = GroupUsers.class, cascade = CascadeType.MERGE)
 	private Set<GroupUsers> groups = new HashSet<>();
-	
+
 
 	@JsonIgnore
 	@CreationTimestamp
@@ -127,6 +127,7 @@ public class User implements UserDetails {
 		this.email = email;
 	}
 
+	@Override
 	public String getPassword() {
 		return password;
 	}
@@ -179,7 +180,7 @@ public class User implements UserDetails {
 	@Override
 	public List<? extends GrantedAuthority> getAuthorities() {
 		if (this.profile == null) {
-			return new ArrayList<GrantedAuthority>();
+			return new ArrayList<>();
 		}
 
 		return profile.getPermissions().stream().collect(Collectors.toList());

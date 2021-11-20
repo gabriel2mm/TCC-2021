@@ -25,10 +25,10 @@ public class ProfileRepositoryImpl implements ProfileRepository, Serializable {
 
 	@Autowired
 	private ProfileDao profileDao;
-	
+
 	@Autowired
 	private EntityManager entityManager;
-	
+
 	@Override
 	public void save(Profile profile) {
 		profileDao.save(profile);
@@ -50,14 +50,14 @@ public class ProfileRepositoryImpl implements ProfileRepository, Serializable {
 
 	@Override
 	public List<Profile> findAllByOrg(String orgName) {
-		
+
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Profile> query = builder.createQuery(Profile.class);
 		Root<Profile> root = query.from(Profile.class);
 		Join<Profile,Organization> joinOrganizationProfile = root.join("org");
-		
+
 		query.where(builder.equal(joinOrganizationProfile.get("name"), orgName));
-		
+
 		return entityManager.createQuery(query).getResultList();
 	}
 
@@ -66,14 +66,14 @@ public class ProfileRepositoryImpl implements ProfileRepository, Serializable {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Profile> query = builder.createQuery(Profile.class);
 		Root<Profile> root = query.from(Profile.class);
-		
+
 		query.where(builder.equal(root.get("name"), profileName));
-		
+
 		List<Profile> profiles = entityManager.createQuery(query).getResultList();
 		if(profiles.size() > 0 ) {
 			return profiles.get(0);
 		}
-		
+
 		return null;
 	}
 
@@ -83,7 +83,7 @@ public class ProfileRepositoryImpl implements ProfileRepository, Serializable {
 		if(profileTmp.isPresent()) {
 			return profileTmp.get();
 		}
-		
+
 		return null;
 	}
 

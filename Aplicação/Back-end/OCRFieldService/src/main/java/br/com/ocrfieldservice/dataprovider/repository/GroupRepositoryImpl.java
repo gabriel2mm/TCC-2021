@@ -25,10 +25,10 @@ public class GroupRepositoryImpl implements GroupRepository, Serializable {
 
 	@Autowired
 	private GroupDao groupDao;
-	
+
 	@Autowired
 	private EntityManager entityManager;
-	
+
 	@Override
 	public List<GroupUsers> findAll() {
 		return groupDao.findAll();
@@ -39,7 +39,7 @@ public class GroupRepositoryImpl implements GroupRepository, Serializable {
 		Optional<GroupUsers> group = groupDao.findById(id);
 		if(group.isPresent())
 				return group.get();
-		
+
 		return null;
 	}
 
@@ -51,14 +51,14 @@ public class GroupRepositoryImpl implements GroupRepository, Serializable {
 	@Override
 	public void update(GroupUsers group) {
 		groupDao.saveAndFlush(group);
-		
+
 	}
 
 	@Override
 	public void deleteId(Long id) {
 		if(id != null) {
 			groupDao.deleteById(id);
-		}		
+		}
 	}
 
 	@Override
@@ -67,14 +67,14 @@ public class GroupRepositoryImpl implements GroupRepository, Serializable {
 		CriteriaQuery<GroupUsers> query = builder.createQuery(GroupUsers.class);
 		Root<GroupUsers> root = query.from(GroupUsers.class);
 		Join<GroupUsers, Organization> joinGroupOganization = root.join("organization");
-		
+
 		query.select(root).distinct(true).where(
 				builder.or(
 						builder.equal(joinGroupOganization.get("name"), organization.getName()),
 						builder.equal(joinGroupOganization.get("id"), organization.getId())
 				)
 		);
-		
+
 		return entityManager.createQuery(query).getResultList();
 	}
 
@@ -84,11 +84,11 @@ public class GroupRepositoryImpl implements GroupRepository, Serializable {
 		CriteriaQuery<GroupUsers> query = builder.createQuery(GroupUsers.class);
 		Root<GroupUsers> root = query.from(GroupUsers.class);
 		Join<GroupUsers, Organization> joinGroupOganization = root.join("organization");
-		
+
 		query.select(root).distinct(true).where(
 				builder.equal(joinGroupOganization.get("id"), orgId)
 		);
-		
+
 		return entityManager.createQuery(query).getResultList();
 	}
 

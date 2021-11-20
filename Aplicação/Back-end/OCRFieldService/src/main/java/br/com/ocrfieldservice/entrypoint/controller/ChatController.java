@@ -19,38 +19,38 @@ import br.com.ocrfieldservice.entrypoint.viewModel.ChatMessage;
 
 @Controller
 public class ChatController {
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private MessagesRepository messageRepository;
-	
+
 	@Autowired
-	private ChatRoomRepository chatRoomRepository; 
-	
+	private ChatRoomRepository chatRoomRepository;
+
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-    	
+
     	ChatRoom chatRoom = chatRoomRepository.findOne(chatMessage.getChatRoom());
-    	
-    	Messages message = new Messages();    	
+
+    	Messages message = new Messages();
     	message.setChatRoom(chatRoom);
     	message.setTo(userRepository.findById(chatMessage.getTo().getId()));
     	message.setFrom(userRepository.findById(chatMessage.getFrom().getId()));
     	message.setCreated(new Date());
     	message.setMessage(chatMessage.getContent());
-    	
+
     	messageRepository.save(message);
-    	
-    	List<Messages> messages = chatRoom.getMessages() != null && chatRoom.getMessages().size() > 0 ? chatRoom.getMessages() : new ArrayList<Messages>();
+
+    	List<Messages> messages = chatRoom.getMessages() != null && chatRoom.getMessages().size() > 0 ? chatRoom.getMessages() : new ArrayList<>();
     	messages.add(message);
     	chatRoom.setMessages(messages);
     	chatRoom.setNotificiation(true);
 
     	chatRoomRepository.save(chatRoom);
-    	
+
         return chatMessage;
     }
 }

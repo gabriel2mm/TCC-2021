@@ -76,7 +76,7 @@ function ProfileDetailPage() {
                         <GroupListComponent data={data} setData={setData} dataSource={configuration} />
                     </div>
                     <Form.Item>
-                        <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>
+                    {context.containsPermission("Admin") || context.containsPermission("write:profile") ? (<ButtonComponent name="save" type="submit">Salvar</ButtonComponent>) : (null)}
                         <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>
                     </Form.Item>
                 </Form>

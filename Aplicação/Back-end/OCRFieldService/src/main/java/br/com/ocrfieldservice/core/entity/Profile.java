@@ -1,7 +1,6 @@
 package br.com.ocrfieldservice.core.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,32 +28,32 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="PROFILE")
 public class Profile {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	@Column(name="name", length = 50, nullable = false)
 	private String name;
-	
+
 	@Column(name="description", length = 150, nullable = false)
 	private String description;
-	
+
 	@Column(name="active", nullable = false, columnDefinition = "tinyint default 1")
 	private boolean active;
-	
+
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private List<User> users;
-	
+
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = Organization.class)
 	private Organization org;
-	
+
 	@OrderBy("permission ASC")
 	@ManyToMany(cascade = CascadeType.ALL, targetEntity = Permission.class, fetch = FetchType.EAGER)
 	private Set<Permission> Permissions = new HashSet<>();
-	
+
 	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime created;
@@ -62,11 +61,11 @@ public class Profile {
 	@JsonIgnore
 	@UpdateTimestamp
 	private LocalDateTime updated;
-	
+
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User createdBy;
-	
+
 	public long getId() {
 		return id;
 	}
@@ -91,7 +90,7 @@ public class Profile {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-	
+
 	public Organization getOrg() {
 		return org;
 	}
@@ -116,7 +115,7 @@ public class Profile {
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
 	}
-	
+
 	public List<User> getUsers() {
 		return users;
 	}

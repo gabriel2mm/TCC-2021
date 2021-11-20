@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.ocrfieldservice.core.entity.Errors;
 import br.com.ocrfieldservice.core.entity.User;
-import br.com.ocrfieldservice.core.repository.UserRepository;
 import io.jsonwebtoken.JwtException;
 
 @Component
@@ -35,17 +34,17 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 
 	@Value("${jwt.secret}")
 	private String secret;
-	
+
 	private static final String HEADER = "Authorization";
 	private static final String PREFIX = "Bearer ";
-	
+
 	@Autowired
 	private UserDetailService userDetailService;
-	
+
 	public JWTValidateTokenFilter(AuthenticationManager authenticationManager) {
-		super(authenticationManager);		
+		super(authenticationManager);
 	}
-	
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String authorizationHeader = request.getHeader(HEADER);
@@ -55,7 +54,7 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 				String email = JWT.decode(token).getSubject();
 				User user = (User) userDetailService.loadUserByUsername(email);
 				DecodedJWT decoded = JWT.require(Algorithm.HMAC512(this.secret)).build().verify(token);
-				
+
 				if(user != null && decoded != null) {
 					UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
 					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -82,27 +81,27 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 			constructorErrors("Não foi possível processar sua solicitação", 500, response);
 		}
 	}
-	
+
 	private void constructorErrors(String error, int status, HttpServletResponse response) throws JsonProcessingException, IOException {
 		String errors = new ObjectMapper().writeValueAsString(new Errors(new ArrayList<String>() {{ add(error);}}, status));
-		
+
 		response.setStatus(status);
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().write(errors);
 		response.getWriter().flush();
 	}
-	
+
 	private UsernamePasswordAuthenticationToken getAuthenticationToken(final String token) {
 		String usuario = JWT.require(Algorithm.HMAC512(secret.getBytes()))
 				.build()
 				.verify(token)
 				.getSubject();
-		
+
 		if(usuario == null || usuario.isEmpty())
 			return null;
-		
+
 		return new UsernamePasswordAuthenticationToken(usuario, null, new ArrayList<>());
-	}	
+	}
 
 }

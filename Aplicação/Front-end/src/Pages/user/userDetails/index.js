@@ -5,12 +5,14 @@ import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { API } from "../../../Services";
 import { useParams } from 'react-router-dom';
 import {AuthenticatedLayoutComponent} from '../../../Components';
+import { useUserContext } from "../../../Contexts";
 
 function UserDetailsPage() {
     const params = useParams();
     const [form] = Form.useForm();
     const [profiles, setProfiles] = useState([]);
     const [data, setData] = useState({ id: params.id, firstName: "", lastName: "", email: "", cpf: "", password: "" , active: false , profile: null});
+    const context = useUserContext();
 
     useEffect(() => {
        async function handleLoads(){
@@ -95,7 +97,8 @@ function UserDetailsPage() {
                     <Form.Item>
                        <BasicSelectComponent dataSource={profiles.map(p => ({ option: p.name, value: p.id}))} name="profile" value={data.profile?.id} onChange={e => handleChangeProfile(e)} />
                     </Form.Item>
-                    <ButtonComponent name="save" type="submit">Salvar</ButtonComponent>
+
+                    {context.containsPermission("Admin") || context.containsPermission("write:user") ? (<ButtonComponent name="save" type="submit">Salvar</ButtonComponent>) : (null)}
                     <span onClick={() => window.history.back()} className="ml-5 text-blue-500 hover:text-blue-400 cursor-pointer">Cancelar</span>
                 </Form>
             </div>

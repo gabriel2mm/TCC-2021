@@ -27,26 +27,26 @@ public class Capacity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(length = 50, name = "name", nullable = false, unique = false)
 	private String name;
-	
+
 	@Column(length = 150, name = "description", nullable = false, unique = false)
 	private String description;
-	
+
 	@Column(name="active", nullable = false, columnDefinition = "tinyint default 1")
 	private boolean active;
 
 	@ManyToMany(cascade = CascadeType.MERGE, targetEntity = User.class)
 	private Set<User> users = new HashSet<>();
-	
+
 	@ManyToOne(cascade = CascadeType.MERGE, targetEntity = Category.class)
 	private Category category;
-	
+
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.MERGE,targetEntity = Organization.class)
 	private Organization organization;
-	
+
 	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime created;
@@ -54,7 +54,7 @@ public class Capacity {
 	@JsonIgnore
 	@UpdateTimestamp
 	private LocalDateTime updated;
-	
+
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User createdBy;

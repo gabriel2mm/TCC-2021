@@ -3,6 +3,7 @@ import { message, Spin } from 'antd';
 import axios from 'axios';
 import {useActivityViewContext} from '../../../Contexts';
 import "./style.css";
+import { API } from '../../../Services';
 
 function ChartViewComponent() {
 
@@ -55,7 +56,7 @@ function ChartViewComponent() {
 
     useEffect(() => {
         setLoading(true);
-        const response = axios.get("https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/viewActivit");
+        const response = API().get("/api/activities");
         response.then(res => {
             setDataSource(res.data)
             getHead();
@@ -72,18 +73,16 @@ function ChartViewComponent() {
     }
 
     function renderItem(hour, index) {
+        
+        return dataSource.map((activity, i) => {
+            const row = i + 2;
+            const activityHour = padStart(parseInt(new Date(activity.created).getHours()), 2, 0);
 
-        return dataSource.map((resources, i) => {
-            return resources.acitivities.map((activity, j) => {
-                const row = i + 2;
-                const activityHour = padStart(parseInt(new Date(activity.created).getHours()), 2, 0);
-
-                if (hour === activityHour) {
-                    return (
-                        <div onClick={() => handleShowActivity(activity)} className={`h-16 cursor-pointer ${j % 2 === 0 ? "bg-green-400" : "bg-yellow-300"} rounded-lg absolute`} style={{ top: "calc(1.5rem + 1.25rem + " + i + " * 4rem)", "width": "calc(100%)", gridRowStart: row }}></div>
-                    )
-                }
-            });
+            if (hour === activityHour) {
+                return (
+                    <div onClick={() => handleShowActivity(activity)} className={`h-16 cursor-pointer ${i % 2 === 0 ? "bg-green-400" : "bg-yellow-300"} rounded-lg absolute`} style={{ top: "calc(1.5rem + 1.25rem + " + i + " * 4rem)", "width": "calc(100%)", gridRowStart: row }}></div>
+                )
+            }
         });
     }
 

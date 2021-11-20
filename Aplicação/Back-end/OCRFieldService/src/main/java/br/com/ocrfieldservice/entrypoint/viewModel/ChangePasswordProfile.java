@@ -3,9 +3,9 @@ package br.com.ocrfieldservice.entrypoint.viewModel;
 public class ChangePasswordProfile {
 
 	private String email;
-	
+
 	private String currentPassword;
-	
+
 	private String newPassword;
 
 	public String getEmail() {

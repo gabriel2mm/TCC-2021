@@ -18,16 +18,16 @@ public class PasswordReset {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long ID;
-	
+
 	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User user;
-	
+
 	@Column(name = "token", unique = true, nullable = false)
 	private String token;
-	
+
 	@Column(name="expiration")
 	private Date expiration;
-	
+
 	@Column(name = "active", nullable = false)
 	private boolean Active;
 

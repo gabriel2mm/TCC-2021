@@ -65,12 +65,12 @@ function ActivitiesViewComponent() {
       ]}>
         <div className="container">
           <div className="flex flex-col">
-            <span><b>Atividade: </b> {activity.activity}</span>
+            <span><b>Atividade: </b> {activity.number}</span>
             <span><b>criado: </b> {moment(activity.created).format("DD/MM/yy HH:mm")}</span>
             <span><b>data limite: </b> {moment(activity.limite).format("DD/MM/yy HH:mm")}</span>
             <span><b>Status: </b> {activity.status}</span>
-            <span><b>Usuário Atribuído: </b> {activity.request} </span>
-            <span><b>Usuário requisitante: </b> {activity.request}</span>
+            <span><b>Usuário Atribuído: </b> {activity.assigned?.firstName} </span>
+            <span><b>Usuário requisitante: </b> {`${activity.requester?.firstName} ${activity.requester?.firstName} - ${activity.requester?.email} `}</span>
           </div>
         </div>
       </Modal>

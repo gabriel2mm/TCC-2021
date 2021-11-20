@@ -36,52 +36,52 @@ import br.com.ocrfieldservice.core.repository.UserRepository;
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
-	
+
 	@Autowired UserRepository useRepository;
-	
+
 	@Autowired CategoryRepository repository;
-	
+
 	@Autowired CapacityRepository capacityRepository;
-	
+
 	@Autowired SkillRepository skillRepository;
-	
+
 	@Autowired SLARepository slaRepository;
-	
-	
+
+
 	@GetMapping
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:category') or hasAuthority('write:category')")
 	public @ResponseBody ResponseEntity<List<Category>> getAllCategories(Authentication authentication){
 		User userLogged = useRepository.findByEmail(authentication.getName());
 		if(userLogged!= null && userLogged.getOrganization() != null) {
-			return new ResponseEntity<List<Category>>(repository.findByOrg(userLogged.getOrganization()), HttpStatus.OK);
+			return new ResponseEntity<>(repository.findByOrg(userLogged.getOrganization()), HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<List<Category>>( new ArrayList<>(), HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>( new ArrayList<>(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('read:category') or hasAuthority('write:category')")
 	public @ResponseBody ResponseEntity<Category> getOneCategory(Authentication authentication, @PathVariable("id") long id){
 		User userLogged = useRepository.findByEmail(authentication.getName());
 		if(userLogged != null && userLogged.getOrganization() != null	){
-			return new ResponseEntity<Category>(repository.findOne(id), HttpStatus.OK);
+			return new ResponseEntity<>(repository.findOne(id), HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<Category>( new Category() , HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>( new Category() , HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:category')")
 	public @ResponseBody ResponseEntity<String> deleteCategory(Authentication authentication, @PathVariable("id") long id){
 		User userLogged = useRepository.findByEmail(authentication.getName());
 		if(userLogged != null && userLogged.getOrganization() != null	){
 			repository.deleteId(id);
-			return new ResponseEntity<String>("Deletado com sucesso!", HttpStatus.OK);
+			return new ResponseEntity<>("Deletado com sucesso!", HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<String>("Não foi possível deletar registro!", HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>("Não foi possível deletar registro!", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@PostMapping
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:category')")
 	public @ResponseBody ResponseEntity<String> createCategory(Authentication authentication, @RequestBody Category category){
@@ -90,41 +90,41 @@ public class CategoryController {
 			category.setActive(true);
 			category.setOrganization(userLogged.getOrganization());
 			category.setCreatedBy(userLogged);
-			
+
 			if(category.getSla() != null) {
 				SLA sla = slaRepository.findOne(category.getSla().getId());
 				if(sla != null) {
 					category.setSla(sla);
 				}
-				
+
 			}
-			
+
 			repository.save(category);
-			return new ResponseEntity<String>("Registro criado com sucesso!", HttpStatus.OK);
+			return new ResponseEntity<>("Registro criado com sucesso!", HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<String>("Não foi possível criar registro", HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>("Não foi possível criar registro", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('Admin') or hasAuthority('write:category')")
 	public @ResponseBody ResponseEntity<String> updateCategory(Authentication authentication, @PathVariable("id") long id, @RequestBody Category category){
 		User userLogged = useRepository.findByEmail(authentication.getName());
 		if(userLogged != null && userLogged.getOrganization() != null	){
 			Category categoryTpm = repository.findOne(id);
-			
+
 			if(categoryTpm != null) {
 				categoryTpm.setActive(category.isActive());
 				categoryTpm.setName(category.getName());
 				categoryTpm.setDescription(category.getDescription());
 				categoryTpm.setAutomaticAssignment(category.isAutomaticAssignment());
 				categoryTpm.setOrganization(userLogged.getOrganization());
-				
+
 				if(category.getSla() != null) {
 					SLA sla = slaRepository.findOne(category.getSla().getId());
 					categoryTpm.setSla(sla);
 				}
-				
+
 				Set<Skill> skills = new HashSet<>();
 				for(Skill skill : category.getSkills()) {
 					Skill tmp = skillRepository.findOne(skill.getId());
@@ -132,9 +132,9 @@ public class CategoryController {
 						skills.add(tmp);
 					}
 				}
-				
+
 				categoryTpm.setSkills(skills);
-				
+
 				Set<Capacity> capacities = new HashSet<>();
 				for(Capacity capacity : category.getCapacities()) {
 					Capacity tmp = capacityRepository.findOne(capacity.getId());
@@ -142,15 +142,15 @@ public class CategoryController {
 						capacities.add(tmp);
 					}
 				}
-				
+
 				categoryTpm.setCapacities(capacities);
-				
+
 				repository.update(categoryTpm);
-				return new ResponseEntity<String>("Registro atualizado com sucesso!", HttpStatus.OK);
+				return new ResponseEntity<>("Registro atualizado com sucesso!", HttpStatus.OK);
 			}
-			
+
 		}
-		
-		return new ResponseEntity<String>("Não foi atualizar registro!", HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>("Não foi atualizar registro!", HttpStatus.BAD_REQUEST);
 	}
 }

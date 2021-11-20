@@ -1,7 +1,7 @@
 package br.com.ocrfieldservice.entrypoint.viewModel;
 
 public class OrganizationInput {
-	
+
 	private String name;
 
 	public String getName() {
@@ -11,5 +11,5 @@ public class OrganizationInput {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

@@ -9,6 +9,6 @@ import br.com.ocrfieldservice.core.entity.User;
 public interface PasswordResetService {
 
 	public PasswordReset createToken(User user);
-	
+
 	public void ResetPassword(final String token, final String newPassword);
 }

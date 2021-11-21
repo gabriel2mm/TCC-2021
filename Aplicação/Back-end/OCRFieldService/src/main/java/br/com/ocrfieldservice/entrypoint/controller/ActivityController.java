@@ -2,8 +2,10 @@ package br.com.ocrfieldservice.entrypoint.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,6 +198,86 @@ public class ActivityController {
 		}
 		
 		return new ResponseEntity<List<Activity>>( new ArrayList<>() , HttpStatus.BAD_REQUEST);
+	}
+	/*
+	@GetMapping("/dashboard/aberto")
+	public @ResponseBody ResponseEntity<String> nomeDoMetodo(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			return new ResponseEntity<String>("1, 2, 3, 4, 5", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("0", HttpStatus.BAD_REQUEST);
+	}*/
+	
+	@GetMapping("/dashboard/aberto")
+	public Map<String, List<Integer>> testeDeString(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			List<Integer> openList = new ArrayList<Integer>();
+			openList.add(1);
+			openList.add(3);
+			openList.add(5);
+			openList.add(7);
+			openList.add(12);
+			openList.add(18);
+			openList.add(22);
+			openList.add(27);
+			openList.add(30);
+			openList.add(20);
+			openList.add(12);
+			openList.add(3);
+			
+			List<Integer> inProgressList = new ArrayList<Integer>();
+			inProgressList.add(5);
+			inProgressList.add(0);
+			inProgressList.add(9);
+			inProgressList.add(10);
+			inProgressList.add(14);
+			inProgressList.add(21);
+			inProgressList.add(3);
+			inProgressList.add(9);
+			inProgressList.add(15);
+			inProgressList.add(28);
+			inProgressList.add(20);
+			inProgressList.add(4);
+			
+			List<Integer> finishedDayList = new ArrayList<Integer>();
+			finishedDayList.add(20);
+			finishedDayList.add(18);
+			finishedDayList.add(16);
+			finishedDayList.add(14);
+			finishedDayList.add(22);
+			finishedDayList.add(24);
+			finishedDayList.add(26);
+			finishedDayList.add(28);
+			finishedDayList.add(30);
+			finishedDayList.add(10);
+			finishedDayList.add(15);
+			finishedDayList.add(5);
+			
+			List<Integer> expiredList = new ArrayList<Integer>();
+			expiredList.add(15);
+			expiredList.add(12);
+			expiredList.add(10);
+			expiredList.add(9);
+			expiredList.add(8);
+			expiredList.add(7);
+			expiredList.add(6);
+			expiredList.add(5);
+			expiredList.add(4);
+			expiredList.add(3);
+			expiredList.add(2);
+			expiredList.add(1);
+			Map<String, List<Integer>> map = new HashMap<>();
+			map.put("openActivities", openList);
+			map.put("inProgressActivities", inProgressList);
+			map.put("finishedDayActivities", finishedDayList);
+			map.put("expiredActivities", expiredList);
+			return map;
+		}
+		Map<String, List<Integer>> map = new HashMap<>();
+		map.put("Erro", map.get("Deu ruim!"));
+		return map;
 	}
 
 

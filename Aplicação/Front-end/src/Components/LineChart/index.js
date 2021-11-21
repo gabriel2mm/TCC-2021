@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Line } from 'react-chartjs-2';
+import { API } from '../../Services'
 
 function LineChart() {
+  const [data, setData] = useState();
+  useEffect(() => {
+    async function loadAcitivities() {
+      try {
+        const response = await API().get('/api/activities/dashboards/aberto');
+        if (response.status >= 200 && response.status < 300) {
+          setData(response.data);
+        }
+      } catch (e) {
+        console.log("ERROR! ", e);
+      }
+    }
+    loadAcitivities();
+  }, [data]);
+
+  console.log("Dados do EndPoit", data);
+
   const dataChart = {
     labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
     datasets: [

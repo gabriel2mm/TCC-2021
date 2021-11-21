@@ -24,6 +24,10 @@ import PieChart from './pieChart';
 import DoughnutChart from './doughnutChart';
 import PolarArea from './polarChart';
 import RadarChart from './radarChart';
+import LineChartMonth from './lineChartMonth';
+import DoughnutChartCap from './doughnutChartCap';
+import DoughnutChartCat from './doughnutChartCat';
+import DoughnutChartHab from './doughnutChartHab';
 
 
 export {
@@ -52,5 +56,9 @@ export {
     PieChart,
     DoughnutChart,
     PolarArea,
-    RadarChart
+    RadarChart,
+    LineChartMonth,
+    DoughnutChartCap,
+    DoughnutChartCat,
+    DoughnutChartHab
 }

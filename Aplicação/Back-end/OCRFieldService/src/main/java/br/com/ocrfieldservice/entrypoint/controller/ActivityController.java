@@ -199,18 +199,9 @@ public class ActivityController {
 		
 		return new ResponseEntity<List<Activity>>( new ArrayList<>() , HttpStatus.BAD_REQUEST);
 	}
-	/*
-	@GetMapping("/dashboard/aberto")
-	public @ResponseBody ResponseEntity<String> nomeDoMetodo(Authentication authentication){
-		User userLogged = useRep.findByEmail(authentication.getName());
-		if(userLogged != null && userLogged.getOrganization() != null) {
-			return new ResponseEntity<String>("1, 2, 3, 4, 5", HttpStatus.OK);
-		}
-		return new ResponseEntity<String>("0", HttpStatus.BAD_REQUEST);
-	}*/
 	
-	@GetMapping("/dashboard/aberto")
-	public Map<String, List<Integer>> testeDeString(Authentication authentication){
+	@GetMapping("/dashboard/ano")
+	public @ResponseBody ResponseEntity<Map<String, List<Integer>>> graficoAnual(Authentication authentication){
 		User userLogged = useRep.findByEmail(authentication.getName());
 		if(userLogged != null && userLogged.getOrganization() != null) {
 			List<Integer> openList = new ArrayList<Integer>();
@@ -269,17 +260,217 @@ public class ActivityController {
 			expiredList.add(2);
 			expiredList.add(1);
 			Map<String, List<Integer>> map = new HashMap<>();
-			map.put("openActivities", openList);
-			map.put("inProgressActivities", inProgressList);
-			map.put("finishedDayActivities", finishedDayList);
-			map.put("expiredActivities", expiredList);
-			return map;
+			map.put("open-activities", openList);
+			map.put("progress-activities", inProgressList);
+			map.put("finished-day-activities", finishedDayList);
+			map.put("expired-activities", expiredList);
+			return new ResponseEntity<Map<String, List<Integer>>>(map, HttpStatus.OK);
 		}
 		Map<String, List<Integer>> map = new HashMap<>();
 		map.put("Erro", map.get("Deu ruim!"));
-		return map;
+		return new ResponseEntity<Map<String, List<Integer>>>(map, HttpStatus.BAD_REQUEST);
 	}
-
+	
+	@GetMapping("/dashboard/mes")
+	public @ResponseBody ResponseEntity<Map<String, List<Integer>>> graficoMesal(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			List<Integer> openList = new ArrayList<Integer>();
+			openList.add(1);
+			openList.add(3);
+			openList.add(5);
+			openList.add(7);
+			openList.add(12);
+			openList.add(18);
+			openList.add(22);
+			openList.add(27);
+			openList.add(30);
+			openList.add(20);
+			openList.add(12);
+			openList.add(3);
+			openList.add(1);
+			openList.add(3);
+			openList.add(5);
+			openList.add(7);
+			openList.add(12);
+			openList.add(18);
+			openList.add(22);
+			openList.add(27);
+			openList.add(30);
+			openList.add(20);
+			openList.add(12);
+			openList.add(3);
+			openList.add(22);
+			openList.add(27);
+			openList.add(30);
+			openList.add(20);
+			openList.add(12);
+			openList.add(3);
+			
+			List<Integer> inProgressList = new ArrayList<Integer>();
+			inProgressList.add(5);
+			inProgressList.add(0);
+			inProgressList.add(9);
+			inProgressList.add(10);
+			inProgressList.add(14);
+			inProgressList.add(21);
+			inProgressList.add(3);
+			inProgressList.add(9);
+			inProgressList.add(15);
+			inProgressList.add(28);
+			inProgressList.add(20);
+			inProgressList.add(4);
+			inProgressList.add(5);
+			inProgressList.add(0);
+			inProgressList.add(9);
+			inProgressList.add(10);
+			inProgressList.add(14);
+			inProgressList.add(21);
+			inProgressList.add(3);
+			inProgressList.add(9);
+			inProgressList.add(15);
+			inProgressList.add(28);
+			inProgressList.add(20);
+			inProgressList.add(4);
+			inProgressList.add(3);
+			inProgressList.add(9);
+			inProgressList.add(15);
+			inProgressList.add(28);
+			inProgressList.add(20);
+			inProgressList.add(4);
+			
+			List<Integer> finishedDayList = new ArrayList<Integer>();
+			finishedDayList.add(20);
+			finishedDayList.add(18);
+			finishedDayList.add(16);
+			finishedDayList.add(14);
+			finishedDayList.add(22);
+			finishedDayList.add(24);
+			finishedDayList.add(26);
+			finishedDayList.add(28);
+			finishedDayList.add(30);
+			finishedDayList.add(10);
+			finishedDayList.add(15);
+			finishedDayList.add(5);
+			finishedDayList.add(20);
+			finishedDayList.add(18);
+			finishedDayList.add(16);
+			finishedDayList.add(14);
+			finishedDayList.add(22);
+			finishedDayList.add(24);
+			finishedDayList.add(26);
+			finishedDayList.add(28);
+			finishedDayList.add(30);
+			finishedDayList.add(10);
+			finishedDayList.add(15);
+			finishedDayList.add(5);
+			finishedDayList.add(26);
+			finishedDayList.add(28);
+			finishedDayList.add(30);
+			finishedDayList.add(10);
+			finishedDayList.add(15);
+			finishedDayList.add(5);
+			
+			List<Integer> expiredList = new ArrayList<Integer>();
+			expiredList.add(15);
+			expiredList.add(12);
+			expiredList.add(10);
+			expiredList.add(9);
+			expiredList.add(8);
+			expiredList.add(7);
+			expiredList.add(6);
+			expiredList.add(5);
+			expiredList.add(4);
+			expiredList.add(3);
+			expiredList.add(2);
+			expiredList.add(1);
+			expiredList.add(15);
+			expiredList.add(12);
+			expiredList.add(10);
+			expiredList.add(9);
+			expiredList.add(8);
+			expiredList.add(7);
+			expiredList.add(6);
+			expiredList.add(5);
+			expiredList.add(4);
+			expiredList.add(3);
+			expiredList.add(2);
+			expiredList.add(1);
+			expiredList.add(6);
+			expiredList.add(5);
+			expiredList.add(4);
+			expiredList.add(3);
+			expiredList.add(2);
+			expiredList.add(1);
+			
+			Map<String, List<Integer>> map = new HashMap<>();
+			map.put("open-activities", openList);
+			map.put("progress-activities", inProgressList);
+			map.put("finished-day-activities", finishedDayList);
+			map.put("expired-activities", expiredList);
+			return new ResponseEntity<Map<String, List<Integer>>>(map, HttpStatus.OK);
+		}
+		Map<String, List<Integer>> map = new HashMap<>();
+		map.put("Erro", map.get("Deu ruim!"));
+		return new ResponseEntity<Map<String, List<Integer>>>(map, HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/dashboard/categorias")
+	public @ResponseBody ResponseEntity<Map<String, List<Integer>>> graficoCategorias(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			List<Integer> qtdCat = new ArrayList<Integer>();
+			qtdCat.add(30);
+			qtdCat.add(5);
+			qtdCat.add(15);
+			qtdCat.add(10);
+			
+			Map<String, List<Integer>> map = new HashMap<>();
+			map.put("data-categoria", qtdCat);
+			return new ResponseEntity<Map<String, List<Integer>>>(map, HttpStatus.OK);
+		}
+		Map<String, List<Integer>> map = new HashMap<>();
+		map.put("Erro", map.get("Deu ruim!"));
+		return new ResponseEntity<Map<String, List<Integer>>>(map, HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/dashboard/habilidades")
+	public @ResponseBody ResponseEntity<Map<String, List<Integer>>> graficoHabilidades(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			List<Integer> qtdHab = new ArrayList<Integer>();
+			qtdHab.add(3);
+			qtdHab.add(10);
+			qtdHab.add(8);
+			qtdHab.add(15);
+			
+			Map<String, List<Integer>> map = new HashMap<>();
+			map.put("data-habilidade", qtdHab);
+			return new ResponseEntity<Map<String, List<Integer>>>(map, HttpStatus.OK);
+		}
+		Map<String, List<Integer>> map = new HashMap<>();
+		map.put("Erro", map.get("Deu ruim!"));
+		return new ResponseEntity<Map<String, List<Integer>>>(map, HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/dashboard/capacidades")
+	public @ResponseBody ResponseEntity<Map<String, List<Integer>>> graficoCapacidades(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			List<Integer> qtdCap = new ArrayList<Integer>();
+			qtdCap.add(40);
+			qtdCap.add(60);
+			qtdCap.add(10);
+			qtdCap.add(5);
+			
+			Map<String, List<Integer>> map = new HashMap<>();
+			map.put("data-habilidade", qtdCap);
+			return new ResponseEntity<Map<String, List<Integer>>>(map, HttpStatus.OK);
+		}
+		Map<String, List<Integer>> map = new HashMap<>();
+		map.put("Erro", map.get("Deu ruim!"));
+		return new ResponseEntity<Map<String, List<Integer>>>(map, HttpStatus.BAD_REQUEST);
+	}
 
 	public static String padLeft(String s, int n) {
 	    return String.format("WO%" + n + "s", s).replace(' ', '0');  

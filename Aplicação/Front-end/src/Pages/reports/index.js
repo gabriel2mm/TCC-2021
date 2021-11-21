@@ -3,11 +3,11 @@ import {
   AuthenticatedLayoutComponent,
   ActivitiesReportsComponent,
   LineChartComponent,
-  BarChart,
-  PieChart,
-  DoughnutChart,
-  PolarArea,
-  RadarChart
+  RadarChart,
+  LineChartMonth,
+  DoughnutChartCap,
+  DoughnutChartCat,
+  DoughnutChartHab
 } from '../../Components';
 
 
@@ -23,21 +23,23 @@ function DashboardPage() {
           <div className="w-full md:w-1/2">
             <LineChartComponent />
           </div>
+        </div>
+        <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start lg:flex-row ">
           <div className="w-full md:w-1/2">
-            <BarChart />
+            <LineChartMonth />
           </div>
         </div>
         <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start lg:flex-row ">
           <div className="w-full md:w-1/2">
-            <PieChart />
+            <DoughnutChartCat />
           </div>
           <div className="w-full md:w-1/2">
-            <DoughnutChart />
+            <DoughnutChartHab />
           </div>
         </div>
         <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start lg:flex-row ">
           <div className="w-full md:w-1/2">
-            <PolarArea />
+            <DoughnutChartCap />
           </div>
           <div className="w-full md:w-1/2">
             <RadarChart />

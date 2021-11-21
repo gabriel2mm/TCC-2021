@@ -6,7 +6,7 @@ function RadarChart() {
     labels: ['DEVELOPER', 'HARDWARE', 'CLOUD', 'INFRA', 'OUTROS'],
     datasets: [{
       label: 'Período diurno',
-      data: [65, 59, 90, 81, 56],
+      data: [60, 59, 90, 81, 56],
       fill: true,
       backgroundColor: 'rgba(102, 255, 102, 0.2)',
       borderColor: 'rgb(102, 255, 102)',

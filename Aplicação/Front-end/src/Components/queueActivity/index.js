@@ -58,7 +58,7 @@ export default function QueueActivityComponent() {
             <h2 className="text-lg font-bold text-gray-800">Fila - Atividades não atribuídas</h2>
             <List className="overflow-y-auto">
             {activities.map( (activity, index) => (
-                
+                <a href={`/activities/${activity.id}`} key={index}>
                 <List.Item>
                         <div className="grid grid-cols-12 gap-2 w-full rounded-lg shadow cursor-pointer hover:shadow-lg  bg-white transition-all delay-200">
                             <div className={`${renderColor(activity.created, activity.dateLimit, activity.status)} w-full h-full rounded-tl-lg rounded-bl-lg`}></div>
@@ -72,6 +72,7 @@ export default function QueueActivityComponent() {
                             </div>
                         </div>
                     </List.Item>
+                </a>
             ))}
             </List>
         </div>

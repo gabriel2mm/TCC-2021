@@ -45,7 +45,7 @@ export default function ContactListComponent() {
     }
 
     return (
-        <>
+        <div style={{zIndex: 5}}>
             <div  onClick={() =>handleBack()} className="px-5 py-2 flex flex-row items-center cursor-pointer">
              <ArrowLeftOutlined className="mr-2 text-purple-500 hover:text-purple-400 focus:text-purple-400 text-lg" /><span className="text-gray-800 font-bold text-lg">Contatos</span> 
             </div>
@@ -71,6 +71,6 @@ export default function ContactListComponent() {
                     ))}
                 </List>
             ) : (<Empty description="Não há contatos" />)}
-        </>
+        </div>
     )
 }

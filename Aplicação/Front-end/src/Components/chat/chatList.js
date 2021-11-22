@@ -55,7 +55,7 @@ export default function ChatListComponent() {
     }
 
     return (
-        <>
+        <div style={{zIndex: 5}}>
             <div className="px-5 py-2 flex flex-row justify-between items-center">
                 <span className="text-gray-800 font-bold text-lg">Conversas</span>
                 <PlusCircleOutlined className="text-lg font-bold text-gray-800 cursor-pointer" onClick={() => handleChangeScreen(ChatTypes.contactList)} />
@@ -81,6 +81,6 @@ export default function ChatListComponent() {
                     ))}
                 </List>
             ) : (<Empty description="Não há contatos" />)}
-        </>
+        </div>
     )
 }

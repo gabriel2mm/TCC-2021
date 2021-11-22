@@ -1,37 +1,68 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { message, Spin } from 'antd';
 import axios from 'axios';
-import {useActivityViewContext} from '../../../Contexts';
+import { useActivityViewContext, useGroupSelectContext, useUserContext } from '../../../Contexts';
 import "./style.css";
 import { API } from '../../../Services';
+import moment from 'moment';
 
 function ChartViewComponent() {
-
-    const [loading, setLoading] = useState(false);
+    const [currDate, setCurrDate] = useState(new Date());
+    const context = useUserContext();
+    const containerRef = useRef();
+    const [difHours, setDifHours] = useState(24);
+    const [resources, setResources] = useState([]);
+    const { activities, type, id } = useGroupSelectContext();
+    const [loading, setLoading] = useState(true);
     const [headers, setHeaders] = useState([]);
-    const [dataSource, setDataSource] = useState([]);
     const { changeActivity, handleShowModal } = useActivityViewContext();
 
-    const tmpHeaders = [];
-    const initialDate = useMemo(() => {
-        const date = new Date();
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(1);
+    useEffect(() => {
+        getHead();
+        setLoading(false);
+        loadResource();
 
-        return date;
-    }, []);
+        setInterval(() => {
+            setCurrDate(new Date());
+        }, 60000);
 
-    const endDate = useMemo(() => {
-        const date = new Date();
-        date.setHours(23);
-        date.setMinutes(59);
-        date.setSeconds(59);
+    }, [activities]);
 
-        return date;
-    }, [])
+    async function loadResource() {
+        if(context.containsPermission("Admin") || context.containsPermission("activities")){
+            let url = "/api/users";
+            if (type == "u") {
+                url = `/api/users/${id}`;
+            } else if (type == "g") {
+                url = `/api/groups/${id}`;
+            }
+    
+            try {
+                const response = await API().get(url);
+                if (response.status >= 200 && response.status < 300) {
+                    if (type == "u") {
+                        setResources([response.data]);
+                    } else if (type === "g") {
+                        setResources(response.data?.users);
+                    } else {
+                        setResources(response.data);
+                    }
+                }
+            } catch (e) {
+                console.log(e);
+                message.error("Não foi possível carregar recursos");
+            }
+        }else if(context.containsPermission("receive:activity")){
+            setResources([context.user]);
+        }
+    }
 
-    const difHours = 24;
+    function groupBy(data, key) {
+        return data.reduce(function (acc, item) {
+            (acc[item[key]["id"]] = acc[item[key]["id"]] || []).push(item);
+            return acc;
+        }, {});
+    };
 
     function padStart(number, digits = 2, emptyDigit = 0) {
         let length = 0;
@@ -46,6 +77,7 @@ function ChartViewComponent() {
     }
 
     function getHead() {
+        const tmpHeaders = [];
         for (var i = 0; i < difHours; i++) {
             tmpHeaders.push({ hour: padStart(i, 2, 0) });
         }
@@ -53,60 +85,115 @@ function ChartViewComponent() {
         setHeaders(tmpHeaders);
     }
 
-
-    useEffect(() => {
-        setLoading(true);
-        const response = API().get("/api/activities");
-        response.then(res => {
-            setDataSource(res.data)
-            getHead();
-            renderItem();
-            setLoading(false);
-        }).catch(err => message.error("Não foi possível capturar os dados"));
-    }, [])
-
-
-    function handleShowActivity(activity){
-        console.log(activity)
+    function handleShowActivity(activity) {
         changeActivity(activity);
         handleShowModal();
     }
 
-    function renderItem(hour, index) {
-        
-        return dataSource.map((activity, i) => {
-            const row = i + 2;
-            const activityHour = padStart(parseInt(new Date(activity.created).getHours()), 2, 0);
-
-            if (hour === activityHour) {
-                return (
-                    <div onClick={() => handleShowActivity(activity)} className={`h-16 cursor-pointer ${i % 2 === 0 ? "bg-green-400" : "bg-yellow-300"} rounded-lg absolute`} style={{ top: "calc(1.5rem + 1.25rem + " + i + " * 4rem)", "width": "calc(100%)", gridRowStart: row }}></div>
-                )
-            }
+    function renderHead() {
+        return headers.map((item, i) => {
+            const width = containerRef.current?.offsetWidth;
+            const space = 300 + (i * ((width - 300) / difHours));
+            return (
+                <div style={{ zIndex: 1, position: "absolute", height: "100%", width: ((width - 300) / 24), left: `${i > 0 ? space : 300}px`, top: 0, borderLeft: "1px dashed #CCC", textAlign: "center" }}>
+                    <div style={{ position: "absolute", background: "#CCC", width: "24px", height: "25px", borderRadius: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                        <p>{item.hour}</p>
+                    </div>
+                </div>
+            )
         });
     }
 
-    return (
-        loading ? (<div className="w-full h-full flex flex-row justify-center items-center"><Spin /></div>) : (
-            <div id="grid-view" className={`relative w-full py-1 h-auto min-h-screen grid grid-cols-${difHours + 2} grid-rows-none overflow-y-auto`}>
-                <div className="row-start-1 min-w-max item col-span-2 text-lg text-gray-800 text-center">
-                    <div className="mb-5">Recursos</div>
-                    {dataSource.map((data, index) => (
-                        <>
-                            <div key={`line-${index}`} className={`${index % 2 === 0 ? "bg-items" : ""} absolute w-full h-16 -mt-1`}></div>
-                            <div key={`resource-${index}`} className="h-16 flex flex-row justify-center items-center" style={{ gridRowStart: index + 2 }}>{data.Recurso}</div>
-                        </>
-                    )
+    function calculeLeftItem(created) {
+        const hour = new Date(created).getHours();
+        const minutes = new Date(created).getMinutes();
+        const width = containerRef.current?.offsetWidth;
+        const space = (hour * ((width - 300) / difHours));
+        const totalMinutes = 100*minutes/ 60;
+        const widthSpace = ((width - 300) / difHours);
 
-                    )}
-                </div>
-                {headers.map((hour, index) =>
-                    <div key={`hourIcon-${index}`} className="mb-5 row-start-1 item relative" id={`head-${hour.hour}`} data-key={hour.hour}>
-                        <span className="flex flex-row justify-center items-center rounded-full bg-gray-400 text-white w-6 h-6">{hour.hour}</span>
-                        {renderItem(hour.hour, index)}
+        return space + (totalMinutes / 100) * widthSpace;
+    }
+
+    function calculeWidthItem(activity, created, deadline, unity) {
+        
+        let init = new Date(created).getHours();
+        let limit = new Date(deadline).getHours();
+        let duration = limit - init;
+        switch(unity){
+            case "m":
+                init = new Date(created).getMinutes();
+                limit = new Date(deadline).getMinutes();
+                duration = (limit > init ? limit - init : init - limit) / 160;
+                break;
+            case "h":
+                init = new Date(created).getHours();
+                limit = new Date(deadline).getHours();
+                break;
+            case "d":
+                init = new Date(created).getDate();
+                limit = new Date(deadline).getDate();
+                duration = 23 * (limit - init);
+                break;
+        }
+        
+        
+        const width = duration * ((containerRef.current?.offsetWidth - 300) / 24);
+
+        return width;
+    }
+
+    function calculeColor(activity){
+        const currentDate = new Date();
+        const initialDate = new Date(activity.created);
+        const finalDate = new Date(activity.dateLimit);
+
+        const diff1 = moment(finalDate).diff(moment(initialDate), 'minutes');
+        const diff2 = moment(currentDate).diff(moment(initialDate), 'minutes');
+
+        let result = Math.abs(100 * diff2 / diff1);
+        
+        if(isNaN(result))
+            result = 0;
+        
+        if(activity.status == "ABERTO" || activity.status == "EM_ANDAMENTO"){
+            if(result < 40){
+                return "green";
+            }else if(result >= 40 && result < 80){
+                return "yellow";
+            }else if(result >= 80){
+                return "red";
+            }
+        }else{
+            return "blue";
+        }
+    }
+
+    return (
+        loading || !activities ? (<div className="w-full h-full flex flex-row justify-center items-center"><Spin /></div>) : (
+            <>
+                <div id="container" ref={containerRef} style={{ width: "100%", minHeight: "1080px", "overflow-x": "auto", "overflow-y": "auto", "position": "relative" }}>
+                    <div className="bg-gray-100" style={{ "width": "300px", "min-height": "1080px" }}>
+                        <h3 style={{ "height": "40px", fontSize: "16pt", textAlign: "center" }}>Recursos</h3>
+                        <div style={{position: 'absolute',height: '100%',left: 300 + calculeLeftItem(currDate),top: '0px', borderLeft: '1px solid red', textAlign: 'center', width: '1px', zIndex: 4}}></div>
+                        {renderHead()}
+                        {resources.map((resource, i) => {
+                            return (
+                                <div className={`flex flex-col flex-1 justify-center items-center border border-gray-300 ${i % 2 === 0 ? "" : "bg-gray-200"}`} style={{ "height": "70px", "width": "100%", paddingLeft: 10 }} key={i}>
+                                    <span className="text-md font-medium">{resource.firstName} {resource.lastName}</span>
+                                    <ul className={`${i % 2 === 0 ? "bg-gray-100" : "bg-gray-200"} flex flex-row`} style={{ position: "absolute", left: 300, width: "310%", height: 70, top: (i * 70) + 40 }}>
+                                        {groupBy(activities, "assigned")[resource.id]?.map((activity, j) => {
+                                            return (
+                                                <li key={j} onClick={() => handleShowActivity(activity)} className={`cursor-pointer bg-${calculeColor(activity)}-400 border border-${calculeColor(activity)}-500`} style={{ zIndex: 2, position: "absolute", height: 70, borderRadius: 6, width: calculeWidthItem(activity, activity.created, activity.dateLimit, activity.category.sla.unity), left: calculeLeftItem(activity.created) }}></li>
+                                            )
+                                        })}
+                                    </ul>
+                                </div>
+                            )
+                        })}
                     </div>
-                )}
-            </div>
+                </div>
+            </>
         )
     )
 }

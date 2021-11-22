@@ -2,9 +2,11 @@ package br.com.ocrfieldservice.entrypoint.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,15 +24,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ocrfieldservice.core.entity.Activity;
+import br.com.ocrfieldservice.core.entity.Capacity;
 import br.com.ocrfieldservice.core.entity.Category;
 import br.com.ocrfieldservice.core.entity.Complement;
+import br.com.ocrfieldservice.core.entity.GroupUsers;
+import br.com.ocrfieldservice.core.entity.Proof;
 import br.com.ocrfieldservice.core.entity.SLA;
+import br.com.ocrfieldservice.core.entity.Skill;
 import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.enumerators.ActivityStatus;
 import br.com.ocrfieldservice.core.repository.ActivityRepository;
 import br.com.ocrfieldservice.core.repository.AddressRepository;
 import br.com.ocrfieldservice.core.repository.CategoryRepository;
 import br.com.ocrfieldservice.core.repository.ComplementRepository;
+import br.com.ocrfieldservice.core.repository.GroupRepository;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 
 @CrossOrigin(origins = "*")
@@ -47,6 +54,9 @@ public class ActivityController {
 	@Autowired AddressRepository addressRepository;
 	
 	@Autowired ComplementRepository complementRepository;
+	
+	@Autowired GroupRepository groupRepository;
+	
 	
 	@GetMapping
 	public @ResponseBody ResponseEntity<List<Activity>> getAllByOrg(Authentication authentication){
@@ -84,6 +94,11 @@ public class ActivityController {
 				activity.setNumber(padLeft(String.valueOf(1), 8));
 			}
 			
+			Proof proof = new Proof();
+			proof.setCreatedBy(userLogged);
+			proof.setRate(0);
+			proof.setSignature("");
+			activity.setProof(proof);
 			
 			Category category = categoryRepository.findOne(activity.getCategory().getId());
 			if(category != null) {
@@ -112,6 +127,19 @@ public class ActivityController {
 							break;
 					}
 					activity.setDateLimit(calendar.getTime());
+					
+					
+					if(category.isAutomaticAssignment()) {						
+						List<User> users = useRep.selectAssignedUser(category.getSkills(), category.getCapacities(), userLogged.getOrganization());
+						if(users != null && users.size() > 0) {
+							User assigned = repository.UserActivityAssigned(users, new Date(), activity.getDateLimit());
+							if(assigned != null) {
+								activity.setAssigned(assigned);
+							}
+						}
+							
+					}
+					
 				}
 			}
 			
@@ -149,17 +177,56 @@ public class ActivityController {
 				
 				tmp.setComplements(complementsSet);
 				
+				
+				if(tmp.getProof() == null) {
+					tmp.setProof(new Proof());
+				}
+				
+				tmp.getProof().setRate(activity.getProof().getRate());
+				tmp.getProof().setActivity(tmp);
+				tmp.getProof().setSignature(activity.getProof().getSignature());
+				
+				if(ActivityStatus.CONCLUIDO.equals(tmp.getStatus())) {
+					tmp.setStatus(ActivityStatus.FECHADO);
+				}else {
+					tmp.setStatus(activity.getStatus());
+				}
+			
+				
 				if(activity.getAssigned() != null) {
 					User tmpUser = useRep.findById(activity.getAssigned().getId());
+
 					if(tmpUser != null) {
+						Set<Activity> activities = tmpUser.getActivities();
+						activities.add(tmp);
+						tmpUser.setActivities(activities);
+						useRep.save(tmpUser);
 						tmp.setAssigned(tmpUser);
 					}
 				}
 				
-				tmp.setStatus(activity.getStatus());
+				
 				//tmp.setProof(activity.getProof());
 				
 				repository.update(tmp);
+				return new ResponseEntity<String>("Atualizado com sucesso!!!", HttpStatus.OK);
+			}
+		}
+		
+		return new ResponseEntity<String>("Não foi possível atualizar atividade!", HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/status-activity/{id}")
+	public @ResponseBody ResponseEntity<String> setStatusActivity(Authentication authentication, @PathVariable("id") Long id, @RequestParam("status") ActivityStatus status){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			Activity tmp = repository.getById(id);
+			if(tmp != null) {
+				tmp.setStatus(status);
+				if(tmp.getStatus() == ActivityStatus.CONCLUIDO) {
+					tmp.setDateClosed(new Date());
+				}
+				repository.save(tmp);
 				return new ResponseEntity<String>("Atualizado com sucesso!!!", HttpStatus.OK);
 			}
 		}
@@ -197,6 +264,100 @@ public class ActivityController {
 		
 		return new ResponseEntity<List<Activity>>( new ArrayList<>() , HttpStatus.BAD_REQUEST);
 	}
+	
+	@GetMapping("/all/organization")
+	public @ResponseBody ResponseEntity<List<Activity>> getAllAticitiesOrganization(Authentication authentication, @RequestParam("date") String date){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			Date tmpDate = new Date();
+			tmpDate.setTime(Long.parseLong(date));
+			return new ResponseEntity<List<Activity>>(repository.getAllBetweenDate(userLogged.getOrganization(), tmpDate) , HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<List<Activity>>( new ArrayList<>() , HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/all/group-or-user")
+	public @ResponseBody ResponseEntity<List<Activity>> getAllAticitiesOrganization(Authentication authentication, @RequestParam("date") String date, @RequestParam("type") String type, @RequestParam("id") Long id){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			
+			List<User> users = new ArrayList<User>();
+			if("u".equals(type.toLowerCase()))
+			{
+				User usertmp = useRep.findById(id);
+				users.add(usertmp);
+			}else if("g".equals(type.toLowerCase())) {
+				GroupUsers group = groupRepository.findOne(id);
+				users = group.getUsers().stream().collect(Collectors.toList());
+			}
+			Date tmpDate = new Date();
+			tmpDate.setTime(Long.parseLong(date));
+				
+			return new ResponseEntity<List<Activity>>(repository.getAllBetweenDateAndUserList(userLogged.getOrganization(), tmpDate, users) , HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<List<Activity>>( new ArrayList<>() , HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/status")
+	public @ResponseBody ResponseEntity<String[]> getAllStatus(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			return new ResponseEntity<String[]>( new String[] { String.valueOf(repository.countStatusOpen(userLogged.getOrganization())), String.valueOf(repository.countStatusCurrent(userLogged.getOrganization())), String.valueOf(repository.countStatusClosed(userLogged.getOrganization())), String.valueOf(repository.countStatusLate(userLogged.getOrganization()))}  , HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<String[]>( new String[0] , HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/category-count")
+	public @ResponseBody ResponseEntity<List<Object[]>> getCategoryCount(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			return new ResponseEntity<List<Object[]>>( repository.countCategory(userLogged.getOrganization()) , HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<List<Object[]>>( new ArrayList<>() , HttpStatus.BAD_REQUEST);
+	}
+	
+	
+	@GetMapping("/skills-count")
+	public @ResponseBody ResponseEntity<List<Object[]>> getSkillsCount(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			return new ResponseEntity<List<Object[]>>( repository.countSkills(userLogged.getOrganization()) , HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<List<Object[]>>( new ArrayList<>() , HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/capacity-count")
+	public @ResponseBody ResponseEntity<List<Object[]>> getCapacityCount(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			return new ResponseEntity<List<Object[]>>( repository.countCapacity(userLogged.getOrganization()) , HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<List<Object[]>>( new ArrayList<>() , HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/history-activities")
+	public @ResponseBody ResponseEntity<List<List<Object[]>>> getHistoryActivity(Authentication authentication){
+		User userLogged = useRep.findByEmail(authentication.getName());
+		if(userLogged != null && userLogged.getOrganization() != null) {
+			List<Object[]> closed = repository.historyActivitiesClosed(userLogged.getOrganization());
+			List<Object[]> lated = repository.historyActivitiesLated(userLogged.getOrganization());
+			
+			List<List<Object[]>> results = new ArrayList<>();
+			results.add(closed);
+			results.add(lated);
+			
+			return new ResponseEntity<List<List<Object[]>>>( results , HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<List<List<Object[]>>>( new ArrayList<>() , HttpStatus.BAD_REQUEST);
+	}
+	
 
 
 	public static String padLeft(String s, int n) {

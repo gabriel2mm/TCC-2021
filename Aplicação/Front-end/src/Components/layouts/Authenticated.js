@@ -74,8 +74,7 @@ function AuthenticatedLayoutComponent({ children }) {
                                 {context.containsPermission("dashboard") || context.containsPermission("Admin") ? ( <NavLink to="/dashboard" className={`${getCurrentRoute("/dashboard")}`} tabIndex="3">Relatórios</NavLink>) : (null)}
                                 {context.containsPermission("settings") || context.containsPermission("Admin") ? (<NavLink to="/settings" className={`${getCurrentRoute("/settings")}`} tabIndex="4">Configurações</NavLink>) : (null)}
                                 <ul className="flex flex-row justify-around md:justify-center items-center ml-2 mt-5 md:mt-0">
-                                    <SearchActivityComponent />
-
+                                    {context.containsPermission("Admin") || context.containsPermission("read:activities") || context.containsPermission("receive:activity") || context.containsPermission("activities") ? (<SearchActivityComponent/>) : (null)}
                                     <Link to="/chat" className="md:hidden">
                                         <li className="md:hidden antialiased mx-5 text-gray-500 text-2xl flex justify-center items-center py-2 px-2 rounded-full hover:bg-gray-200 focus:bg-gray-200 transition-colors duration-800">
                                             <MessageOutlined />

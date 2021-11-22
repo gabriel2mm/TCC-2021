@@ -1,43 +1,68 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Line } from 'react-chartjs-2';
+import { API } from "../../Services";
+import { message, Spin} from 'antd';
 
 function LineChart() {
-  const dataChart = {
-    labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
-    datasets: [
-      {
-        label: '# atividades abertas',
-        data: [1, 5, 10, 15, 20, 25, 28, 22, 17, 12, 7, 3],
-        borderColor: ['blue'],
-        backgroundColor: ['blue'],
-      },
-      {
-        label: '# atividades em andamento',
-        data: [3, 8, 13, 18, 23, 28, 31, 25, 20, 15, 10, 6],
-        borderColor: ['green'],
-        backgroundColor: ['green'],
-      },
-      {
-        label: '# atividades finalizadas no dia',
-        data: [1, 10, 8, 5, 2, 15, 28, 30, 10, 12, 10, 8],
-        borderColor: ['orange'],
-        backgroundColor: ['orange'],
-      },
-      {
-        label: '# atividades SLA extourado',
-        data: [1, 2, 3, 4, 5, 10, 9, 8, 7, 6, 15, 2],
-        borderColor: ['red'],
-        backgroundColor: ['red'],
-      },
-    ]
-  };
+  const [data, setData] = React.useState({});
+  const mouths = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+  const [labels, setLabels] = React.useState([]);
+  
+  useEffect(() => {
+    if(data && data.length > 0) {
+      data.map(item => {
+        item.map(subItem => {
+          const mouth = subItem[1];
+          const year = subItem[2];
+          if(!labels.includes(`${mouths[mouth - 1]}/${year}`)){
+            setLabels(labels => [...labels, `${mouths[mouth - 1]}/${year}`]);
+          }
+        })
+      })
+    }
+
+  },[data]);
+
+  useEffect(() => {
+    getData();
+  },[]);
+
+  async function getData() {
+    try{  
+      const response = await API().get('/api/activities/history-activities');
+      if(response.status >= 200 && response.status < 300){
+        setData(response.data);
+      }
+
+    }catch(err){
+      message.error("Não foi possível carregar dados de categoria!");
+    }
+  }
+
   return (
-    <>
+    data && data.length > 0 ? (
+<>
       <div className="mt-8">
         <Line
           height={400}
           width={400}
-          data={dataChart}
+          data={{
+            labels: labels,
+            datasets: [
+              {
+                label: '# atividades finalizadas',
+                data: data[0].map(item => item[0]),
+                borderColor: ['orange'],
+                backgroundColor: ['orange'],
+              },
+              {
+                label: '# atividades finalizadas com atraso',
+                data: data[1].map(item => item[0]),
+                borderColor: ['red'],
+                backgroundColor: ['red'],
+              },
+            ]
+          }}
           options={{
             maintainAspectRatio: false,
             responsive: true,
@@ -47,13 +72,15 @@ function LineChart() {
               },
               title: {
                 display: true,
-                text: 'GRÁFICO DE LINHA'
+                text: 'Histórico atividades'
               }
             }
           }}
         />
       </div>
     </>
+    ) : (<Spin />)
+    
   );
 }
 

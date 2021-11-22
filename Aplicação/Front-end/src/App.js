@@ -1,16 +1,18 @@
 import React from 'react';
 import Routes from './Routes/index';
 import { BrowserRouter } from 'react-router-dom';
-import { UserContextProvider } from './Contexts';
+import { UserContextProvider, GroupSelectContextProvider } from './Contexts';
 
 
 function App() {
 
   return (
     <UserContextProvider>
-      <BrowserRouter>
-        <Routes />
-      </BrowserRouter>
+      <GroupSelectContextProvider>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </GroupSelectContextProvider>
     </UserContextProvider>
   );
 }

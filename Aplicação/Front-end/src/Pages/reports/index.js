@@ -20,12 +20,7 @@ function DashboardPage() {
           <ActivitiesReportsComponent />
         </div>
         <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start lg:flex-row ">
-          <div className="w-full md:w-1/2">
-            <LineChartComponent />
-          </div>
-          <div className="w-full md:w-1/2">
-            <BarChart />
-          </div>
+          <div className="w-full"> <LineChartComponent /></div>
         </div>
         <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start lg:flex-row ">
           <div className="w-full md:w-1/2">
@@ -38,9 +33,6 @@ function DashboardPage() {
         <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start lg:flex-row ">
           <div className="w-full md:w-1/2">
             <PolarArea />
-          </div>
-          <div className="w-full md:w-1/2">
-            <RadarChart />
           </div>
         </div>
       </div>

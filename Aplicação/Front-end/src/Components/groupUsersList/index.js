@@ -3,7 +3,7 @@ import { message, Tree } from 'antd';
 import {BasicInputComponent} from '../../Components';
 import {API} from '../../Services';
 import { TeamOutlined, UserOutlined, ClusterOutlined , DownOutlined} from '@ant-design/icons';
-import { useUserContext } from '../../Contexts';
+import { useGroupSelectContext, useUserContext } from '../../Contexts';
 
 export default function GroupUserListComponent() {
     const context = useUserContext();
@@ -11,6 +11,7 @@ export default function GroupUserListComponent() {
     const [searchValue, setSearchValue] = useState("");
     const [autoExpandParent, setAutoExpandParent] = useState(false);
     const [treeData, setTreeData] = useState([]);
+    const groupContext = useGroupSelectContext();
 
     useEffect(() => {
         loadGroups();
@@ -54,6 +55,8 @@ export default function GroupUserListComponent() {
         const type = node.node.key.split("-")[0];
         const id = node.node.key.split("-")[1];
         console.log(type ,id );
+
+        groupContext.changeGroup(type, id);
     }
 
     const loop = (data) =>

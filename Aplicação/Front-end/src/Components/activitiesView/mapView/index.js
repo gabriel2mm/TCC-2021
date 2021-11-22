@@ -2,12 +2,12 @@ import React, {useState, useEffect} from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { layout } from '../../../Pages/activity/maps/optionsLayout';
 import {message} from 'antd';
-import {useActivityViewContext} from '../../../Contexts';
+import {useActivityViewContext, useGroupSelectContext} from '../../../Contexts';
 import { API } from '../../../Services';
 
 
 function MapViewComponent() {
-  const [activities, setActivities] = useState([]);
+  const { activities } = useGroupSelectContext();
   const [initialLocation, setInitialLocation] = useState({ lat: -25.475174 || 0, lng: -49.2807627 || 0 });
   const { screen, showModal, activity, handleShowModal, changeActivity, changeViewScreen } = useActivityViewContext();
 
@@ -21,28 +21,11 @@ function MapViewComponent() {
     height: '100%'
   };
 
-  useEffect(() => {
-    async function fetchActivities(){
-        const response = await API().get("/api/activities");
-        try{
-          if(response.status >= 200 && response.status < 300){
-            console.log(response.data)
-            setActivities(response.data);
-          }
-        }catch(e){
-          message.error("Não foi possível carregar as atividades");
-        }
-    }
-
-    fetchActivities();
-  }, [])
-
   function toggleActivity(activity) {
     changeActivity(activity);
     handleShowModal();
   }
-
-
+  
   return (
     (
       isLoaded ?

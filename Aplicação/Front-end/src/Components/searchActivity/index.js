@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Modal, List, Spin, message, Empty } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import moment from 'moment';
 import { API } from '../../Services';
+import { Redirect } from 'react-router-dom';
 
 function SearchActivityComponent() {
     const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ function SearchActivityComponent() {
         }
     }
 
-    function renderColor(created, limit, status){
+    function renderColor(created, limit, status) {
         const currentDate = new Date();
         const initialDate = new Date(created);
         const finalDate = new Date(limit);
@@ -50,18 +50,20 @@ function SearchActivityComponent() {
 
         let result = Math.abs(100 * diff2 / diff1);
 
-        if(isNaN(result))
+        console.log(result, diff1, diff2);
+
+        if (isNaN(result))
             result = 0;
-        
-        if(status == "ABERTO" || status == "EM_ANDAMENTO"){
-            if(result < 40){
+
+        if (status == "ABERTO" || status == "EM_ANDAMENTO") {
+            if (result < 40) {
                 return "bg-green-500";
-            }else if(result >= 40 && result < 70){
+            } else if (result >= 40 && result < 70) {
                 return "bg-yellow-500";
-            }else if(result >= 70){
+            } else if (result >= 70) {
                 return "bg-red-500";
             }
-        }else{
+        } else {
             return "bg-blue-500";
         }
     }
@@ -88,20 +90,21 @@ function SearchActivityComponent() {
                     <>
                         <List className="mt-5 max-h-80 overflow-y-auto">
                             {activities && activities.length > 0 ? activities.map((a, i) => (
-
-                                <List.Item key={i}>
-                                    <div className="grid grid-cols-12 gap-2 w-full rounded-lg shadow cursor-pointer hover:shadow-lg  bg-white transition-all delay-200">
-                                        <div className={`w-full h-full ${renderColor(a.created, a.dateLimit, a.status)} rounded-tl-lg rounded-bl-lg`}></div>
-                                        <div className="w-full col-span-11 h-full">
-                                            <div className="flex flex-col py-2">
-                                                <span className="text-md text-gray-800 font-medium"><b>Atividade</b>: {a.number}</span>
-                                                <span className="font-thin text-gray-700"><b>Data de criação:</b> {moment(a.created).format("DD/MM/yyyy HH:mm")}</span>
-                                                <span className="font-thin text-gray-700"><b>Data limite:</b> {moment(a.dateLimit).format("DD/MM/yyyy HH:mm")}</span>
-                                                <span className="font-thin text-gray-700"><b>Categoria:</b> {a.category?.name}</span>
+                                <a href={`/activities/${a.id}`} key={i}>
+                                    <List.Item>
+                                        <div className="grid grid-cols-12 gap-2 w-full rounded-lg shadow cursor-pointer hover:shadow-lg  bg-white transition-all delay-200">
+                                            <div className={`w-full h-full ${renderColor(a.created, a.dateLimit, a.status)} rounded-tl-lg rounded-bl-lg`}></div>
+                                            <div className="w-full col-span-11 h-full">
+                                                <div className="flex flex-col py-2">
+                                                    <span className="text-md text-gray-800 font-medium"><b>Atividade</b>: {a.number}</span>
+                                                    <span className="font-thin text-gray-700"><b>Data de criação:</b> {moment(a.created).format("DD/MM/yyyy HH:mm")}</span>
+                                                    <span className="font-thin text-gray-700"><b>Data limite:</b> {moment(a.dateLimit).format("DD/MM/yyyy HH:mm")}</span>
+                                                    <span className="font-thin text-gray-700"><b>Categoria:</b> {a.category?.name}</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </List.Item>
+                                    </List.Item>
+                                </a>
                             )) : search && search.length > 0 ? (<Empty description={`Não encontramos nenhuma atividade com este termo "${search}" `} />) : (<span></span>)}
 
                         </List>

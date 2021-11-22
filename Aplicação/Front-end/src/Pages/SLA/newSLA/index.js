@@ -58,7 +58,7 @@ function NewSLAPage() {
                         <div className="flex flex-col justify-start w-1/2">
                             <label htmlFor="unity" className="font-semibold text-gray-600">Unidade:</label>
                             <Form.Item name="unity" type="select" rules={[{ required: true, message: 'Selecione a unidade' }]}>
-                                <BasicSelectComponent onChange={e => onChangeSelect(e)} name="unity" defaultOption={false} dataSource={[{ option: 'Minutos', value: "m" }, { option: 'Horas', value: "h" }, { option: 'Dia(s)', value: "d" }, { option: 'Mês/Meses', value: "M" }, { option: 'Semana(s)', value: "S" }, { option: 'Ano(s)', value: "y" }]} />
+                                <BasicSelectComponent onChange={e => onChangeSelect(e)} name="unity" defaultOption={true} dataSource={[{ option: 'Minutos', value: "m" }, { option: 'Horas', value: "h" }, { option: 'Dia(s)', value: "d" }]} />
                             </Form.Item>
                         </div>
                     </div>

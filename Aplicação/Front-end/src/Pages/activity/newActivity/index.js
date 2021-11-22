@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react'
-import { Form, Upload, message, Button, Tabs, Table, Switch } from 'antd';
+import { Form, Upload, message, Button, Tabs, } from 'antd';
 import { AuthenticatedLayoutComponent, BasicInputComponent, BasicInputMaskComponent, BasicSelectComponent, ButtonComponent } from '../../../Components'
-import { UploadOutlined, ClearOutlined, CloseOutlined, CheckOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import ActivityResultPage from '../activityResult';
 import AddressMapComponent from '../maps/addressMap';
 import axios from 'axios';
@@ -29,6 +29,16 @@ export default function NewActivityPage() {
     useEffect(() => {
         console.log(data);
     }, [data]);
+
+
+    async function loadAcitivities(){
+        try{
+
+        }catch(e){
+            console.log(e);
+            message.error("Não foi possível carregar graficos!");
+        }
+    }
 
     async function handleSubmit() {
         try{
@@ -368,50 +378,7 @@ export default function NewActivityPage() {
                                     </div>
                                 </div>
                             </TabPane>
-                            <TabPane tab="Complemento" key="2">
-                                <div className="flex flex-col md:flex-row">
-                                    <div className="md:w-1/2 w-full">
-                                        <div className="flex flex-col w-full">
-                                            <div className="flex md:flex-row flex-col w-full">
-                                                <div className="item-group w-full">
-                                                    {data.viewFormComplement ? (<button type="button" title="Limpar complemento" className="mx-1  flex flex-row justify-center items-center bg-gray-100 border-2 border-gray-200 rounded w-8 h-8 cursor-pointer" onClick={e => handleClearComplement()}><ClearOutlined /></button>) : (null)}
-                                                    <label htmlFor="formComplement" className="font-semibold text-gray-600">Complemento:</label>
-                                                    <Form.Item>
-                                                        <BasicInputComponent type="textarea" rows="10" name="formComplement" onChange={changeText} value={data.formComplement || ''} placeholder="Informe o complemento da sua solicitação" />
-                                                    </Form.Item>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex md:flex-row flex-col w-full">
-                                                <div className="item-group w-full">
-                                                    <label htmlFor="deadline" className="font-semibold text-gray-600">Mostrar complemento ao usuário:</label>
-                                                    <Form.Item>
-                                                        <Switch checkedChildren={<CheckOutlined className="flex justify-items-center" />} unCheckedChildren={<CloseOutlined className="flex justify-items-center" />} onChange={e => handleChangeVisibilityComplment(e)}  checked={data.complementVisible}/>
-                                                    </Form.Item>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex md:flex-row flex-col w-full">
-                                                <div className="item-group w-full">
-                                                    <label htmlFor="deadline" className="font-semibold text-gray-600">Anexo:</label>
-                                                    <Form.Item>
-                                                        <Upload {...props} maxCount={1}>
-                                                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                                                        </Upload>
-                                                    </Form.Item>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        {!data.viewFormComplement ? (<ButtonComponent type="button" name="add" className="float-right mb-5" onClick={addComplement}>Adicionar</ButtonComponent>) : (null)}
-                                    </div>
-
-                                    <div className="md:w-1/2 w-full p-5">
-                                        <Table rowKey={record => record.key} columns={cols} dataSource={data.tableComplement} />
-                                    </div>
-
-                                </div>
-                            </TabPane>
+                            
                             <TabPane tab="Requisitante" key="3">
                                 <div className="flex flex-col w-full">
                                     <div className="flex md:flex-row flex-col w-full">

@@ -2,17 +2,24 @@ package br.com.ocrfieldservice.dataprovider.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import br.com.ocrfieldservice.core.entity.Capacity;
 import br.com.ocrfieldservice.core.entity.Organization;
+import br.com.ocrfieldservice.core.entity.Permission;
+import br.com.ocrfieldservice.core.entity.Profile;
+import br.com.ocrfieldservice.core.entity.Skill;
 import br.com.ocrfieldservice.core.entity.User;
 import br.com.ocrfieldservice.core.repository.UserRepository;
 import br.com.ocrfieldservice.dataprovider.dao.UserDao;
@@ -145,5 +152,53 @@ public class UserRepositoryImpl implements UserRepository {
 		if(id != null) {
 			userDao.deleteById(id);
 		}
+	}
+
+	@Override
+	public List<User> selectAssignedUser(Set<Skill> skills, Set<Capacity> capacities, Organization organization) {
+		// TODO Auto-generated method stub
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<User> query = builder.createQuery(User.class);
+		Root<User> root = query.from(User.class);
+		Join<User, Organization> joinUserOrganization = root.join("organization");
+		Join<User, Profile> joinUserProfile = root.join("profile", JoinType.INNER);
+		Join<Profile, Permission> joinProfilePermission = joinUserProfile.join("Permissions",JoinType.INNER);
+		
+		
+		Predicate predicate = null;
+		if(skills != null && skills.size() > 0 && capacities != null && capacities.size() <= 0) {
+			predicate = root.get("skills").in(skills);
+		}else if(skills != null && skills.size() <= 0 && capacities != null && capacities.size() > 0) {
+			predicate = root.get("Capacity").in(capacities);
+		}else if(skills != null && skills.size() > 0 && capacities != null && capacities.size() > 0){
+			predicate = builder.and(
+					root.get("skills").in(skills),
+					root.get("Capacity").in(capacities)
+			);		
+		}
+
+		query.select(root).distinct(true);
+		
+		if(predicate != null) {
+			query.where(builder.and(
+					predicate,
+					builder.equal(joinProfilePermission.get("permission"), "receive:activity"),
+					builder.or(
+							builder.equal(joinUserOrganization.get("id"), organization.getId()),
+							builder.equal(joinUserOrganization.get("name"), organization.getName())
+					)
+			));
+		}else {
+			query.where(builder.and(
+					builder.equal(joinProfilePermission.get("permission"), "receive:activity"),
+					builder.or(
+							builder.equal(joinUserOrganization.get("id"), organization.getId()),
+							builder.equal(joinUserOrganization.get("name"), organization.getName())
+					)
+			));
+		}
+		
+		
+		return entityManager.createQuery(query).getResultList();
 	}
 }

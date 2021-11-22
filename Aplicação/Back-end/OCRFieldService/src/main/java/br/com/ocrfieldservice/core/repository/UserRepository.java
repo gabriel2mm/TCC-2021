@@ -1,10 +1,13 @@
 package br.com.ocrfieldservice.core.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
+import br.com.ocrfieldservice.core.entity.Capacity;
 import br.com.ocrfieldservice.core.entity.Organization;
+import br.com.ocrfieldservice.core.entity.Skill;
 import br.com.ocrfieldservice.core.entity.User;
 
 @Repository("userRepository")
@@ -29,4 +32,6 @@ public interface UserRepository {
 	public Long countUsersByOrganizationId(final Long orgId);
 
 	public void deleteById(final Long id);
+	
+	public List<User> selectAssignedUser(Set<Skill> skills, Set<Capacity> capacities, Organization organization);
 }

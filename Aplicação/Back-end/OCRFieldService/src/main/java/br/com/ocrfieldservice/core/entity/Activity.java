@@ -56,10 +56,10 @@ public class Activity {
 	@ManyToOne(cascade = CascadeType.MERGE , targetEntity = Category.class)
 	private Category category; 
 	
-	@OneToOne(cascade = CascadeType.MERGE, targetEntity = User.class )
+	@ManyToOne(cascade = CascadeType.MERGE, targetEntity = User.class )
 	private User requester;
 	
-	@OneToOne(cascade = CascadeType.MERGE, targetEntity = User.class )
+	@ManyToOne(cascade = CascadeType.MERGE, targetEntity = User.class )
 	private User assigned;
 	
 	@Column

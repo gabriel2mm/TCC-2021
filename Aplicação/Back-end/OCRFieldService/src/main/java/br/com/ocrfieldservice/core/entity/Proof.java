@@ -25,7 +25,7 @@ public class Proof {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@Column
+	@Column(length = 15000)
 	private String signature;
 	
 	@Column
@@ -42,6 +42,7 @@ public class Proof {
 	@OneToOne(cascade = CascadeType.PERSIST, targetEntity = User.class)
 	private User createdBy;
 	
+	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, targetEntity = Activity.class)
 	private Activity activity;
 

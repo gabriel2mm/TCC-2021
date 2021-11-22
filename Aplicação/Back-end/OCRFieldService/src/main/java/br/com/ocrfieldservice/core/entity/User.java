@@ -82,7 +82,10 @@ public class User implements UserDetails {
 	@ManyToMany(targetEntity = GroupUsers.class, cascade = CascadeType.MERGE)
 	private Set<GroupUsers> groups = new HashSet<>();
 
-
+	@JsonIgnore
+	@OneToMany(targetEntity = Activity.class, cascade = CascadeType.MERGE)
+	private Set<Activity> activities = new HashSet<>();
+	
 	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime created;
@@ -267,6 +270,14 @@ public class User implements UserDetails {
 
 	public void setSkills(Set<Skill> skills) {
 		this.skills = skills;
+	}
+
+	public Set<Activity> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(Set<Activity> activities) {
+		this.activities = activities;
 	}
 
 }

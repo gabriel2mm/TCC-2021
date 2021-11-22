@@ -95,7 +95,7 @@ function UserDetailsPage() {
                     </Form.Item>
                     <label htmlFor="profile" className="font-semibold text-gray-600 mr-2">Selecione o perfil do usuário:</label>
                     <Form.Item>
-                       <BasicSelectComponent dataSource={profiles.map(p => ({ option: p.name, value: p.id}))} name="profile" value={data.profile?.id} onChange={e => handleChangeProfile(e)} />
+                       <BasicSelectComponent defaultOption={true} dataSource={profiles.map(p => ({ option: p.name, value: p.id}))} name="profile" value={data.profile?.id} onChange={e => handleChangeProfile(e)} />
                     </Form.Item>
 
                     {context.containsPermission("Admin") || context.containsPermission("write:user") ? (<ButtonComponent name="save" type="submit">Salvar</ButtonComponent>) : (null)}

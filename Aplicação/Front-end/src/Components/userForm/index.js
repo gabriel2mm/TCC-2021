@@ -64,7 +64,7 @@ function UserFormComponent() {
                 </Form.Item>
                 <label htmlFor="profile" className="font-semibold text-gray-600 mr-2">Selecione o perfil do usuário:</label>
                     <Form.Item>
-                       <BasicSelectComponent dataSource={profiles.map(p => ({ option: p.name, value: p.id}))} name="profile" value={data.profile?.id} onChange={e => handleChangeProfile(e)} />
+                       <BasicSelectComponent defaultOption={true} dataSource={profiles.map(p => ({ option: p.name, value: p.id}))} name="profile" value={data.profile?.id} onChange={e => handleChangeProfile(e)} />
                     </Form.Item>
                 <label htmlFor="password" className="font-semibold text-gray-600">Senha:</label>
                 <Form.Item className="w-full form-control" type="password" name="password" rules={[{ required: true, message: 'Insira a senha do Usuário' }]} >

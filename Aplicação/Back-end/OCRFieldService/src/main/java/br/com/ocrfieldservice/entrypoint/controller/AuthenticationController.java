@@ -117,7 +117,7 @@ public class AuthenticationController {
 
 		return new ResponseEntity<>("Criado com sucesso!", HttpStatus.OK);
 	}
-
+	
 	@PostMapping
 	private @ResponseBody ResponseEntity<TokenResponse> signIn(@RequestBody SignRequest signRequest) {
 

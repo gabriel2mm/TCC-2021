@@ -1,6 +1,6 @@
 package br.com.ocrfieldservice.configuration;
 
-import java.util.List;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,27 +70,17 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
-		CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-        corsConfiguration.setAllowedOrigins(List.of("*"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setExposedHeaders(List.of("Authorization"));
-		
-		
-		http.authorizeRequests().antMatchers(MATCHERS_PUBLIC).permitAll().anyRequest()
+
+		http.csrf().disable().cors().and()
+				.authorizeRequests().antMatchers(MATCHERS_PUBLIC).permitAll().anyRequest()
 				.authenticated()
 				.and()
 				.addFilter(authenticationFilter())
 				.addFilter(jwtValidateTokenFilter())
 				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.csrf().disable().cors().configurationSource(request -> corsConfiguration);
-				
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
-
+	
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {

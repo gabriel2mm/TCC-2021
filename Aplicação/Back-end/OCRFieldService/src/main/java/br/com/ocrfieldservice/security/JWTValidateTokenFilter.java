@@ -48,6 +48,9 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String authorizationHeader = request.getHeader(HEADER);
+		
+		 response.setHeader("Access-Control-Max-Age", "3600");
+		
 		try {
 			if(authorizationHeader != null && authorizationHeader.startsWith(PREFIX)) {
 				String token = authorizationHeader.replace(PREFIX, "");

@@ -91,6 +91,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				.sign(Algorithm.HMAC512(this.secret.getBytes()));
 		
 		response.setHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Content-Security-Policy", "upgrade-insecure-requests");
 		response.getWriter().write(new ObjectMapper().writeValueAsString(new TokenResponse.Builder().token(token).type("Bearer").erros(new ArrayList<>()).build()));
 		response.getWriter().flush();
 	}

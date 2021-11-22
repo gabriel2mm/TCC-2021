@@ -30,6 +30,7 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
     HttpServletRequest request = (HttpServletRequest) req;
     HttpServletResponse response = (HttpServletResponse) res;
     response.setHeader("Access-Control-Max-Age", "3600");
+    response.setHeader("Content-Security-Policy", "upgrade-insecure-requests");
     chain.doFilter(request, response);
 }
 

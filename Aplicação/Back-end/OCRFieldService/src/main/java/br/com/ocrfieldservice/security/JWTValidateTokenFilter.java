@@ -50,6 +50,7 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 		String authorizationHeader = request.getHeader(HEADER);
 		
 		 response.setHeader("Access-Control-Max-Age", "3600");
+		 response.setHeader("Content-Security-Policy", "upgrade-insecure-requests");
 		
 		try {
 			if(authorizationHeader != null && authorizationHeader.startsWith(PREFIX)) {
@@ -87,7 +88,7 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 
 	private void constructorErrors(String error, int status, HttpServletResponse response) throws JsonProcessingException, IOException {
 		String errors = new ObjectMapper().writeValueAsString(new Errors(new ArrayList<String>() {{ add(error);}}, status));
-
+		
 		response.setStatus(status);
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json; charset=UTF-8");

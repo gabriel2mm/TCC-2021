@@ -8,7 +8,8 @@ export const API = function () {
         headers: {
             "Content-type": "application/json; charset= UTF-8",
             "Referrer-Policy": "unsafe-url",
-            "referrer": "unsafe-url"
+            "referrer": "unsafe-url",
+            "Access-Control-Allow-Origin" : window.location.origin
         }
     });
 }

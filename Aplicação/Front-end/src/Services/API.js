@@ -9,7 +9,6 @@ export const API = function () {
             "Content-type": "application/json; charset= UTF-8",
             "Referrer-Policy": "unsafe-url",
             "referrer": "unsafe-url",
-            "Access-Control-Allow-Origin" : window.location.origin
         }
     });
 }

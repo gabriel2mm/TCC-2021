@@ -3,6 +3,7 @@ package br.com.ocrfieldservice.dataprovider.repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -167,13 +168,25 @@ public class UserRepositoryImpl implements UserRepository {
 		
 		Predicate predicate = null;
 		if(skills != null && skills.size() > 0 && capacities != null && capacities.size() <= 0) {
-			predicate = root.get("skills").in(skills);
+			Join<User, Skill> joinUserSkill = root.join("skills");
+			List<Long> skillsIds = skills.stream().map(itens -> itens.getId()).collect(Collectors.toList());
+			predicate = joinUserSkill.get("id").in(skillsIds);
 		}else if(skills != null && skills.size() <= 0 && capacities != null && capacities.size() > 0) {
-			predicate = root.get("Capacity").in(capacities);
+			Join<User, Capacity> joinUserCapacity = root.join("capacities");
+			List<Long> capacitiesIds = capacities.stream().map(itens -> itens.getId()).collect(Collectors.toList());
+			predicate = joinUserCapacity.get("id").in(capacitiesIds);
 		}else if(skills != null && skills.size() > 0 && capacities != null && capacities.size() > 0){
+			Join<User, Capacity> joinUserCapacity = root.join("capacities");
+			Join<User, Skill> joinUserSkill = root.join("skills");
+			
+			List<Long> capacitiesIds = capacities.stream().map(itens -> itens.getId()).collect(Collectors.toList());
+			predicate = joinUserSkill.get("id").in(capacitiesIds);
+			
+			List<Long> skillsIds = skills.stream().map(itens -> itens.getId()).collect(Collectors.toList());
+			predicate = joinUserSkill.get("id").in(skillsIds);
 			predicate = builder.and(
-					root.get("skills").in(skills),
-					root.get("Capacity").in(capacities)
+					joinUserSkill.get("id").in(skillsIds),
+					joinUserCapacity.get("id").in(capacitiesIds)
 			);		
 		}
 

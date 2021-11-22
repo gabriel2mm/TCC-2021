@@ -1,5 +1,7 @@
 package br.com.ocrfieldservice.configuration;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -68,23 +70,25 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable();
+		
+		CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        corsConfiguration.setAllowedOrigins(List.of("*"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setExposedHeaders(List.of("Authorization"));
+		
+		
 		http.authorizeRequests().antMatchers(MATCHERS_PUBLIC).permitAll().anyRequest()
 				.authenticated()
 				.and()
 				.addFilter(authenticationFilter())
 				.addFilter(jwtValidateTokenFilter())
 				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-	}
-
-	@Bean
-	CorsConfigurationSource corsConfiguratationSouce() {
-		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-		source.registerCorsConfiguration("/**", corsConfiguration);
-
-		return source;
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+				.csrf().disable().cors().configurationSource(request -> corsConfiguration);
+				
 	}
 
 	@Override

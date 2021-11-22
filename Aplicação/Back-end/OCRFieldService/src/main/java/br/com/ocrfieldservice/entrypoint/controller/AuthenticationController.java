@@ -42,7 +42,6 @@ import br.com.ocrfieldservice.entrypoint.viewModel.TokenResponse;
 
 @RestController
 @RequestMapping(value = "/api/auth")
-@CrossOrigin(origins = "*")
 public class AuthenticationController {
 
 	@Autowired

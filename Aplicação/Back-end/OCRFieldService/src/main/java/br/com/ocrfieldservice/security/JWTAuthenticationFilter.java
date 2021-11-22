@@ -90,8 +90,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				.withExpiresAt(new Date(System.currentTimeMillis() + expiration))
 				.sign(Algorithm.HMAC512(this.secret.getBytes()));
 		
-		response.setHeader("Access-Control-Max-Age", "3600");
-		response.setHeader("Content-Security-Policy", "upgrade-insecure-requests");
+		response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+	    response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT");
+	    response.setHeader("Access-Control-Max-Age", "3600");
+	    response.setHeader("Access-Control-Allow-Credentials", "true");
+	    response.setHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
+	    response.setHeader("Content-Security-Policy", "upgrade-insecure-requests");
 		response.getWriter().write(new ObjectMapper().writeValueAsString(new TokenResponse.Builder().token(token).type("Bearer").erros(new ArrayList<>()).build()));
 		response.getWriter().flush();
 	}

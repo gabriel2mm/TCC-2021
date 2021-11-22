@@ -49,8 +49,12 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String authorizationHeader = request.getHeader(HEADER);
 		
-		 response.setHeader("Access-Control-Max-Age", "3600");
-		 response.setHeader("Content-Security-Policy", "upgrade-insecure-requests");
+		response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+	    response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT");
+	    response.setHeader("Access-Control-Max-Age", "3600");
+	    response.setHeader("Access-Control-Allow-Credentials", "true");
+	    response.setHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
+	    response.setHeader("Content-Security-Policy", "upgrade-insecure-requests");
 		
 		try {
 			if(authorizationHeader != null && authorizationHeader.startsWith(PREFIX)) {
@@ -69,7 +73,6 @@ public class JWTValidateTokenFilter extends BasicAuthenticationFilter {
 				if(request_path.contains("/api/auth"))
 					chain.doFilter(request, response);
 				else if(request_path.contains("app") || request_path.contains("ws")) {
-					response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
 					chain.doFilter(request, response);	
 				}
 					

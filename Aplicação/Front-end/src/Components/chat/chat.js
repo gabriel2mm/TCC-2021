@@ -98,7 +98,7 @@ export default function ChatMassagesComponent() {
 
         chatUser ? (
             <>
-                <SockJsClient url='http://143.244.157.15:8080/ocrfieldservice-1.0.0-SNAPSHOT/ws'
+                <SockJsClient url='https://143.244.157.15:8080/ocrfieldservice-1.0.0-SNAPSHOT/ws'
                     topics={['/topic/public']}
                     onConnect={() => {
                         console.log("connected");

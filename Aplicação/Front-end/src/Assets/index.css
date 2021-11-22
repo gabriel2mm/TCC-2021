@@ -1,0 +1,25 @@
+:root{
+    font-family: "Roboto", sans-serif, Trebuchet MS, Lucida Sans Unicode, Lucida Grande, Lucida Sans, Arial, sans-serif !important;
+}
+
+*{
+    font-family: "Roboto", sans-serif, Trebuchet MS, Lucida Sans Unicode, Lucida Grande, Lucida Sans, Arial, sans-serif !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: #CCC;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}

@@ -1,0 +1,19 @@
+
+/* width */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    border-radius: 15px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #DEDEDE;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #CCC;
+    border-radius: 10px;
+  }

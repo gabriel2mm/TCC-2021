@@ -12,16 +12,16 @@ function ChartViewComponent() {
     const containerRef = useRef();
     const [difHours, setDifHours] = useState(24);
     const [resources, setResources] = useState([]);
-    const { activities, type, id } = useGroupSelectContext();
-    const [loading, setLoading] = useState(true);
+    const { activities, type, id, loading } = useGroupSelectContext();
     const [headers, setHeaders] = useState([]);
     const { changeActivity, handleShowModal } = useActivityViewContext();
 
     useEffect(() => {
         getHead();
-        setLoading(false);
-        loadResource();
+    }, []);
 
+    useEffect(() => {
+        loadResource();
         setInterval(() => {
             setCurrDate(new Date());
         }, 60000);
@@ -29,14 +29,14 @@ function ChartViewComponent() {
     }, [activities]);
 
     async function loadResource() {
-        if(context.containsPermission("Admin") || context.containsPermission("activities")){
+        if (context.containsPermission("Admin") || context.containsPermission("activities")) {
             let url = "/api/users";
             if (type == "u") {
                 url = `/api/users/${id}`;
             } else if (type == "g") {
                 url = `/api/groups/${id}`;
             }
-    
+
             try {
                 const response = await API().get(url);
                 if (response.status >= 200 && response.status < 300) {
@@ -52,7 +52,7 @@ function ChartViewComponent() {
                 console.log(e);
                 message.error("Não foi possível carregar recursos");
             }
-        }else if(context.containsPermission("receive:activity")){
+        } else if (context.containsPermission("receive:activity")) {
             setResources([context.user]);
         }
     }
@@ -91,17 +91,21 @@ function ChartViewComponent() {
     }
 
     function renderHead() {
-        return headers.map((item, i) => {
-            const width = containerRef.current?.offsetWidth;
-            const space = 300 + (i * ((width - 300) / difHours));
-            return (
-                <div style={{ zIndex: 1, position: "absolute", height: "100%", width: ((width - 300) / 24), left: `${i > 0 ? space : 300}px`, top: 0, borderLeft: "1px dashed #CCC", textAlign: "center" }}>
-                    <div style={{ position: "absolute", background: "#CCC", width: "24px", height: "25px", borderRadius: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                        <p>{item.hour}</p>
+        if (activities && resources && containerRef && containerRef) {
+            return headers.map((item, i) => {
+                const width = containerRef.current?.offsetWidth;
+                const space = 300 + (i * ((width - 300) / difHours));
+                return (
+                    <div style={{ zIndex: 1, position: "absolute", height: "100%", width: ((width - 300) / 24), left: `${i > 0 ? space : 300}px`, top: 0, borderLeft: "1px dashed #CCC", textAlign: "center" }}>
+                        <div style={{ position: "absolute", background: "#CCC", width: "24px", height: "25px", borderRadius: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                            <p>{item.hour}</p>
+                        </div>
                     </div>
-                </div>
-            )
-        });
+                )
+            });
+        } else {
+            <Spin />
+        }
     }
 
     function calculeLeftItem(created) {
@@ -109,18 +113,18 @@ function ChartViewComponent() {
         const minutes = new Date(created).getMinutes();
         const width = containerRef.current?.offsetWidth;
         const space = (hour * ((width - 300) / difHours));
-        const totalMinutes = 100*minutes/ 60;
+        const totalMinutes = 100 * minutes / 60;
         const widthSpace = ((width - 300) / difHours);
 
         return space + (totalMinutes / 100) * widthSpace;
     }
 
     function calculeWidthItem(activity, created, deadline, unity) {
-        
+
         let init = new Date(created).getHours();
         let limit = new Date(deadline).getHours();
         let duration = limit - init;
-        switch(unity){
+        switch (unity) {
             case "m":
                 init = new Date(created).getMinutes();
                 limit = new Date(deadline).getMinutes();
@@ -136,14 +140,14 @@ function ChartViewComponent() {
                 duration = 23 * (limit - init);
                 break;
         }
-        
-        
+
+
         const width = duration * ((containerRef.current?.offsetWidth - 300) / 24);
 
         return width;
     }
 
-    function calculeColor(activity){
+    function calculeColor(activity) {
         const currentDate = new Date();
         const initialDate = new Date(activity.created);
         const finalDate = new Date(activity.dateLimit);
@@ -152,30 +156,30 @@ function ChartViewComponent() {
         const diff2 = moment(currentDate).diff(moment(initialDate), 'minutes');
 
         let result = Math.abs(100 * diff2 / diff1);
-        
-        if(isNaN(result))
+
+        if (isNaN(result))
             result = 0;
-        
-        if(activity.status == "ABERTO" || activity.status == "EM_ANDAMENTO"){
-            if(result < 40){
+
+        if (activity.status == "ABERTO" || activity.status == "EM_ANDAMENTO") {
+            if (result < 40) {
                 return "green";
-            }else if(result >= 40 && result < 80){
+            } else if (result >= 40 && result < 80) {
                 return "yellow";
-            }else if(result >= 80){
+            } else if (result >= 80) {
                 return "red";
             }
-        }else{
+        } else {
             return "blue";
         }
     }
 
-    return (
-        loading || !activities ? (<div className="w-full h-full flex flex-row justify-center items-center"><Spin /></div>) : (
-            <>
-                <div id="container" ref={containerRef} style={{ width: "100%", minHeight: "1080px", "overflow-x": "auto", "overflow-y": "auto", "position": "relative" }}>
+    function renderGrid() {
+        if (!loading && activities && resources && containerRef && containerRef.current) {
+            return (
+                <>
                     <div className="bg-gray-100" style={{ "width": "300px", "min-height": "1080px" }}>
                         <h3 style={{ "height": "40px", fontSize: "16pt", textAlign: "center" }}>Recursos</h3>
-                        <div style={{position: 'absolute',height: '100%',left: 300 + calculeLeftItem(currDate),top: '0px', borderLeft: '1px solid red', textAlign: 'center', width: '1px', zIndex: 4}}></div>
+                        <div style={{ position: 'absolute', height: '100%', left: 300 + calculeLeftItem(currDate), top: '0px', borderLeft: '1px solid red', textAlign: 'center', width: '1px', zIndex: 4 }}></div>
                         {renderHead()}
                         {resources.map((resource, i) => {
                             return (
@@ -192,9 +196,21 @@ function ChartViewComponent() {
                             )
                         })}
                     </div>
+                </>
+            )
+        } else {
+            return (
+                <div className="h-96 w-full flex justify-center items-center">
+                    <Spin />
                 </div>
-            </>
-        )
+            );
+        }
+    }
+
+    return (
+        <div id="container" ref={containerRef} style={{ width: "100%", minHeight: "1080px", "overflow-x": "auto", "overflow-y": "auto", "position": "relative" }}>
+            {renderGrid()}
+        </div>
     )
 }
 

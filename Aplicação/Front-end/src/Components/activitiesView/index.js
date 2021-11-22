@@ -16,8 +16,8 @@ function ActivitiesViewComponent() {
   const context = useUserContext();
 
   React.useEffect(() => {
-    contextGroups.changeGroup(null, null);
-    console.log(screen, changeViewScreen, changeActivity, handleShowModal);
+    if(!contextGroups.activities || contextGroups.activities.length <= 0)
+      contextGroups.changeGroup(null, null);
   }, []);
 
   function renderScreen() {

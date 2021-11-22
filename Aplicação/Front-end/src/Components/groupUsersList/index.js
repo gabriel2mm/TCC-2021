@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { message, Tree } from 'antd';
+import { Spin, Tree } from 'antd';
 import {BasicInputComponent} from '../../Components';
 import {API} from '../../Services';
 import { TeamOutlined, UserOutlined, ClusterOutlined , DownOutlined} from '@ant-design/icons';
@@ -7,6 +7,7 @@ import { useGroupSelectContext, useUserContext } from '../../Contexts';
 
 export default function GroupUserListComponent() {
     const context = useUserContext();
+    const [loading, setLoading] = useState(true);
     const [initialData, setInitialData] = useState([]);
     const [searchValue, setSearchValue] = useState("");
     const [autoExpandParent, setAutoExpandParent] = useState(false);
@@ -17,11 +18,8 @@ export default function GroupUserListComponent() {
         loadGroups();
     }, []);
 
-    useEffect(() => {
-        console.log(treeData);
-    }, [treeData])
-
     async function loadGroups(){
+        setLoading(true);
         try{
             const response = await API().get('/api/groups');
             if(response.status >= 200 && response.status < 300){
@@ -49,6 +47,7 @@ export default function GroupUserListComponent() {
         }catch(err){
             console.log(err);
         }
+        setLoading(false);
     }
 
     function onChangeSelect(keySelected, node) {
@@ -135,23 +134,26 @@ export default function GroupUserListComponent() {
 
     return (
         <div className="min-h-screen lg:block mr-0 md:mr-5 bg-white p-5 rounded-lg w-full lg:w-1/4 border-2 border-gray-200 ">
-            <BasicInputComponent name="filterTree" placeholder="Buscar grupo" className="my-2" value={searchValue} onChange={onChange} />
-    
-            {treeData ? (
-                <Tree
-                defaultExpandAll
-                defaultExpandParent
-                showLine={true}
-                showIcon
-                defaultSelectedKeys={['0']}
-                onExpand={onExpand}
-                autoExpandParent={autoExpandParent}
-                treeData={loop(treeData)}
-                filterTreeNode={filterTreeNode}
-                switcherIcon={<DownOutlined />}
-                onSelect={ onChangeSelect}
-                />
-            ) : null}
+            {loading ? <center><Spin /></center> : (
+                <>
+                    <BasicInputComponent name="filterTree" placeholder="Buscar grupo" className="my-2" value={searchValue} onChange={onChange} />
+                    {treeData ? (
+                        <Tree
+                        defaultExpandAll
+                        defaultExpandParent
+                        showLine={true}
+                        showIcon
+                        defaultSelectedKeys={['0']}
+                        onExpand={onExpand}
+                        autoExpandParent={autoExpandParent}
+                        treeData={loop(treeData)}
+                        filterTreeNode={filterTreeNode}
+                        switcherIcon={<DownOutlined />}
+                        onSelect={ onChangeSelect}
+                        />
+                    ) : null}
+                </>
+            )}
         </div>
     )
 }

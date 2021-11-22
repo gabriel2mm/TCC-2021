@@ -58,7 +58,6 @@ export const UserContextProvider = ({ children }) => {
                 const permissionResponse = await API().get('/api/permissions', { headers: { Authorization: `Bearer ${response.data.token}` } });
                 if (permissionResponse.status >= 200 && permissionResponse.status < 300) {
                     setPermissions(permissionResponse.data);
-                    console.log(permissionResponse);
                 }
 
                 const userResponse = await API().get('/api/users/my-user', { headers: { Authorization: `Bearer ${response.data.token}` } });

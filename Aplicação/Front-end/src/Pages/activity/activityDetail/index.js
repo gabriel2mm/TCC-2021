@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom';
 import { Form, Upload, message, Button, Tabs, Table, Rate, Switch } from 'antd';
 import { AuthenticatedLayoutComponent, BasicInputComponent, BasicInputMaskComponent, BasicSelectComponent, ButtonComponent } from '../../../Components'
@@ -9,7 +9,6 @@ import ActivityResultPage from '../activityResult';
 import SignatureCanvas from 'react-signature-canvas';
 import { API } from '../../../Services';
 import moment from 'moment';
-import { context } from 'rc-image/lib/PreviewGroup';
 import { useUserContext } from '../../../Contexts';
 
 
@@ -19,6 +18,7 @@ export default function ActivityDetailPage() {
   const params = useParams();
   const { TabPane } = Tabs;
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(true);
   const [sendForm, setSendForm] = useState(false);
   const [showMarker, setShowMarker] = useState(false);
   const [historyDataSource, setHistoryDataSource] = useState([]);
@@ -42,6 +42,7 @@ export default function ActivityDetailPage() {
   }
 
   async function getData() {
+    setLoading(true);
     try {
       const response = await API().get(`/api/activities/${params.id}`);
       if (response.status >= 200 && response.status < 300) {

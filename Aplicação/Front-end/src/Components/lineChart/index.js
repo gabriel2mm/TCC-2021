@@ -3,7 +3,7 @@ import { Line } from 'react-chartjs-2';
 import { API } from "../../Services";
 import { message, Spin } from 'antd';
 
-function LineChart() {
+function LineChartComponent() {
   const [data, setData] = React.useState({});
   const mouths = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
   const [labels, setLabels] = React.useState([]);
@@ -84,4 +84,4 @@ function LineChart() {
   );
 }
 
-export default LineChart;
+export default LineChartComponent;

@@ -12,7 +12,7 @@ import UserTableComponent from './userTable';
 import UserFormComponent from './userForm';
 import ChatComponent from './chat';
 import ActivitiesReportsComponent from './activitiesReports';
-import LineChartComponent from './lineChart';
+import LineChartComponent from './lineChart/index';
 import GroupUserListComponent from './groupUsersList';
 import QueueActivityComponent from './queueActivity';
 import BasicInputMaskComponent from './basicInputMask';

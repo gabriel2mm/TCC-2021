@@ -41,7 +41,7 @@ export default function AuthenticatedRoutes(){
 
     return (
         <Switch>
-            <Route path="/" exact component={HomePage}/>
+            <Route path="/" exact  render={ r => context.containsPermission("Admin") || context.containsPermission("receive:activity") || context.containsPermission("activities") ? (<HomePage/>) :  (<MyActivitiesPage />)}/>
             <Route path="/settings" exact render={ r => context.containsPermission("settings") || context.containsPermission("Admin") ? (<SettingsPage />) :  (<Redirect to="/"></Redirect>)} />
             <Route path="/settings/about" exact component={AboutPage} />
             <Route path="/settings/profiles" exact render={ r => context.containsPermission("read:profile") || context.containsPermission("write:profile") || context.containsPermission("Admin") ? (<ProfilePage />) :  (<Redirect to="/"></Redirect>)} /> 

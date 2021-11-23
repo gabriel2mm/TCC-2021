@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { BasicInputComponent, ButtonComponent, LoginLayoutComponent } from '../../Components';
 import { ArrowLeftOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Form, message } from 'antd';
-import { useParams } from 'react-router-dom';
+import { Form, message, Spin } from 'antd';
 import { API } from '../../Services/API';
 import { useLocation } from "react-router-dom";
 
 function ResetPasswordPage() {
     const [form] = Form.useForm();
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState({ newPassword: "", confirmPassword: ""});
     const [token, setToken] = useState();
     const params = useLocation();
@@ -23,6 +23,7 @@ function ResetPasswordPage() {
     }
 
     async function handleSubmit() {
+        setLoading(true);
         if(data && data.newPassword && token){
             const response = await API().post('/api/auth/reset', { token: token, newPassword : data.newPassword})
             if(response.status >= 200 && response.status < 300){
@@ -31,6 +32,7 @@ function ResetPasswordPage() {
                 message.success("Não foi possível redefinir senha, tente novamente mais tarde!");
             }
         }
+        setLoading(false);
     }
     
     return (
@@ -65,7 +67,7 @@ function ResetPasswordPage() {
                         <BasicInputComponent type="password" name="confirmPassword" placeholder="Confirme sua senha" icon={<LockOutlined />} iconPosition={"left"} value={data.confirmPassword} onChange={e => changeText(e)} />
                     </Form.Item>
                 </div>
-                <ButtonComponent type="submit" className="float-right mt-5" >Redefinir</ButtonComponent>
+                {!loading ? ( <ButtonComponent type="submit" className="float-right mt-5" >Redefinir</ButtonComponent>) : (<center><Spin /></center>)}
             </Form>
         </LoginLayoutComponent>
     )

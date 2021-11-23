@@ -2,22 +2,31 @@ import React, {useState} from 'react';
 import { BasicInputComponent, ButtonComponent, LoginLayoutComponent } from '../../Components';
 import { ArrowLeftOutlined, MailOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Form, message } from 'antd';
+import { Form, message, Spin } from 'antd';
 import { API } from '../../Services/API';
 
 function ForgotPasswordPage() {
     const [form] = Form.useForm();
     const [data, setData] = useState({email: ""});
+    const [loading, setLoading] = useState(false);
 
     function changeText(e){
         setData({...data, [e.target.name]: e.target.value});
     }
 
     async function handleSubmit(){
-        if(data && data.email){
-            const response = await API().post('/api/auth/forgot', {email : data.email});
-            message.info("Se o e-mail inserido for válido, você receberá um link para redefinir sua senha!");
+        setLoading(true);
+        try{
+            if(data && data.email){
+                const response = await API().post('/api/auth/forgot', {email : data.email});
+                if(response.status >= 200 && response.status < 300){
+                    message.info("Se o e-mail inserido for válido, você receberá um link para redefinir sua senha!");
+                }
+            }
+        }catch(e){
+            console.log("Não foi possível encaminhar e-mail", e.message);
         }
+        setLoading(false);
     }
 
     return (
@@ -35,7 +44,7 @@ function ForgotPasswordPage() {
                 <Form.Item name="email" type="email" rules={[{required: true, message: "Informe um e-mail"}, {type: "email", message: "Informe um e-mail válido"}]}>
                     <BasicInputComponent type="email" name="email" placeholder="Informe o email cadastrado" icon={<MailOutlined />} iconPosition="left" value={data.email} onChange={e => changeText(e)} />
                 </Form.Item>
-                <ButtonComponent type="submit" className="float-right mt-5" >Redefinir</ButtonComponent>
+                {!loading ? (<ButtonComponent type="submit" className="float-right mt-5" >Redefinir</ButtonComponent>) : (<center><Spin /></center>)}
             </Form>
         </LoginLayoutComponent>
     )

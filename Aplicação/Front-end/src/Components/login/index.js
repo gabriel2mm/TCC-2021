@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { BasicInputComponent, ButtonComponent } from '..';
-import {Form, message} from 'antd';
+import {Form, message, Spin} from 'antd';
 import { useHistory } from "react-router-dom"
 import { useUserContext } from "../../Contexts";
 
@@ -10,16 +10,18 @@ function LoginComponent() {
   const  history = useHistory();
   const [form] = Form.useForm();
   const context = useUserContext();
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({email: null , password: null, persistConnection: true});
 
   async function handleSubmit(){
-    console.log(data.persistConnection);
+    setLoading(true);
     const login = await context.signIn(data.email, data.password, data.persistConnection);
     if(login){
       history.push("/")
     }else{
       message.error("E-mail ou senha inválidos! Tente novamente.");
     }
+    setLoading(false);
   }
 
   function onChangeText(event){
@@ -53,9 +55,11 @@ function LoginComponent() {
           </label>
           <Link to="/forgot-password" className="text-purple-700">Esqueci minha senha</Link>
         </div>
+        {!loading ? (
           <ButtonComponent type="submit" className="w-full">
-            Entrar
+           Entrar
           </ButtonComponent>
+        ) : (<center><Spin /></center>) }
       </Form>
     </>
   );

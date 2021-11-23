@@ -34,7 +34,6 @@ export function GroupSelectContextProvider({children}){
             const response = await API().get(url);
             if(response.status >= 200 && response.status < 300){
                 setActivities(response.data);
-                console.log("carregou as atividades");
                 setLoading(false);
             }
         }catch(e){

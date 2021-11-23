@@ -82,7 +82,7 @@ export default function ActivityDetailPage() {
 
   async function loadUsers() {
     try {
-      const response = await API().get(`/api/users`);
+      const response = await API().get(`/api/users/only-receive`);
       if (response.status >= 200 && response.status < 300) {
         setUsers(response.data.filter(user => user.active === true));
       }

@@ -1,6 +1,5 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { message, Spin } from 'antd';
-import axios from 'axios';
 import { useActivityViewContext, useGroupSelectContext, useUserContext } from '../../../Contexts';
 import "./style.css";
 import { API } from '../../../Services';
@@ -30,7 +29,7 @@ function ChartViewComponent() {
 
     async function loadResource() {
         if (context.containsPermission("Admin") || context.containsPermission("activities")) {
-            let url = "/api/users";
+            let url = "/api/users/only-receive";
             if (type == "u") {
                 url = `/api/users/${id}`;
             } else if (type == "g") {

@@ -40,7 +40,7 @@ function SkillDetailPage() {
 
     async function loadUsers(){
         try{
-            const response = await API().get('/api/users');
+            const response = await API().get('/api/users/only-receive');
             if(response.status >= 200 && response.status < 300){
                 setUsers(response.data.map(item => ({key: item.id, title: `${item.firstName} ${item.lastName}`})));   
             }

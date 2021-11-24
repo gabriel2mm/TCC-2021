@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom';
 import { Form, Upload, message, Button, Tabs, Table, Rate, Switch } from 'antd';
 import { AuthenticatedLayoutComponent, BasicInputComponent, BasicInputMaskComponent, BasicSelectComponent, ButtonComponent } from '../../../Components'
-import { UploadOutlined, ClearOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import axios from 'axios';
+import { UploadOutlined, ClearOutlined, CheckOutlined, CloseOutlined, DownloadOutlined } from "@ant-design/icons";
 import AddressMapComponent from '../maps/addressMap';
 import ActivityResultPage from '../activityResult';
 import SignatureCanvas from 'react-signature-canvas';
 import { API } from '../../../Services';
-import moment from 'moment';
 import { useUserContext } from '../../../Contexts';
+import moment from 'moment';
+import Base64Downloader from 'react-base64-downloader';
 
 
 export default function ActivityDetailPage() {
@@ -36,8 +36,6 @@ export default function ActivityDetailPage() {
     if (context.containsPermission("Admin") || context.containsPermission("activities")) {
       loadUsers();
     }
-
-    //await getHistory();
     form.resetFields();
   }
 
@@ -70,6 +68,7 @@ export default function ActivityDetailPage() {
             signature: response.data.proof?.signature,
             dateClosed: response.data?.dateClosed,
             createdBy: response.data?.createdBy,
+            attachment: response.data?.attachment || ''
           });
         setLocation({ lat: parseFloat(response.data?.address?.lat), lng: parseFloat(response.data?.address?.lng) });
         setShowMarker(true);
@@ -99,7 +98,6 @@ export default function ActivityDetailPage() {
         number: data.activity,
         status: data.status,
         description: data.description,
-        attachment: "",
         category: data.category,
         assigned: data.assigned,
         complements: data.tableComplement,
@@ -116,17 +114,6 @@ export default function ActivityDetailPage() {
       console.log(e);
       message.error("Não foi possível atualizar atividade");
     }
-  }
-
-
-  function getHistory() {
-    const response = axios.get("https://60727341e4e0160017ddea55.mockapi.io/tcc/api/users/Organization/1/category/1/activity/1/history");
-
-    response.then(response => {
-      setHistoryDataSource(response.data || []);
-    }).catch(err => {
-      message.error("Não foi possível carregar o histórico desta atividade!");
-    })
   }
 
   async function updateStatus(status) {
@@ -147,24 +134,6 @@ export default function ActivityDetailPage() {
       }
     }, 200);
   }
-
-  const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
 
   function handleClearComplement() {
     setData({ ...data, viewFormComplement: false, formComplement: "" });
@@ -348,16 +317,19 @@ export default function ActivityDetailPage() {
                 </div>
               </div>
 
-              <div className="flex md:flex-row flex-col w-full">
-                <div className="item-group w-full">
-                  <label htmlFor="deadline" className="font-semibold text-gray-600">Anexo:</label>
-                  <Form.Item>
-                    <Upload {...props} maxCount={1}>
-                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                    </Upload>
-                  </Form.Item>
+              {data.attachment ? (
+                <div className="flex md:flex-row flex-col w-full">
+                  <div className="item-group w-full">
+                    <label htmlFor="deadline" className="font-semibold text-gray-600">Anexo:</label>
+                    <Base64Downloader  base64={data.attachment} downloadName="anexo" Tag="a" onDownloadSuccess={() => console.log('File download initiated')} onDownloadError={() => console.warn('Download failed to start')}>
+                      <div className='w-10 h-10 rounded-md'>
+                        <DownloadOutlined className="text-lg" />
+                      </div>
+                    </Base64Downloader>
+                  </div>
                 </div>
-              </div>
+              ) : (null)}
+
             </div>
 
             <Tabs defaultActiveKey="1" onChange={handleChangeTab}>
@@ -460,7 +432,7 @@ export default function ActivityDetailPage() {
                           <div className="item-group w-full">
                             <label htmlFor="deadline" className="font-semibold text-gray-600">Anexo:</label>
                             <Form.Item>
-                              <Upload {...props} maxCount={1}>
+                              <Upload maxCount={1}>
                                 <Button icon={<UploadOutlined />}>Click to Upload</Button>
                               </Upload>
                             </Form.Item>

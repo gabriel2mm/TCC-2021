@@ -16,7 +16,7 @@ function NewSkillPage() {
 
     async function loadUsers(){
         try{
-            const response = await API().get('/api/users');
+            const response = await API().get('/api/users/only-receive');
             if(response.status >= 200 && response.status < 300){
                 const users = response.data?.map(item => ( { key: item.id, title: `${item.firstName} ${item.lastName}`} ));
                 setData({...data, users: response.data});

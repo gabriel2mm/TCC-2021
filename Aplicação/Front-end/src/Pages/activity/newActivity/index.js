@@ -8,6 +8,7 @@ import axios from 'axios';
 import { API } from '../../../Services';
 import { useUserContext } from '../../../Contexts';
 import moment from 'moment';
+import FileBase64 from 'react-file-base64';
 
 
 export default function NewActivityPage() {
@@ -17,7 +18,7 @@ export default function NewActivityPage() {
     const [sendForm, setSendForm] = useState(false);
     const [showMarker, setShowMarker] = useState(false);
     const [location, setLocation] = useState({ lat: -25.475174 || 0, lng: -49.2807627 || 0 });
-    const [data, setData] = useState({ category: { id: ""}, created: newDate(), status: "ABERTO", description: "", formComplement: "", tableComplement: [], lat: 0, lng: 0, cep: "", address: "", city: "", state: "", number: "", complement: "", district: "", dataLimit: moment(new Date()).format("DD/MM/yyyy HH:mm"), sendComplement:[] , complementVisible: true });
+    const [data, setData] = useState({ category: { id: ""}, created: newDate(), status: "ABERTO", description: "", formComplement: "", tableComplement: [], lat: 0, lng: 0, cep: "", address: "", city: "", state: "", number: "", complement: "", district: "", dataLimit: moment(new Date()).format("DD/MM/yyyy HH:mm"), sendComplement:[] , complementVisible: true, attachment: "" });
     const [address, setAddress] = useState({ bairro: "", cep: "", complemento: "", ddd: "", gia: "", ibge: "", localidade: "", logradouro: "", siafi: "", uf: ""});
     const context = useUserContext();
 
@@ -30,23 +31,13 @@ export default function NewActivityPage() {
         console.log(data);
     }, [data]);
 
-
-    async function loadAcitivities(){
-        try{
-
-        }catch(e){
-            console.log(e);
-            message.error("Não foi possível carregar graficos!");
-        }
-    }
-
     async function handleSubmit() {
         try{
             const response = await API().post('/api/activities', {
                 number: "",
                 status: data.status,
                 description: data.description,
-                attachment: "",
+                attachment: data.attachment || '',
                 address: {
                     cep: address.cep,
                     CEP: address.cep,
@@ -117,47 +108,8 @@ export default function NewActivityPage() {
         }
     }
 
-
-    const props = {
-        name: 'file',
-        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-        headers: {
-            authorization: 'authorization-text',
-        },
-        onChange(info) {
-            if (info.file.status !== 'uploading') {
-                console.log(info.file, info.fileList);
-            }
-            if (info.file.status === 'done') {
-                message.success(`${info.file.name} file uploaded successfully`);
-            } else if (info.file.status === 'error') {
-                message.error(`${info.file.name} file upload failed.`);
-            }
-        },
-    };
-
     function handleCategory(value){
         calculeDeadline(value.target.value);
-    }
-
-    function handleClearComplement() {
-        setData({ ...data, viewFormComplement: false, formComplement: "" });
-        form.resetFields();
-    }
-
-    function viewComplement(record) {
-        setData({ ...data, viewFormComplement: true, formComplement: record.title });
-        form.resetFields();
-    }
-
-    function addComplement() {
-        console.log("Complement click")
-        const complement = { key: data.tableComplement.length + 1, title: data.formComplement, user: context.user, date: new Date()};
-        setData({ ...data, formComplement: "", tableComplement: [...data.tableComplement, complement], sendComplement: [...data.sendComplement, {key: data.sendComplement.length + 1, complement: data.formComplement, visibleUser: data.complementVisible, attchment : "", user: context.user, date: new Date()}] });
-    }
-
-    function removeComplement(record) {
-        setData({ ...data, formComplement: "", tableComplement: data.tableComplement.filter(d => d.key !== record.key), sendComplement : data.sendComplement.filter(d => d.key !== record.key)});
     }
 
     function changeText(e) {
@@ -168,39 +120,9 @@ export default function NewActivityPage() {
         return moment(new Date()).format("DD/MM/yy HH:mm")
     }
 
-    const cols = [
-        {
-            title: 'Complementos',
-            dataIndex: 'title',
-            key: 'title',
-            render: (key, record) => (
-                <span>{record.title.substr(0, 30)}</span>
-            )
-        },
-        {
-            title: 'Usuário',
-            dataIndex: 'user',
-            render: (text, record, i) => (<span key={i}>{record.user?.firstName} {record.user?.lastName}</span>)
-        },
-        {
-            title: 'Criação',
-            dataIndex: 'date',
-            render: (text, record, i) => (<span key={i}>{moment(record.date).format("dd/MM/yy HH:mm")}</span>)
-        },
-        {
-            title: 'Ações',
-            dataIndex: 'acoes',
-            render: (text, record, i) => (
-                <>
-                    <span className="cursor-pointer text-blue-500 hover:text-blue-300 focus:text-blue-3000 mr-2" onClick={e => viewComplement(record)}>Visualizar</span>
-                    <span className="cursor-pointer text-blue-500 hover:text-blue-300 focus:text-blue-3000" onClick={e => removeComplement(record)}>Remover</span>
-                </>
-            )
-        }
-    ];
-
-    function handleChangeVisibilityComplment(e){
-        setData({...data, complementVisible : e });
+    function uploadFile(file){
+        console.log("upload", file);
+        setData({ ...data, attachment: file.base64 });
     }
 
     async function searchCEP() {
@@ -306,11 +228,7 @@ export default function NewActivityPage() {
                             <div className="flex md:flex-row flex-col w-full">
                                 <div className="item-group w-full">
                                     <label htmlFor="deadline" className="font-semibold text-gray-600">Anexo:</label>
-                                    <Form.Item>
-                                        <Upload {...props} maxCount={1}>
-                                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                                        </Upload>
-                                    </Form.Item>
+                                    <FileBase64 multiple={ false } onDone={ uploadFile } />
                                 </div>
                             </div>
                         </div>

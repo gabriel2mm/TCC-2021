@@ -80,7 +80,7 @@ function ChartViewComponent() {
         for (var i = 0; i < difHours; i++) {
             tmpHeaders.push({ hour: padStart(i, 2, 0) });
         }
-
+        tmpHeaders.push({ hour: "end" });
         setHeaders(tmpHeaders);
     }
 
@@ -119,30 +119,29 @@ function ChartViewComponent() {
     }
 
     function calculeWidthItem(activity, created, deadline, unity) {
-
         let init = new Date(created).getHours();
         let limit = new Date(deadline).getHours();
         let duration = limit - init;
+        let width = 0;
         switch (unity) {
+           
             case "m":
-                init = new Date(created).getMinutes();
-                limit = new Date(deadline).getMinutes();
-                duration = (limit > init ? limit - init : init - limit) / 160;
+                duration = moment(deadline).diff(moment(created), 'minutes');
+                width = duration;
                 break;
             case "h":
-                init = new Date(created).getHours();
-                limit = new Date(deadline).getHours();
+                duration = moment(deadline).diff( moment(created), 'hour');
+                duration = duration * 60;
+                width = duration;
                 break;
             case "d":
-                init = new Date(created).getDate();
-                limit = new Date(deadline).getDate();
-                duration = 23 * (limit - init);
+                console.log("dif: " + moment(deadline).diff( moment(created), 'days'));
+                duration = moment(deadline).diff( moment(created), 'days');
+                duration = (difHours - moment(created).hours()) * (60 - moment(created).hours());
+                width = duration;   
                 break;
         }
-
-
-        const width = duration * ((containerRef.current?.offsetWidth - 300) / 24);
-
+        
         return width;
     }
 

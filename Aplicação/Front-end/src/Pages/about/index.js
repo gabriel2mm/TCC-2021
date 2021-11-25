@@ -15,8 +15,13 @@ function AboutPage() {
         <Divider />
         <label className="font-semibold text-gray-600">Integrantes</label>
         <List>
+          
           <List.Item>
-            <label className="font-semibold text-gray-600">Gabriel Maia • <a href="https:github.com/gabriel2mm">Github</a></label>
+            <label className="font-semibold text-gray-600">Adriano Carvalho • <a href="https:github.com/gabriel2mm/TCC-2021">Github</a></label>
+            <label className="font-semibold text-gray-600">Alexssandre José • <a href="https:github.com/gabriel2mm/TCC-2021">Github</a></label>
+            <label className="font-semibold text-gray-600">David Arcari • <a href="https:github.com/gabriel2mm/TCC-2021">Github</a></label>
+            <label className="font-semibold text-gray-600">Gabriel Moré Maia • <a href="https:github.com/gabriel2mm/TCC-2021">Github</a></label>
+            <label className="font-semibold text-gray-600">Juliano Henrrique • <a href="https:github.com/gabriel2mm/TCC-2021">Github</a></label>
           </List.Item>
         </List>
       </div>

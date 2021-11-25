@@ -41,7 +41,7 @@ function ActivitiesViewComponent() {
     try {
       const response = await API().get(`/api/activities/status-activity/${activity.id}?status=${status}`);
       if (response.status >= 200 && response.status < 300) {
-        message.info("Atividade Iniciada!");
+        message.info(status === "EM_ANDAMENTO" ? "Atividade iniciada!" : "Atividade concluída");
       }
     } catch (e) {
       message.error("Não foi possível atualizar status da atividade");

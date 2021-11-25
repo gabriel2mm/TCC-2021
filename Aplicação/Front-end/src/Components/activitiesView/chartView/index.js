@@ -123,6 +123,7 @@ function ChartViewComponent() {
         let limit = new Date(deadline).getHours();
         let duration = limit - init;
         let width = 0;
+        console.log("atividade : " + activity.number + " unity: " + unity)
         switch (unity) {
            
             case "m":
@@ -131,7 +132,7 @@ function ChartViewComponent() {
                 break;
             case "h":
                 duration = moment(deadline).diff( moment(created), 'hour');
-                duration = duration * 60;
+                duration = duration * (60 - moment(deadline).diff( moment(created), 'hour'));
                 width = duration;
                 break;
             case "d":
